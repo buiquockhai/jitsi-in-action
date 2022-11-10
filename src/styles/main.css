@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .bg-blur {
+    backdrop-filter: blur(20px);
+    box-shadow: inset 0px -1px 1px #e7ebf0;
+    background-color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+@import './globals.css';
+@import './colors.css';
+@import './utils.css';

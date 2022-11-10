@@ -1,0 +1,74 @@
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-size: 15px !important;
+  font-family: 'Inter', sans-serif !important;
+  color: #2d3748 !important;
+  overflow: hidden;
+  /* __Remove background color on tap in broswer */
+  /* -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none; */
+}
+
+p {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+.enable-select-table {
+  -moz-user-select: text;
+  -webkit-user-select: text;
+  -webkit-touch-callout: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+.hidden-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hidden-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cccccc;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #6e6d7a;
+}
+
+::-moz-selection {
+  color: white;
+  background: var(--main);
+}
+
+::selection {
+  color: white;
+  background: var(--main);
+}
+
+.max-2-line {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
