@@ -1,9 +1,9 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 export const EXAMS_MOCK = Array(100)
   .fill(null)
   .map((_, index) => ({
-    id: uuid(),
+    id: v4(),
     title: 'It is a long established fact that a reader will be distracted',
     range: index % 4,
     maxPoint: 10,
@@ -12,7 +12,7 @@ export const EXAMS_MOCK = Array(100)
     questions: Array(10)
       .fill(null)
       .map(() => ({
-        id: uuid(),
+        id: v4(),
         type: '__1__',
         title: 'Tiêu đề câu hỏi',
         range: 50,
@@ -50,7 +50,7 @@ export const EXAMS_MOCK = Array(100)
 export const ADMIN_EXAMS_MOCK = Array(100)
   .fill(null)
   .map((_, index) => ({
-    id: uuid(),
+    id: v4(),
     title: 'It is a long established fact that a reader will be distracted',
     range: index % 4,
     maxPoint: 10,
@@ -58,7 +58,7 @@ export const ADMIN_EXAMS_MOCK = Array(100)
     verified: index % 3 == 0,
     createdAt: new Date(),
     createdBy: {
-      id: uuid(),
+      id: v4(),
       code: 'GV1001',
       fullname: 'Bùi Quốc Khải',
       gender: 0,
@@ -72,7 +72,7 @@ export const ADMIN_EXAMS_MOCK = Array(100)
     questions: Array(10)
       .fill(null)
       .map(() => ({
-        id: uuid(),
+        id: v4(),
         type: '__1__',
         title: 'Tiêu đề câu hỏi',
         range: 50,

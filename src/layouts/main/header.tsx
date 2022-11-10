@@ -8,7 +8,7 @@ import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
 import { roles } from '@util/constant';
 import { adminMenu, studentMenu, teacherMenu } from '@util/menu';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 const Header = () => {
   const { push } = useRouter();
@@ -73,7 +73,7 @@ const Header = () => {
     }
 
     menuData.push({
-      key: uuid(),
+      key: v4(),
       icon: <LogoutOutlined />,
       onClick: handleLogout,
       label: 'Đăng xuất',
@@ -122,7 +122,7 @@ const Header = () => {
               <div className="space-y-2 mt-4">
                 {Array.from({ length: 10 }).map(() => (
                   <div
-                    key={uuid()}
+                    key={v4()}
                     className="rounded-sm bg-blue-50 border-blue-300 border p-5 flex flex-col"
                   >
                     <p className="font-semibold">Tiêu đề thông báo</p>

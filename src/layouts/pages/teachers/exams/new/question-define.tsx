@@ -1,7 +1,7 @@
 import { Button, Form, Tag, InputNumber, Popconfirm } from 'antd';
 import React from 'react';
 import { ANPHABET, QUESTION_RANGE, QUESTION_TYPE } from '@util/constant';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 
 const QuestionDefine: React.FC<any> = ({ form }) => {
@@ -14,7 +14,7 @@ const QuestionDefine: React.FC<any> = ({ form }) => {
       {questions?.map((node, index) => {
         return (
           <div
-            key={uuid()}
+            key={v4()}
             className="w-full p-5 bg-white rounded-sm flex flex-col gap-3"
           >
             <div className="w-full flex flex-row gap-5 justify-between items-center">

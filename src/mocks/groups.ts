@@ -1,14 +1,14 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 export const GROUPS_MOCK = Array(50)
   .fill(null)
   .map((_, index) => ({
-    id: uuid(),
+    id: v4(),
     code: `MTKH${index}`,
     name: 'Chuyên Toán 01',
     createdAt: new Date(),
     headTeacher: {
-      id: uuid(),
+      id: v4(),
       code: 'GV1001',
       fullname: 'Bùi Quốc Khải',
       gender: 0,
@@ -22,7 +22,7 @@ export const GROUPS_MOCK = Array(50)
     students: Array(20)
       .fill(null)
       .map((_, subIndex) => ({
-        id: uuid(),
+        id: v4(),
         code: `1711726${subIndex}`,
         fullname: 'Bùi Quốc Khải',
         gender: 0,

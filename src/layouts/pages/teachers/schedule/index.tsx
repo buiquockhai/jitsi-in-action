@@ -2,28 +2,28 @@ import { getNextMonth, getPreviousMonth } from '@util/functions';
 import { Badge, BadgeProps, Calendar, List, Modal } from 'antd';
 import moment, { Moment } from 'moment';
 import React from 'react';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 const getListByMonth = (month: number, year: number) => {
   const monthData = {
     7: {
       10: [
         {
-          id: uuid(),
+          id: v4(),
           title: 'This is title',
           startDate: new Date(),
           workingTime: 100,
-          teacherId: uuid(),
+          teacherId: v4(),
           teacherName: 'Teacher Name',
         },
       ],
       20: [
         {
-          id: uuid(),
+          id: v4(),
           title: 'This is title',
           startDate: new Date(),
           workingTime: 100,
-          teacherId: uuid(),
+          teacherId: v4(),
           teacherName: 'Teacher Name',
         },
       ],
@@ -31,31 +31,31 @@ const getListByMonth = (month: number, year: number) => {
     8: {
       15: [
         {
-          id: uuid(),
+          id: v4(),
           title: 'This is title',
           startDate: new Date(),
           workingTime: 100,
-          teacherId: uuid(),
+          teacherId: v4(),
           teacherName: 'Teacher Name',
         },
       ],
       16: [
         {
-          id: uuid(),
+          id: v4(),
           title: 'This is title',
           startDate: new Date(),
           workingTime: 100,
-          teacherId: uuid(),
+          teacherId: v4(),
           teacherName: 'Teacher Name',
         },
       ],
       20: [
         {
-          id: uuid(),
+          id: v4(),
           title: 'This is title',
           startDate: new Date(),
           workingTime: 100,
-          teacherId: uuid(),
+          teacherId: v4(),
           teacherName: 'Teacher Name',
         },
       ],

@@ -8,11 +8,11 @@ import { roles } from '@util/constant';
 import { copy } from '@util/functions';
 import { Button, Form, Input, message, Popconfirm } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 const initialValues = {
-  forStudent: uuid(),
-  forTeacher: uuid(),
+  forStudent: v4(),
+  forTeacher: v4(),
 };
 
 const SponsorSetting: NextPage = () => {
@@ -54,7 +54,7 @@ const SponsorSetting: NextPage = () => {
                     <Popconfirm
                       title="Bạn có chắc chắn muốn tạo mới?"
                       icon={<QuestionCircleOutlined />}
-                      onConfirm={() => form.setFieldValue('forStudent', uuid())}
+                      onConfirm={() => form.setFieldValue('forStudent', v4())}
                     >
                       <Button size="small" icon={<RetweetOutlined />} type="link" />
                     </Popconfirm>
@@ -81,7 +81,7 @@ const SponsorSetting: NextPage = () => {
                     <Popconfirm
                       title="Bạn có chắc chắn muốn tạo mới?"
                       icon={<QuestionCircleOutlined />}
-                      onConfirm={() => form.setFieldValue('forTeacher', uuid())}
+                      onConfirm={() => form.setFieldValue('forTeacher', v4())}
                     >
                       <Button size="small" icon={<RetweetOutlined />} type="link" />
                     </Popconfirm>

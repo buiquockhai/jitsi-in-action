@@ -3,13 +3,13 @@ import withAuth from '@hoc/withAuth';
 import { roles } from '@util/constant';
 import { Button } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 const Logout: NextPage = () => {
   return (
     <div className="w-full flex py-5 items-center justify-center">
       <div
-        key={uuid()}
+        key={v4()}
         className="max-w-2xl w-full rounded-sm bg-white p-5 flex flex-col gap-3"
       >
         <div className="flex flex-row gap-3 items-center">

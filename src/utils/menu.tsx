@@ -1,4 +1,4 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 import {
   AppstoreOutlined,
   BellOutlined,
@@ -14,12 +14,12 @@ import { ROUTES } from './routes';
 
 export const adminMenu = [
   {
-    key: uuid(),
+    key: v4(),
     label: 'Người dùng',
     icon: <TeamOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Danh sách người dùng',
         href: ROUTES.ADMIN_ACCOUNT_LIST,
         onClick: () => {
@@ -27,7 +27,7 @@ export const adminMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Cài đặt sponsor',
         href: ROUTES.ADMIN_SPONSOR,
         onClick: () => {
@@ -35,7 +35,7 @@ export const adminMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Nhóm',
         href: ROUTES.ADMIN_GROUP_LIST,
         onClick: () => {
@@ -43,7 +43,7 @@ export const adminMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thêm nhóm',
         href: ROUTES.ADMIN_NEW_GROUP,
         onClick: () => {
@@ -53,12 +53,12 @@ export const adminMenu = [
     ],
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Phòng thi',
     icon: <NumberOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Danh sách phòng thi',
         href: ROUTES.ADMIN_ROOM_LIST,
         onClick: () => {
@@ -66,7 +66,7 @@ export const adminMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Danh sách đề',
         href: ROUTES.ADMIN_EXAM_LIST,
         onClick: () => {
@@ -74,7 +74,7 @@ export const adminMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Tạo phòng thi',
         href: ROUTES.ADMIN_NEW_ROOM,
         onClick: () => {
@@ -84,12 +84,12 @@ export const adminMenu = [
     ],
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Hoạt động',
     icon: <BellOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thông báo',
         href: ROUTES.ADMIN_NOTICE,
         onClick: () => {
@@ -97,7 +97,7 @@ export const adminMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         href: ROUTES.ADMIN_LOGOUT,
         onClick: () => {
           router.push(ROUTES.ADMIN_LOGOUT);
@@ -110,7 +110,7 @@ export const adminMenu = [
 
 export const studentMenu = [
   {
-    key: uuid(),
+    key: v4(),
     label: 'Tham gia',
     icon: <RocketOutlined />,
     onClick: () => {
@@ -118,7 +118,7 @@ export const studentMenu = [
     },
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Lịch thi',
     icon: <CalendarOutlined />,
     href: ROUTES.STUDENT_SCHEDULE,
@@ -127,12 +127,12 @@ export const studentMenu = [
     },
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Người dùng',
     icon: <UserOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thông tin',
         href: ROUTES.STUDENT_INFORMATION,
         onClick: () => {
@@ -140,7 +140,7 @@ export const studentMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Chỉnh sửa thông tin',
         href: ROUTES.STUDENT_EDIT,
         onClick: () => {
@@ -148,7 +148,7 @@ export const studentMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Đổi mật khẩu',
         href: ROUTES.STUDENT_CHANGE_PASSWORD,
         onClick: () => {
@@ -158,12 +158,12 @@ export const studentMenu = [
     ],
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Hoạt động',
     icon: <BellOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thông báo',
         href: ROUTES.STUDENT_NOTICE,
         onClick: () => {
@@ -171,7 +171,7 @@ export const studentMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         href: ROUTES.STUDENT_LOGOUT,
         onClick: () => {
           router.push(ROUTES.STUDENT_LOGOUT);
@@ -184,7 +184,7 @@ export const studentMenu = [
 
 export const teacherMenu = [
   {
-    key: uuid(),
+    key: v4(),
     label: 'Tham gia',
     icon: <RocketOutlined />,
     onClick: () => {
@@ -192,7 +192,7 @@ export const teacherMenu = [
     },
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Lịch thi',
     icon: <CalendarOutlined />,
     href: ROUTES.TEACHER_SCHEDULE,
@@ -201,12 +201,12 @@ export const teacherMenu = [
     },
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Bài thi',
     icon: <AppstoreOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Danh sách bài thi',
         href: ROUTES.TEACHER_EXAM_LIST,
         onClick: () => {
@@ -214,7 +214,7 @@ export const teacherMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thêm bài thi',
         href: ROUTES.TEACHER_NEW_EXAM,
         onClick: () => {
@@ -224,12 +224,12 @@ export const teacherMenu = [
     ],
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Ngân hàng câu hỏi',
     icon: <CloudOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Danh sách câu hỏi',
         href: ROUTES.TEACHER_QUESTION_LIST,
         onClick: () => {
@@ -237,7 +237,7 @@ export const teacherMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thêm câu hỏi',
         href: ROUTES.TEACHER_NEW_QUESTION,
         onClick: () => {
@@ -247,12 +247,12 @@ export const teacherMenu = [
     ],
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Người dùng',
     icon: <UserOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thông tin',
         href: ROUTES.TEACHER_INFORMATION,
         onClick: () => {
@@ -260,7 +260,7 @@ export const teacherMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Chỉnh sửa thông tin',
         href: ROUTES.TEACHER_EDIT,
         onClick: () => {
@@ -268,7 +268,7 @@ export const teacherMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         label: 'Đổi mật khẩu',
         href: ROUTES.TEACHER_CHANGE_PASSWORD,
         onClick: () => {
@@ -278,12 +278,12 @@ export const teacherMenu = [
     ],
   },
   {
-    key: uuid(),
+    key: v4(),
     label: 'Hoạt động',
     icon: <BellOutlined />,
     children: [
       {
-        key: uuid(),
+        key: v4(),
         label: 'Thông báo',
         href: ROUTES.TEACHER_NOTICE,
         onClick: () => {
@@ -291,7 +291,7 @@ export const teacherMenu = [
         },
       },
       {
-        key: uuid(),
+        key: v4(),
         href: ROUTES.TEACHER_LOGOUT,
         onClick: () => {
           router.push(ROUTES.TEACHER_LOGOUT);

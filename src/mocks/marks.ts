@@ -1,9 +1,9 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 export const MARKS_STUDENT_MOCK = Array(100)
   .fill(null)
   .map((_, index) => ({
-    id: uuid(),
+    id: v4(),
     title: 'It is a long established fact that a reader will be distracted',
     range: index % 4,
     maxPoint: 10,
@@ -13,7 +13,7 @@ export const MARKS_STUDENT_MOCK = Array(100)
     questions: Array(10)
       .fill(null)
       .map((_, subIndex) => ({
-        id: uuid(),
+        id: v4(),
         type: '__1__',
         title: 'Tiêu đề câu hỏi',
         range: 50,

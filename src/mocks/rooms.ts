@@ -1,14 +1,14 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 export const ROOMS_DETAIL_MOCK = {
-  id: uuid(),
+  id: v4(),
   title: 'Phòng thi số 7',
   workingTime: 100,
   shuffle: true,
   createdAt: new Date(),
   startAt: new Date(),
   teacher: {
-    id: uuid(),
+    id: v4(),
     code: 'GV1001',
     fullname: 'Bùi Quốc Khải',
     gender: 0,
@@ -20,7 +20,7 @@ export const ROOMS_DETAIL_MOCK = {
       'https://mymodernmet.com/wp/wp-content/uploads/archive/9YPBjDyXBmK6zd25PAM1_gesichtermix14.jpg',
   },
   exam: {
-    id: uuid(),
+    id: v4(),
     title: 'It is a long established fact that a reader will be distracted',
     range: 2,
     maxPoint: 10,
@@ -28,7 +28,7 @@ export const ROOMS_DETAIL_MOCK = {
     verified: true,
     createdAt: new Date(),
     createdBy: {
-      id: uuid(),
+      id: v4(),
       code: 'GV1001',
       fullname: 'Bùi Quốc Khải',
       gender: 0,
@@ -42,7 +42,7 @@ export const ROOMS_DETAIL_MOCK = {
     questions: Array(10)
       .fill(null)
       .map(() => ({
-        id: uuid(),
+        id: v4(),
         type: '__1__',
         title: 'Tiêu đề câu hỏi',
         range: 50,

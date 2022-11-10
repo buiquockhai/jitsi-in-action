@@ -1,7 +1,7 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 export const ROOMING_EXAMS_MOCK = {
-  id: uuid(),
+  id: v4(),
   title: 'It is a long established fact that a reader will be distracted',
   range: 4,
   maxPoint: 10,
@@ -10,7 +10,7 @@ export const ROOMING_EXAMS_MOCK = {
   questions: Array(10)
     .fill(null)
     .map(() => ({
-      id: uuid(),
+      id: v4(),
       type: '__1__',
       title: 'Tiêu đề câu hỏi',
       range: 50,

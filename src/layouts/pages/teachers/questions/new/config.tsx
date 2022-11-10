@@ -16,7 +16,7 @@ import { usePreview } from '@hook/system/usePreview';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
 import { ANPHABET, QUESTION_RANGE, QUESTION_TYPE } from '@util/constant';
 import { isArray, isNil } from 'lodash';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
   const [onPreview] = usePreview();
@@ -33,7 +33,7 @@ const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
   useEffect(() => {
     if (isArray(answers)) {
       const formatAnswers = answers?.map((item, index) =>
-        isNil(item) ? { content: '', id: uuid(), label: ANPHABET[index] } : item
+        isNil(item) ? { content: '', id: v4(), label: ANPHABET[index] } : item
       );
       form.setFieldValue('answers', formatAnswers);
     }

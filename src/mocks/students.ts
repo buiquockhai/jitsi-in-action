@@ -1,9 +1,9 @@
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 export const STUDENTS_MOCK = Array(100)
   .fill(null)
   .map(() => ({
-    id: uuid(),
+    id: v4(),
     code: '1711726',
     fullname: 'Bùi Quốc Khải',
     gender: 0,

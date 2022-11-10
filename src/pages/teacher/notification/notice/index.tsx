@@ -1,7 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import { roles } from '@util/constant';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { uuid } from 'uuidv4';
+import { v4  } from 'uuid';
 
 const Notification: NextPage = () => {
   return (
@@ -11,7 +11,7 @@ const Notification: NextPage = () => {
           .fill(null)
           .map(() => (
             <div
-              key={uuid()}
+              key={v4()}
               className="rounded-sm bg-blue-50 border-blue-300 border p-5 flex flex-col"
             >
               <p className="font-semibold">Tiêu đề thông báo</p>
