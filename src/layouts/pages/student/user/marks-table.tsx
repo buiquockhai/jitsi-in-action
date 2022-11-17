@@ -5,7 +5,7 @@ import moment from 'moment';
 import React, { useMemo, useState } from 'react';
 import ViewExam from './view-exam';
 
-const MarksTable: React.FC<any> = () => {
+const MarksTable = () => {
   const [data, setData] = useState<any>({});
   const [open, setOpen] = useState<boolean>(false);
 

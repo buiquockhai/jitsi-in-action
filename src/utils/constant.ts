@@ -67,8 +67,8 @@ export const EXAM_RANGE = {
 };
 
 export const GENDER = {
-  0: 'Nam',
-  1: 'Nữ',
+  male: 'Nam',
+  female: 'Nữ',
 };
 
 export const VERIFY_STATUS = {

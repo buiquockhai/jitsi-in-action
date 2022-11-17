@@ -13,7 +13,7 @@ import {
 } from 'antd';
 import ImgCrop from 'antd-img-crop';
 import moment from 'moment';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 import { useState } from 'react';
 
 const StudentUpdateInformation: NextPage = () => {
@@ -155,13 +155,10 @@ const initialValues: {
   avatar: [],
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
-  roles.student
-);
+export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+  return {
+    props: {},
+  };
+}, roles.student);
 
 export default StudentUpdateInformation;

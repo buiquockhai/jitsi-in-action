@@ -28,6 +28,7 @@
       "@query/*": ["query/*"],
       "@context/*": ["contexts/*"],
       "@schema/*": ["schemas/*"],
+      "@service/*": ["services/*"],
       "@hoc/*": ["hocs/*"]
     },
     "incremental": true

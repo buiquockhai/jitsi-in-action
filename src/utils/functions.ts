@@ -58,7 +58,7 @@ export const removeAuthentication = () => {
   Cookies.remove(__fullname);
 };
 
-export async function ErrorHanlder<T>(
+export async function ErrorHandler<T>(
   originalFunction: () => T,
   setLoading: (loading: boolean) => void
 ) {

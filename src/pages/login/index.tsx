@@ -4,12 +4,12 @@ import { useRouter } from 'next/router';
 import { useState } from 'react';
 import BlankLayout from '@layout/utils/blank-layout';
 import Registration from '@layout/pages/login/registration';
-import { ErrorHanlder, getCookie, setAuthentication } from '@util/functions';
+import { ErrorHandler, getCookie, setAuthentication } from '@util/functions';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { __fullname, __role, __token, __username } from '@util/constant';
-import { client } from '@util/apis';
 import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
+import { userService } from '@service/router';
 
 interface LoginFormProps {
   username: string;
@@ -36,8 +36,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async ({ username, password }: LoginFormProps) => {
-    const res = await ErrorHanlder(
-      () => client.login({ username, password }),
+    const res = await ErrorHandler(
+      () => userService.login({ username, password }),
       setLoading
     );
     if (res.data) {
