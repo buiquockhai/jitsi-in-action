@@ -10,12 +10,6 @@ export const __role = '__role';
 
 export const __fullname = '__fullname';
 
-export const roles = {
-  admin: 'admin',
-  teacher: 'teacher',
-  student: 'student',
-};
-
 export const ANPHABET = {
   0: 'A',
   1: 'B',
@@ -66,10 +60,27 @@ export const EXAM_RANGE = {
   3: 'Khó',
 };
 
-export const GENDER = {
+export const GenderEnum = {
   male: 'Nam',
   female: 'Nữ',
-};
+} as const;
+
+export type GenderTypes = keyof typeof GenderEnum;
+
+export const RoleEnum = {
+  admin: 'admin',
+  teacher: 'teacher',
+  student: 'student',
+} as const;
+
+export type RoleTypes = keyof typeof RoleEnum;
+
+export const DeleteFlagEnum = {
+  Y: 'Y',
+  N: 'N',
+} as const;
+
+export type DeleteFlagTypes = keyof typeof DeleteFlagEnum;
 
 export const VERIFY_STATUS = {
   0: 'Chưa kiểm duyệt',

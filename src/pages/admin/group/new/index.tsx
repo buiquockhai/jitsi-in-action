@@ -1,6 +1,6 @@
 import withAuth from '@hoc/withAuth';
 import TableTransfer from '@layout/pages/admin/group/new/transfer-table';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { Button } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.admin
+  RoleEnum.admin
 );
 
 export default NewGroup;

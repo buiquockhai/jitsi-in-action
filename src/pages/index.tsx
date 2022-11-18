@@ -5,7 +5,7 @@ import HomeLayout from '@layout/utils/home-layout';
 import StudentCalendar from '@layout/pages/student/schedule';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import withAuth from '@hoc/withAuth';
-import { roles, __role } from '@util/constant';
+import { RoleEnum, __role } from '@util/constant';
 import { ROUTES } from '@util/routes';
 
 const Home = () => {
@@ -33,7 +33,7 @@ const Home = () => {
 
 export const getServerSideProps: GetServerSideProps = withAuth(
   async (context: GetServerSidePropsContext) => {
-    if (context.req.cookies?.__role === roles.admin) {
+    if (context.req.cookies?.__role === RoleEnum.admin) {
       context.res.writeHead(302, { Location: ROUTES.ADMIN_ACCOUNT_LIST });
       context.res.end();
       return { props: {} };

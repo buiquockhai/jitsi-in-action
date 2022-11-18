@@ -1,7 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import GroupTable from '@layout/pages/admin/group/list/group-table';
 import MemberTable from '@layout/pages/admin/group/list/member-table';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useState } from 'react';
 
@@ -22,7 +22,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.admin
+  RoleEnum.admin
 );
 
 export default AdminGroupList;

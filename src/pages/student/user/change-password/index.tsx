@@ -1,14 +1,30 @@
 import withAuth from '@hoc/withAuth';
-import { roles } from '@util/constant';
-import { Form, Input, Button } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import React from 'react';
+import { RoleEnum } from '@util/constant';
+import { Form, Input, Button } from 'antd';
+import { GetServerSideProps } from 'next';
+import { message } from 'antd';
+import { userMutationUserChangePassword } from '@hook/user/useMutationChangePassword';
+
+type FormProps = {
+  oldPassword: string;
+  newPassword: string;
+  confirmationPassword: string;
+};
 
 const ChangePassword: React.FC<any> = () => {
   const [form] = Form.useForm();
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
+  const userChangePasswordMutation = userMutationUserChangePassword();
+
+  const handleSubmit = (values: FormProps) => {
+    if (values?.newPassword !== values?.confirmationPassword) {
+      return message.warn('Mật khẩu xác nhận không trùng khớp');
+    }
+    userChangePasswordMutation.mutate({
+      old_password: values?.oldPassword,
+      new_password: values?.newPassword,
+    });
   };
 
   return (
@@ -16,7 +32,6 @@ const ChangePassword: React.FC<any> = () => {
       <div className="max-w-xl w-full rounded-sm bg-white p-5">
         <Form
           labelCol={{ span: 9 }}
-          initialValues={initialValues}
           onFinish={handleSubmit}
           autoComplete="off"
           form={form}
@@ -47,7 +62,7 @@ const ChangePassword: React.FC<any> = () => {
             </Form.Item>
 
             <div className="w-full flex items-end justify-end">
-              <Button key="submit" type="primary">
+              <Button htmlType="submit" type="primary">
                 Lưu
               </Button>
             </div>
@@ -58,23 +73,10 @@ const ChangePassword: React.FC<any> = () => {
   );
 };
 
-const initialValues: {
-  oldPassword: string;
-  newPassword: string;
-  confirmationPassword: string;
-} = {
-  oldPassword: '',
-  newPassword: '',
-  confirmationPassword: '',
-};
-
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
-  roles.student
-);
+export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+  return {
+    props: {},
+  };
+}, RoleEnum.student);
 
 export default ChangePassword;

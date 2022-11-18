@@ -3,7 +3,7 @@ import PageHeaderExamsCreation from '@layout/pages/teachers/exams/new/page-heade
 import QuestionDefine from '@layout/pages/teachers/exams/new/question-define';
 import QuestionTree from '@layout/pages/teachers/exams/new/question-tree';
 import { ANSWER_MOCK } from '@mock/answers';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { Form } from 'antd';
 import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 
@@ -55,7 +55,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.teacher
+  RoleEnum.teacher
 );
 
 export default TeacherExams;

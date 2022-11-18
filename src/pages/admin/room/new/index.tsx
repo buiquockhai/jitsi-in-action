@@ -16,7 +16,7 @@ import { GROUPS_MOCK } from '@mock/groups';
 import { TEACHERS_MOCK } from '@mock/teachers';
 import moment from 'moment';
 import withAuth from '@hoc/withAuth';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 
 const NewRoomPage: NextPage = () => {
   const [form] = Form.useForm();
@@ -196,7 +196,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.admin
+  RoleEnum.admin
 );
 
 export default NewRoomPage;

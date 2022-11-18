@@ -1,7 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import ExamPane from '@layout/pages/student/start/exam';
 import MeetingPane from '@layout/pages/student/start/meeting';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { Tabs } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 
@@ -28,7 +28,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.student
+  RoleEnum.student
 );
 
 export default StartPage;

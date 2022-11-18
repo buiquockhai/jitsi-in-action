@@ -4,7 +4,7 @@ import { Form, UploadFile } from 'antd';
 import QuestionPreview from '@layout/pages/teachers/questions/new/preview';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import withAuth from '@hoc/withAuth';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 
 const TeacherQuestions = () => {
   const [form] = Form.useForm();
@@ -64,7 +64,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.teacher
+  RoleEnum.teacher
 );
 
 export default TeacherQuestions;

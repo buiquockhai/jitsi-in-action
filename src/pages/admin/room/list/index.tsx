@@ -1,6 +1,6 @@
 import withAuth from '@hoc/withAuth';
 import RoomTable from '@layout/pages/admin/room/list/room-table';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 
 const AdminRoomList: NextPage = () => {
@@ -17,7 +17,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.admin
+  RoleEnum.admin
 );
 
 export default AdminRoomList;

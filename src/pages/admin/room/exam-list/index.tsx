@@ -1,7 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import ExamsTable from '@layout/pages/admin/room/exam-list';
 import ViewExam from '@layout/pages/admin/room/exam-list/view-exam';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { useState } from 'react';
 
@@ -32,7 +32,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.admin
+  RoleEnum.admin
 );
 
 export default AdminExamList;

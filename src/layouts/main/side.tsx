@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import { isArray } from 'lodash';
 import { adminMenu, studentMenu, teacherMenu } from '@util/menu';
 import Cookies from 'js-cookie';
-import { roles, __role } from '@util/constant';
+import { RoleEnum, __role } from '@util/constant';
 import { useSystemContext } from '@context/system';
 
 const MenuSlide: React.FC<any> = () => {
@@ -16,10 +16,10 @@ const MenuSlide: React.FC<any> = () => {
     const role = Cookies.get(__role);
     let result = studentMenu;
     switch (role) {
-      case roles.admin:
+      case RoleEnum.admin:
         result = adminMenu;
         break;
-      case roles.teacher:
+      case RoleEnum.teacher:
         result = teacherMenu;
         break;
       default:

@@ -1,11 +1,11 @@
 import React from 'react';
-import dayjs from 'dayjs';
+import moment from 'moment';
 import { AntDesignOutlined } from '@ant-design/icons';
 import { Avatar, Button, Descriptions } from 'antd';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@util/routes';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
-import { GENDER } from '@util/constant';
+import { GenderEnum } from '@util/constant';
 
 const StudentInformationCard = () => {
   const router = useRouter();
@@ -39,10 +39,10 @@ const StudentInformationCard = () => {
         <Descriptions.Item label="Mã học sinh">{user?.code}</Descriptions.Item>
         <Descriptions.Item label="Tên đầy đủ">{user?.name}</Descriptions.Item>
         <Descriptions.Item label="Giới tính">
-          {GENDER[user?.gender ?? '']}
+          {GenderEnum[user?.gender ?? '']}
         </Descriptions.Item>
         <Descriptions.Item label="Ngày sinh">
-          {dayjs(user?.date_of_birth).format('DD/MM/YYYY')}
+          {moment(user?.date_of_birth).format('DD/MM/YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="Lớp chủ nhiệm">
           {user?.group_title}

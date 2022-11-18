@@ -8,7 +8,13 @@ import {
 import fetcher from '@util/fetcher';
 import { __token } from '@util/constant';
 import { Client } from '@util/apis';
-import { GetUserDetailResponse } from './types';
+import {
+  GetUserDetailResponse,
+  GetUserListRequest,
+  GetUserListResponse,
+  UpdateUserDetailRequest,
+  UpdateUserPasswordRequest,
+} from './types';
 
 class UserService extends Client {
   public login(data: { username: string; password: string }) {
@@ -19,6 +25,15 @@ class UserService extends Client {
     });
   }
 
+  public getUserList(req: GetUserListRequest) {
+    return fetcher<BaseResponse<GetUserListResponse[]>>(
+      `${this.baseUrl}/v1/user?${qs.stringify(req)}`,
+      {
+        headers: this.privateHeaders,
+      }
+    );
+  }
+
   public getUserDetail() {
     return fetcher<BaseResponse<GetUserDetailResponse>>(
       `${this.baseUrl}/v1/user/detail`,
@@ -26,6 +41,22 @@ class UserService extends Client {
         headers: this.privateHeaders,
       }
     );
+  }
+
+  public updateUserDetail(req: UpdateUserDetailRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/user`, {
+      headers: this.privateHeaders,
+      method: 'PUT',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public updateUserPassword(req: UpdateUserPasswordRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/user/password`, {
+      headers: this.privateHeaders,
+      method: 'PUT',
+      body: JSON.stringify(req),
+    });
   }
 
   public getQuestions(params: GetQuestionRequest) {

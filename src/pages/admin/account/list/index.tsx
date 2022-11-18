@@ -1,9 +1,9 @@
 import withAuth from '@hoc/withAuth';
 import StudentAccountTable from '@layout/pages/admin/account/student-table';
 import TeacherAccountTable from '@layout/pages/admin/account/teacher-table';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { Tabs } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { GetServerSideProps, NextPage } from 'next';
 
 const AccountList: NextPage = () => {
   return (
@@ -22,13 +22,10 @@ const AccountList: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
-  roles.admin
-);
+export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+  return {
+    props: {},
+  };
+}, RoleEnum.admin);
 
 export default AccountList;

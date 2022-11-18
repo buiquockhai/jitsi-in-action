@@ -4,7 +4,7 @@ import {
   CopyOutlined,
 } from '@ant-design/icons';
 import withAuth from '@hoc/withAuth';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { copy } from '@util/functions';
 import { Button, Form, Input, message, Popconfirm } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
@@ -109,7 +109,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.admin
+  RoleEnum.admin
 );
 
 export default SponsorSetting;

@@ -1,8 +1,8 @@
 import withAuth from '@hoc/withAuth';
 import TeacherInfomationCard from '@layout/pages/teachers/user/card';
 import MarksTable from '@layout/pages/teachers/user/marks-table';
-import { roles } from '@util/constant';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { RoleEnum } from '@util/constant';
+import { GetServerSideProps, NextPage } from 'next';
 
 const TeacherInfomation: NextPage = () => {
   return (
@@ -13,13 +13,10 @@ const TeacherInfomation: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
-  roles.teacher
-);
+export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+  return {
+    props: {},
+  };
+}, RoleEnum.teacher);
 
 export default TeacherInfomation;

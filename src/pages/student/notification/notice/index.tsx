@@ -1,5 +1,5 @@
 import withAuth from '@hoc/withAuth';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 import { v4  } from 'uuid';
 
@@ -29,7 +29,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.student
+  RoleEnum.student
 );
 
 export default Notification;

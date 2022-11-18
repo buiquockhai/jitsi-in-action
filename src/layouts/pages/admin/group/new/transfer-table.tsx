@@ -1,5 +1,5 @@
 import { STUDENTS_MOCK } from '@mock/students';
-import { GENDER } from '@util/constant';
+import { GenderEnum } from '@util/constant';
 import { Table, Tag, Transfer } from 'antd';
 import difference from 'lodash/difference';
 import React, { useState } from 'react';
@@ -23,7 +23,7 @@ const leftTableColumns: any = [
   {
     dataIndex: 'gender',
     title: 'Giới tính',
-    render: (gender) => <Tag>{GENDER[gender]}</Tag>,
+    render: (gender) => <Tag>{GenderEnum[gender]}</Tag>,
     width: '20%',
   },
   {

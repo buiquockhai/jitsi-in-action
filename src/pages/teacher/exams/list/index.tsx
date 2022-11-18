@@ -2,7 +2,7 @@ import withAuth from '@hoc/withAuth';
 import ExamsTable from '@layout/pages/teachers/exams/list';
 import ViewExam from '@layout/pages/teachers/exams/list/view-exam';
 import SlideLayout from '@layout/utils/slide-layout';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { Button } from 'antd';
 import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import { useState } from 'react';
@@ -37,7 +37,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.teacher
+  RoleEnum.teacher
 );
 
 TeacherExams.layout = SlideLayout;

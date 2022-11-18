@@ -1,28 +1,43 @@
 import {
   DeleteOutlined,
-  EditOutlined,
   EyeOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { TEACHERS_MOCK } from '@mock/teachers';
+import { GET_USER_LIST, useFetchUserList } from '@hook/user/useFetchUserList';
+import { userMutationUserDetail } from '@hook/user/useMutationUserDetail';
+import { GetUserListResponse } from '@service/user/types';
+import { DeleteFlagEnum, RoleEnum } from '@util/constant';
 import { Button, Popconfirm, Table } from 'antd';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import TeacherDetail from './teacher-detail';
 
-const TeacherAccountTable: React.FC<any> = () => {
-  const [open, setOpen] = useState<boolean>(false);
-  const [data, setData] = useState<any>({});
+const TeacherAccountTable = () => {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState<Partial<GetUserListResponse>>({});
 
-  const handleBindingData = (row) => {
+  const userList = useFetchUserList({
+    role: RoleEnum.teacher,
+  });
+
+  const mutationUser = userMutationUserDetail([GET_USER_LIST]);
+
+  const handleBindingData = (row: GetUserListResponse) => {
     setData(row);
     setOpen(true);
+  };
+
+  const handleRemove = (id: string) => {
+    mutationUser.mutate({
+      id: id,
+      deleted: DeleteFlagEnum.Y,
+    });
   };
 
   const columns: any = useMemo(
     () => [
       {
         title: 'Tên đầy đủ',
-        dataIndex: 'fullname',
+        dataIndex: 'name',
         width: '50%',
       },
       {
@@ -39,7 +54,7 @@ const TeacherAccountTable: React.FC<any> = () => {
         title: 'Hoạt động',
         dataIndex: '',
         width: '10%',
-        render: (row) => {
+        render: (row: GetUserListResponse) => {
           return (
             <div className="flex flex-row gap-3 items-center">
               <Button
@@ -51,6 +66,7 @@ const TeacherAccountTable: React.FC<any> = () => {
               <Popconfirm
                 title="Bạn có chắc chắn xoá？"
                 icon={<QuestionCircleOutlined />}
+                onConfirm={() => handleRemove(row.id)}
               >
                 <Button icon={<DeleteOutlined />} size="small" type="link" danger />
               </Popconfirm>
@@ -62,19 +78,10 @@ const TeacherAccountTable: React.FC<any> = () => {
     []
   );
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
   return (
     <div className="w-full col-span-2 bg-white rounded-sm">
       <TeacherDetail open={open} data={data} onClose={setOpen.bind(null, false)} />
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={TEACHERS_MOCK}
-        onChange={onChange}
-      />
+      <Table size="small" columns={columns} dataSource={userList} />
     </div>
   );
 };

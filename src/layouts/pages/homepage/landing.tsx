@@ -4,7 +4,7 @@ import Container from '@layout/main/container';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 
 const Landing = () => {
   const { push } = useRouter();
@@ -15,7 +15,7 @@ const Landing = () => {
   };
 
   const handleViewSchedule = () => {
-    push(role === roles.teacher ? ROUTES.TEACHER_SCHEDULE : ROUTES.STUDENT_SCHEDULE);
+    push(role === RoleEnum.teacher ? ROUTES.TEACHER_SCHEDULE : ROUTES.STUDENT_SCHEDULE);
   };
 
   return (
@@ -62,7 +62,7 @@ const Landing = () => {
               <img
                 className="h-[50vh]"
                 src={
-                  role === roles.teacher
+                  role === RoleEnum.teacher
                     ? '/assets/__home_page.svg'
                     : '/assets/__home_page_student.svg'
                 }

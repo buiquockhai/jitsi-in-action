@@ -1,6 +1,8 @@
 import withAuth from '@hoc/withAuth';
 import { usePreview } from '@hook/system/usePreview';
-import { roles } from '@util/constant';
+import { GET_USER_DETAIL, useFetchUserDetail } from '@hook/user/useFetchUserDetail';
+import { userMutationUserDetail } from '@hook/user/useMutationUserDetail';
+import { GenderEnum, GenderTypes, RoleEnum } from '@util/constant';
 import {
   Button,
   DatePicker,
@@ -14,7 +16,19 @@ import {
 import ImgCrop from 'antd-img-crop';
 import moment from 'moment';
 import { NextPage } from 'next';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+
+type FormProps = {
+  code: string;
+  fullname: string;
+  gender: GenderTypes;
+  dateOfBirth: any;
+  class: string;
+  phone: string;
+  address: string;
+  contact: string;
+  avatar: UploadFile[];
+};
 
 const TeacherUpdateInformation: NextPage = () => {
   const [form] = Form.useForm();
@@ -22,22 +36,53 @@ const TeacherUpdateInformation: NextPage = () => {
 
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
-  const avatar = Form.useWatch('avatar', form);
+  const user = useFetchUserDetail();
+  const userMutation = userMutationUserDetail([GET_USER_DETAIL]);
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
+  // const avatar = Form.useWatch('avatar', form);
+
+  const handleSubmit = (values: FormProps) => {
+    userMutation.mutate({
+      id: user?.id ?? '',
+      address: values?.address,
+      group_title: values?.class,
+      code: values?.code,
+      contact: values?.contact,
+      date_of_birth: values?.dateOfBirth?.toISOString(),
+      name: values?.fullname,
+      gender: values?.gender,
+      phone: values?.phone,
+    });
   };
 
   const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
   };
 
+  useEffect(() => {
+    if (user) {
+      form.setFieldsValue({
+        code: user?.code ?? '',
+        fullname: user?.name ?? '',
+        gender: user?.gender ?? 'male',
+        dateOfBirth: moment(
+          moment(user.date_of_birth).format('DD/MM/YYYY'),
+          'DD/MM/YYYY'
+        ),
+        class: user?.group_title ?? '',
+        phone: user?.phone ?? '',
+        address: user?.address ?? '',
+        contact: user?.contact ?? '',
+        avatar: [],
+      });
+    }
+  }, [user]);
+
   return (
     <div className="w-full flex py-10 items-center justify-center">
       <div className="max-w-xl w-full rounded-sm bg-white p-5">
         <Form
           labelCol={{ span: 7 }}
-          initialValues={initialValues}
           onFinish={handleSubmit}
           autoComplete="off"
           form={form}
@@ -81,8 +126,11 @@ const TeacherUpdateInformation: NextPage = () => {
               rules={[{ required: true, message: 'Vui lòng nhập tên đầy đủ' }]}
             >
               <Radio.Group>
-                <Radio value={0}>Nam</Radio>
-                <Radio value={1}>Nữ</Radio>
+                {Object.entries(GenderEnum).map(([key, value]) => (
+                  <Radio key={key} value={key}>
+                    {value}
+                  </Radio>
+                ))}
               </Radio.Group>
             </Form.Item>
             <Form.Item
@@ -122,7 +170,7 @@ const TeacherUpdateInformation: NextPage = () => {
             </Form.Item>
 
             <div className="w-full flex items-end justify-end">
-              <Button key="submit" type="primary">
+              <Button htmlType="submit" type="primary">
                 Lưu
               </Button>
             </div>
@@ -133,31 +181,9 @@ const TeacherUpdateInformation: NextPage = () => {
   );
 };
 
-const initialValues: {
-  code: string;
-  fullname: string;
-  gender: number;
-  dateOfBirth: any;
-  class: string;
-  phone: string;
-  address: string;
-  contact: string;
-  avatar: UploadFile[];
-} = {
-  code: '1711726',
-  fullname: 'Bùi Quốc Khải',
-  gender: 0,
-  dateOfBirth: moment('26/10/1999', 'DD/MMYYYY'),
-  class: 'KHMT02',
-  phone: '0898463002',
-  address: 'Trường Thọ, Thủ Đức, Tp Hồ Chí Minh',
-  contact: 'https://www.google.com.vn/?hl=vi',
-  avatar: [],
-};
-
 export const getServerSideProps = withAuth(
   async () => ({ props: {} }),
-  roles.teacher
+  RoleEnum.teacher
 );
 
 export default TeacherUpdateInformation;

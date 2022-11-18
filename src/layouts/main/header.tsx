@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { removeAuthentication } from '@util/functions';
 import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { adminMenu, studentMenu, teacherMenu } from '@util/menu';
 import { v4  } from 'uuid';
 
@@ -27,7 +27,7 @@ const Header = () => {
     let title = '';
 
     switch (role) {
-      case roles.admin:
+      case RoleEnum.admin:
         title = 'Dành cho quản trị viên';
         adminMenu.forEach((element) => {
           const { key, label, icon, children } = element;
@@ -40,7 +40,7 @@ const Header = () => {
           menuDataFlatten.push(...children);
         });
         break;
-      case roles.student:
+      case RoleEnum.student:
         title = 'Dành cho học sinh';
         studentMenu.forEach((element) => {
           const { key, label, icon, children, onClick } = element;

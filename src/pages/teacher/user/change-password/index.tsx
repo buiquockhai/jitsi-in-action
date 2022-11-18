@@ -1,14 +1,28 @@
 import withAuth from '@hoc/withAuth';
-import { roles } from '@util/constant';
-import { Form, Input, Button } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
-import React from 'react';
+import { userMutationUserChangePassword } from '@hook/user/useMutationChangePassword';
+import { RoleEnum } from '@util/constant';
+import { Form, Input, Button, message } from 'antd';
+import { GetServerSideProps } from 'next';
 
-const ChangePassword: React.FC<any> = () => {
+type FormProps = {
+  oldPassword: string;
+  newPassword: string;
+  confirmationPassword: string;
+};
+
+const ChangePassword = () => {
   const [form] = Form.useForm();
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
+  const userChangePasswordMutation = userMutationUserChangePassword();
+
+  const handleSubmit = (values: FormProps) => {
+    if (values?.newPassword !== values?.confirmationPassword) {
+      return message.warn('Mật khẩu xác nhận không trùng khớp');
+    }
+    userChangePasswordMutation.mutate({
+      old_password: values?.oldPassword,
+      new_password: values?.newPassword,
+    });
   };
 
   return (
@@ -47,7 +61,7 @@ const ChangePassword: React.FC<any> = () => {
             </Form.Item>
 
             <div className="w-full flex items-end justify-end">
-              <Button key="submit" type="primary">
+              <Button htmlType="submit" type="primary">
                 Lưu
               </Button>
             </div>
@@ -68,13 +82,10 @@ const initialValues: {
   confirmationPassword: '',
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
-  roles.teacher
-);
+export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+  return {
+    props: {},
+  };
+}, RoleEnum.teacher);
 
 export default ChangePassword;

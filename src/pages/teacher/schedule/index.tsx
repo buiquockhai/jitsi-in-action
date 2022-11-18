@@ -1,6 +1,6 @@
 import withAuth from '@hoc/withAuth';
 import TeacherCalendar from '@layout/pages/teachers/schedule';
-import { roles } from '@util/constant';
+import { RoleEnum } from '@util/constant';
 import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 
 const TeacherSchedule: NextPage = () => {
@@ -19,7 +19,7 @@ export const getServerSideProps: GetServerSideProps = withAuth(
       props: {},
     };
   },
-  roles.teacher
+  RoleEnum.teacher
 );
 
 export default TeacherSchedule;
