@@ -9,17 +9,28 @@ import {
   Upload,
   UploadFile,
   UploadProps,
+  FormInstance,
 } from 'antd';
 import React, { Fragment, useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
 import { usePreview } from '@hook/system/usePreview';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { ANPHABET, QUESTION_RANGE, QUESTION_TYPE } from '@util/constant';
+import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { isArray, isNil } from 'lodash';
-import { v4  } from 'uuid';
+import { v4 } from 'uuid';
+import { useSystemContext } from '@context/system';
+import { useFetchFolder } from '@hook/question/useFetchFolder';
 
-const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
+type FormProps = {
+  form: FormInstance;
+};
+
+const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
   const [onPreview] = usePreview();
+
+  const { userId } = useSystemContext();
+
+  const folderList = useFetchFolder({ created_id: userId });
 
   const answers = Form.useWatch('answers', form);
   const type = Form.useWatch('type', form);
@@ -41,13 +52,20 @@ const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
 
   return (
     <div className="w-full rounded-sm bg-white p-5">
+      <Form.Item name="folderId" label="Thư mục">
+        <Select placeholder="Chọn thư mục" allowClear>
+          {folderList?.map((item) => (
+            <Select.Option value={item?.id}>{item.name}</Select.Option>
+          ))}
+        </Select>
+      </Form.Item>
       <Form.Item
         name="type"
         label="Loại câu hỏi"
         rules={[{ required: true, message: 'Vui lòng chọn loại câu hỏi' }]}
       >
         <Radio.Group>
-          {Object.entries(QUESTION_TYPE)?.map(([key, value]) => (
+          {Object.entries(QuestionTypeEnum)?.map(([key, value]) => (
             <Radio.Button value={key}>{value}</Radio.Button>
           ))}
         </Radio.Group>
@@ -64,14 +82,14 @@ const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
         label="Mức độ khó"
         rules={[{ required: true, message: 'Vui lòng nhập tiêu đề' }]}
       >
-        <Slider step={25} marks={QUESTION_RANGE} />
+        <Slider max={4} step={1} marks={LevelEnum} />
       </Form.Item>
 
       <Form.Item
         name="singleCorrect"
         label="Đáp án"
-        rules={[{ required: type == '__1__', message: 'Vui lòng chọn đáp án' }]}
-        hidden={type != '__1__'}
+        rules={[{ required: type == 'single', message: 'Vui lòng chọn đáp án' }]}
+        hidden={type != 'single'}
       >
         <Select placeholder="Chọn đáp án đúng" allowClear>
           {answers?.map((item) => (
@@ -83,8 +101,8 @@ const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
       <Form.Item
         name="multipleCorrect"
         label="Đáp án"
-        rules={[{ required: type == '__2__', message: 'Vui lòng chọn đáp án' }]}
-        hidden={type != '__2__'}
+        rules={[{ required: type == 'multiple', message: 'Vui lòng chọn đáp án' }]}
+        hidden={type != 'multiple'}
       >
         <Select placeholder="Chọn đáp án đúng" mode="multiple" allowClear>
           {answers?.map((item) => (
@@ -123,7 +141,7 @@ const CreationQuestionConfiguration: React.FC<any> = ({ form }) => {
         </ImgCrop>
       </Form.Item>
 
-      <Form.Item label="Đáp án" hidden={!['__1__', '__2__'].includes(type)}>
+      <Form.Item label="Đáp án">
         <Form.List name="answers">
           {(fields, { add, remove }) => {
             const handleRemove = (name) => {

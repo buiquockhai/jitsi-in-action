@@ -1,11 +1,22 @@
 import React from 'react';
-import { Button, Descriptions, Form, PageHeader, Popconfirm } from 'antd';
+import {
+  Button,
+  Descriptions,
+  Form,
+  PageHeader,
+  Popconfirm,
+  FormInstance,
+} from 'antd';
 import { useRouter } from 'next/router';
-import { QUESTION_RANGE, QUESTION_TYPE } from '@util/constant';
+import { LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import moment from 'moment';
 
-const PageHeaderQuestionCreation: React.FC<any> = ({ form }) => {
+type FormProps = {
+  form: FormInstance;
+};
+
+const PageHeaderQuestionCreation: React.FC<FormProps> = ({ form }) => {
   const router = useRouter();
 
   const point = Form.useWatch('point', form);
@@ -36,12 +47,10 @@ const PageHeaderQuestionCreation: React.FC<any> = ({ form }) => {
           {moment().format('LLL')}
         </Descriptions.Item>
         <Descriptions.Item label="Loại câu hỏi">
-          {QUESTION_TYPE?.[type]}
+          {QuestionTypeEnum?.[type]}
         </Descriptions.Item>
         <Descriptions.Item label="Điểm">{point}</Descriptions.Item>
-        <Descriptions.Item label="Mức độ">
-          {QUESTION_RANGE?.[range]}
-        </Descriptions.Item>
+        <Descriptions.Item label="Mức độ">{LevelEnum?.[range]}</Descriptions.Item>
       </Descriptions>
     </PageHeader>
   );

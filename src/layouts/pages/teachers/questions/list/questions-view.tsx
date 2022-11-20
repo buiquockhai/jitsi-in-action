@@ -1,45 +1,43 @@
-import { DataNode } from 'antd/lib/tree';
 import { useQuestionListContext } from './context';
 import { QuestionsTree } from './question-tree-view';
 import { QuestionsFolderView } from './questions-folder-view';
 import { QuestionListPath } from './questions-path-view';
 import { useEffect } from 'react';
-import { useFetchQuestion } from '@hook/question/useFetchQuestion';
-import { useFetchFolder } from '@hook/question/useFetchFolder';
+import { useFetchTree } from '@hook/question/useFetchTree';
+import { GetTreeResponse } from '@service/question/types';
 
-const treeData: DataNode[] = [
-  {
-    title: 'parent 0',
-    key: '0-0',
-    children: [
-      { title: 'leaf 0-0', key: '0-0-0', isLeaf: true },
-      { title: 'leaf 0-1', key: '0-0-1', isLeaf: true },
-    ],
-  },
-  {
-    title: 'parent 1',
-    key: '0-1',
-    children: [
-      { title: 'leaf 1-0', key: '0-1-0', isLeaf: true },
-      { title: 'leaf 1-1', key: '0-1-1', isLeaf: true },
-    ],
-  },
-  { title: 'parent 2', key: '0-2', isLeaf: true },
-  { title: 'parent 3', key: '0-3', isLeaf: true },
-];
+export const rawToDataNode = (raw?: GetTreeResponse) => {
+  const markupParent =
+    raw?.parents?.map(({ name, id, tb_questions }) => ({
+      key: id,
+      title: name,
+      children: tb_questions.map(({ id, title }) => ({
+        key: id,
+        title: title,
+        isLeaf: true,
+      })),
+    })) ?? [];
+
+  const markupLeaf =
+    raw?.aloneLeafs?.map(({ id, title }) => ({
+      key: id,
+      title: title,
+      isLeaf: true,
+    })) ?? [];
+
+  return [...markupParent, ...markupLeaf];
+};
 
 export function QuestionView() {
   const { setTreeNode } = useQuestionListContext();
-  const { data: questions } = useFetchQuestion();
-  const { data: folders } = useFetchFolder();
+
+  const tree = useFetchTree();
 
   useEffect(() => {
-    setTreeNode(treeData);
-  }, [setTreeNode]);
-
-  useEffect(() => {
-    console.log(questions);
-  }, [questions]);
+    if (tree) {
+      setTreeNode(rawToDataNode(tree));
+    }
+  }, [tree]);
 
   return (
     <div className="w-full flex flex-col gap-3 p-5">

@@ -2,16 +2,130 @@ import CreationQuestionConfiguration from '@layout/pages/teachers/questions/new/
 import PageHeaderQuestionCreation from '@layout/pages/teachers/questions/new/page-header';
 import { Form, UploadFile } from 'antd';
 import QuestionPreview from '@layout/pages/teachers/questions/new/preview';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import withAuth from '@hoc/withAuth';
-import { RoleEnum } from '@util/constant';
+import { RoleEnum, QuestionTypes, LevelTypes, ANPHABET } from '@util/constant';
+import { useNewQuestion } from '@hook/question/useNewQuestion';
+import { useEffect, useRef } from 'react';
+import { useRouter } from 'next/router';
+import { GET_QUESTION } from '@hook/question/keys';
+import { useFetchQuestionDetail } from '@hook/question/useFetchQuestionDetail';
+import { useUpdateQuestion } from '@hook/question/useUpdateQuestion';
+import { NewQuestionRequest } from '@service/question/types';
+
+type FormProps = {
+  type: QuestionTypes;
+  title: string;
+  range: LevelTypes;
+  point: number;
+  folderId: string;
+  questionContent: string;
+  singleCorrect: string;
+  multipleCorrect: string[];
+  questionImages: UploadFile[];
+  answers: Array<{
+    id: string;
+    label: string;
+    content: string;
+  }>;
+};
+
+const initialValues: FormProps = {
+  type: 'single',
+  title: '',
+  range: 0,
+  point: 0.25,
+  folderId: '',
+  questionContent: '',
+  questionImages: [],
+  answers: [],
+  singleCorrect: '',
+  multipleCorrect: [],
+};
 
 const TeacherQuestions = () => {
-  const [form] = Form.useForm();
+  const { query } = useRouter();
+  const isEdit = useRef(false);
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
+  const [form] = Form.useForm<FormProps>();
+
+  const questionDetail = useFetchQuestionDetail(query?.id as string);
+
+  const newQuestionMutation = useNewQuestion([GET_QUESTION]);
+  const updateQuestionMutation = useUpdateQuestion([GET_QUESTION]);
+
+  const handleCalculatePercent = (id: string, values: FormProps) => {
+    if (values.type === 'single') {
+      return id === values.singleCorrect ? 100 : 0;
+    }
+    return values.multipleCorrect.includes(id)
+      ? Math.round(100 / values.multipleCorrect.length)
+      : 0;
   };
+
+  const handleSubmit = async (values: FormProps) => {
+    const object: NewQuestionRequest = {
+      type: values.type,
+      level: values.range,
+      point: values.point,
+      title: values.title,
+      folder_id: values.folderId,
+      content: values.questionContent,
+      images:
+        values.questionImages?.length > 0
+          ? JSON.stringify(values.questionImages)
+          : undefined,
+      answer: values.answers.map((item) => ({
+        content: item.content,
+        percent: handleCalculatePercent(item.id, values),
+      })),
+    };
+
+    if (isEdit) {
+      await newQuestionMutation.mutate(object);
+      form.setFieldsValue(initialValues);
+    } else {
+      await updateQuestionMutation.mutate({
+        id: questionDetail?.id ?? '',
+        ...object,
+      });
+    }
+  };
+
+  useEffect(() => {
+    if (query?.id && questionDetail) {
+      isEdit.current = true;
+
+      form.setFieldsValue({
+        type: questionDetail.type,
+        title: questionDetail.title,
+        range: questionDetail.level,
+        point: questionDetail.point,
+        folderId: questionDetail.folder_id,
+        questionContent: questionDetail.content,
+        questionImages:
+          (questionDetail.images ?? '')?.length > 0
+            ? JSON.parse(questionDetail?.images ?? '')
+            : [],
+        answers: questionDetail.tb_answers.map((item, index) => ({
+          id: item.id,
+          content: item.content,
+          label: ANPHABET[index % 26],
+        })),
+        singleCorrect:
+          questionDetail.type === 'single'
+            ? questionDetail.tb_answers.find((item) => item.percent > 0)?.id
+            : '',
+        multipleCorrect:
+          questionDetail.type === 'multiple'
+            ? questionDetail.tb_answers.flatMap((item) =>
+                item.percent > 0 ? item.id : []
+              )
+            : [],
+      });
+    } else {
+      isEdit.current = false;
+    }
+  }, [query, questionDetail]);
 
   return (
     <Form
@@ -32,38 +146,10 @@ const TeacherQuestions = () => {
   );
 };
 
-const initialValues: {
-  type: string;
-  title: string;
-  range: number;
-  point: number;
-  questionContent: string;
-  singleCorrect: string;
-  multipleCorrect: string[];
-  questionImages: UploadFile[];
-  answers: Array<{
-    id: string;
-    label: string;
-    content: string;
-  }>;
-} = {
-  type: '__1__',
-  title: '',
-  range: 0,
-  point: 0.25,
-  questionContent: '',
-  questionImages: [],
-  answers: [],
-  singleCorrect: '',
-  multipleCorrect: [],
-};
-
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  async () => ({
+    props: {},
+  }),
   RoleEnum.teacher
 );
 

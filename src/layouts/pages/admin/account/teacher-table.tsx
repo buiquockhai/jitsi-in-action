@@ -4,7 +4,7 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { GET_USER_LIST, useFetchUserList } from '@hook/user/useFetchUserList';
-import { userMutationUserDetail } from '@hook/user/useMutationUserDetail';
+import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 import { GetUserListResponse } from '@service/user/types';
 import { DeleteFlagEnum, RoleEnum } from '@util/constant';
 import { Button, Popconfirm, Table } from 'antd';
@@ -19,7 +19,7 @@ const TeacherAccountTable = () => {
     role: RoleEnum.teacher,
   });
 
-  const mutationUser = userMutationUserDetail([GET_USER_LIST]);
+  const mutationUser = userUpdateUserDetail([GET_USER_LIST]);
 
   const handleBindingData = (row: GetUserListResponse) => {
     setData(row);

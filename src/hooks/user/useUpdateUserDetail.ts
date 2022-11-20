@@ -1,11 +1,11 @@
-import { QueryClient, useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { userService } from '@service/router';
 import { UpdateUserDetailRequest } from '@service/user/types';
 import { message } from 'antd';
 
-const queryClient = new QueryClient();
+export function userUpdateUserDetail(invalidateKeys?: Array<string | string[]>) {
+  const queryClient = useQueryClient();
 
-export function userMutationUserDetail(invalidateKeys?: string[]) {
   return useMutation({
     mutationFn: (data: UpdateUserDetailRequest) =>
       userService.updateUserDetail(data),
@@ -17,7 +17,9 @@ export function userMutationUserDetail(invalidateKeys?: string[]) {
     },
     onSettled: () => {
       if ((invalidateKeys ?? []).length > 0) {
-        queryClient.invalidateQueries({ queryKey: invalidateKeys });
+        invalidateKeys?.forEach((item) =>
+          queryClient.invalidateQueries({ queryKey: [item].flat() })
+        );
       }
     },
   });

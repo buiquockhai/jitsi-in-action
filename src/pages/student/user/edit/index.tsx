@@ -17,7 +17,7 @@ import { GetServerSideProps, NextPage } from 'next';
 import { useEffect, useState } from 'react';
 import { GET_USER_DETAIL, useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { GenderEnum } from '@util/constant';
-import { userMutationUserDetail } from '@hook/user/useMutationUserDetail';
+import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 
 type FormProps = {
   code: string;
@@ -38,7 +38,7 @@ const StudentUpdateInformation: NextPage = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const user = useFetchUserDetail();
-  const userMutation = userMutationUserDetail([GET_USER_DETAIL]);
+  const userMutation = userUpdateUserDetail([GET_USER_DETAIL]);
 
   // const avatar = Form.useWatch('avatar', form);
 

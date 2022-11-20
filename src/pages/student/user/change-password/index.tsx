@@ -4,7 +4,7 @@ import { RoleEnum } from '@util/constant';
 import { Form, Input, Button } from 'antd';
 import { GetServerSideProps } from 'next';
 import { message } from 'antd';
-import { userMutationUserChangePassword } from '@hook/user/useMutationChangePassword';
+import { userUpdatePassword } from '@hook/user/useUpdatePassword';
 
 type FormProps = {
   oldPassword: string;
@@ -15,7 +15,7 @@ type FormProps = {
 const ChangePassword: React.FC<any> = () => {
   const [form] = Form.useForm();
 
-  const userChangePasswordMutation = userMutationUserChangePassword();
+  const userChangePasswordMutation = userUpdatePassword();
 
   const handleSubmit = (values: FormProps) => {
     if (values?.newPassword !== values?.confirmationPassword) {

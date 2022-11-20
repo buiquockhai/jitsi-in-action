@@ -6,6 +6,9 @@ export const ROUTES = {
 
   //   Teacher
   TEACHER_NEW_QUESTION: '/teacher/questions/new',
+  TEACHER_UPDATE_QUESTION: (id: string) => {
+    return `/teacher/questions/new?id=${id}`;
+  },
   TEACHER_QUESTION_LIST: '/teacher/questions/list',
   TEACHER_SCHEDULE: '/teacher/schedule',
   TEACHER_EXAM_LIST: '/teacher/exams/list',

@@ -4,14 +4,24 @@ import {
   QuestionCircleOutlined,
   EyeOutlined,
 } from '@ant-design/icons';
-import { EXAMS_MOCK } from '@mock/exams';
-import { EXAM_RANGE } from '@util/constant';
-import { Button, Popconfirm, Table, Tag } from 'antd';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import { useSystemContext } from '@context/system';
+import { useFetchExams } from '@hook/exam/useFetchExams';
+import { LevelEnum } from '@util/constant';
+import { Button, Popconfirm, Table, Tag } from 'antd';
+import { useMemo, FC } from 'react';
+import { ExamResponse } from '@service/exam/types';
 
-const ExamsTable: React.FC<{ setData: (data: any) => void }> = ({ setData }) => {
-  const columns: any = useMemo(
+type Props = {
+  onFocus: (id) => void;
+};
+
+const ExamsTable: FC<Props> = ({ onFocus }) => {
+  const { userId } = useSystemContext();
+
+  const examList = useFetchExams({ created_id: 'abc' });
+
+  const columns = useMemo(
     () => [
       {
         title: 'Tiêu đề',
@@ -20,11 +30,11 @@ const ExamsTable: React.FC<{ setData: (data: any) => void }> = ({ setData }) => 
       },
       {
         title: 'Độ khó',
-        dataIndex: 'range',
+        dataIndex: 'level',
         width: '20%',
         sorter: (a, b) => a.range - b.range,
-        render: (range) => <Tag color="green">{EXAM_RANGE[range]}</Tag>,
-        filters: Object.entries(EXAM_RANGE).map(([key, value]) => ({
+        render: (level) => <Tag color="green">{LevelEnum[level]}</Tag>,
+        filters: Object.entries(LevelEnum).map(([key, value]) => ({
           text: value,
           value: key,
         })),
@@ -32,35 +42,35 @@ const ExamsTable: React.FC<{ setData: (data: any) => void }> = ({ setData }) => 
       },
       {
         title: 'Điểm tối đa',
-        dataIndex: 'maxPoint',
+        dataIndex: 'max_point',
         width: '10%',
         sorter: (a, b) => a.maxPoint - b.maxPoint,
       },
       {
         title: 'Thời gian làm bài',
-        dataIndex: 'workingTime',
+        dataIndex: 'duration',
         width: '10%',
         sorter: (a, b) => a.workingTime - b.workingTime,
       },
       {
         title: 'Ngày tạo',
-        dataIndex: 'createdAt',
+        dataIndex: 'created_date',
         width: '20%',
-        sorter: (a, b) => a.createdAt - b.createdAt,
-        render: (createdAt) => moment(createdAt).format('LLL'),
+        sorter: (a, b) => a.created_date - b.created_date,
+        render: (created_date) => moment(created_date).format('LLL'),
       },
       {
         title: 'Hoạt động',
         dataIndex: '',
         width: '10%',
-        render: (row) => {
+        render: (row: ExamResponse) => {
           return (
             <div className="flex flex-row gap-3 items-center">
               <Button
                 icon={<EyeOutlined />}
                 size="small"
                 type="link"
-                onClick={setData.bind(null, row)}
+                onClick={() => onFocus(row.id)}
               />
               <Button icon={<EditOutlined />} size="small" type="link" />
               <Popconfirm
@@ -77,18 +87,7 @@ const ExamsTable: React.FC<{ setData: (data: any) => void }> = ({ setData }) => 
     []
   );
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
-  return (
-    <Table
-      size="small"
-      columns={columns}
-      dataSource={EXAMS_MOCK}
-      onChange={onChange}
-    />
-  );
+  return <Table size="small" columns={columns} dataSource={examList} />;
 };
 
 export default ExamsTable;

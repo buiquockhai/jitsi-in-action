@@ -1,9 +1,9 @@
-import { GetFolderRequest } from '@schema/questions';
 import { useQuery } from '@tanstack/react-query';
-import { userService } from '@service/router';
+import { questionService } from '@service/router';
+import { GET_FOLDER } from './keys';
+import { GetFolderRequest } from '@service/question/types';
 
-const queryKey = 'GET_FOLDER';
-
-export function useFetchFolder(params?: GetFolderRequest) {
-  return useQuery([queryKey], () => userService.getFolders(params ?? {}));
+export function useFetchFolder(req: GetFolderRequest) {
+  const res = useQuery([GET_FOLDER], () => questionService.getFolder(req));
+  return res.data?.data;
 }

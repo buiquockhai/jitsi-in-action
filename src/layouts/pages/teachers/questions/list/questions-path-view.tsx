@@ -1,12 +1,31 @@
 import { Breadcrumb, Button, Input } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useQuestionListContext } from './context';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@util/routes';
+import NewFolderModal from './folder/new-folder-modal';
+import UpdateFolderModal from './folder/update-fodler-modal';
 
 export function QuestionListPath() {
-  const { path, setPath } = useQuestionListContext();
+  const { push } = useRouter();
+  const {
+    path,
+    setPath,
+    newFolderOpen,
+    setNewFodlerOpen,
+    updateFolderData,
+    setUpdateFolderData,
+  } = useQuestionListContext();
 
   return (
     <div className="w-full flex flex-row gap-5 justify-between items-baseline">
+      <NewFolderModal open={newFolderOpen} onClose={() => setNewFodlerOpen(false)} />
+      <UpdateFolderModal
+        open={updateFolderData.open}
+        data={updateFolderData.data}
+        id={updateFolderData.id}
+        onClose={() => setUpdateFolderData({ open: false, data: '', id: '' })}
+      />
       <Breadcrumb>
         <Breadcrumb.Item>
           <button onClick={setPath.bind(null, [])}>Danh sách câu hỏi</button>
@@ -17,10 +36,16 @@ export function QuestionListPath() {
       </Breadcrumb>
 
       <div className="flex flex-row gap-2">
-        <Button icon={<PlusOutlined />} type="primary">
+        <Button
+          icon={<PlusOutlined />}
+          type="primary"
+          onClick={() => push(ROUTES.TEACHER_NEW_QUESTION)}
+        >
           Câu hỏi
         </Button>
-        <Button icon={<PlusOutlined />}>Thư mục</Button>
+        <Button icon={<PlusOutlined />} onClick={() => setNewFodlerOpen(true)}>
+          Thư mục
+        </Button>
         <Input.Search placeholder="Tìm câu hỏi" allowClear style={{ width: 200 }} />
       </div>
     </div>

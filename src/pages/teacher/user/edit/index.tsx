@@ -1,7 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import { usePreview } from '@hook/system/usePreview';
 import { GET_USER_DETAIL, useFetchUserDetail } from '@hook/user/useFetchUserDetail';
-import { userMutationUserDetail } from '@hook/user/useMutationUserDetail';
+import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 import { GenderEnum, GenderTypes, RoleEnum } from '@util/constant';
 import {
   Button,
@@ -37,7 +37,7 @@ const TeacherUpdateInformation: NextPage = () => {
   const [fileList, setFileList] = useState<UploadFile[]>([]);
 
   const user = useFetchUserDetail();
-  const userMutation = userMutationUserDetail([GET_USER_DETAIL]);
+  const userMutation = userUpdateUserDetail([GET_USER_DETAIL]);
 
   // const avatar = Form.useWatch('avatar', form);
 

@@ -59,6 +59,8 @@ const SystemContextProvider = ({ children }) => {
   const [username, setUsername] = useState('');
   const [avatar, setAvatar] = useState('');
 
+  console.log(userId);
+
   const context: SystemContextProps = {
     toast,
     setToast,

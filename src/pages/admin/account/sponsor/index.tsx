@@ -4,32 +4,73 @@ import {
   CopyOutlined,
 } from '@ant-design/icons';
 import withAuth from '@hoc/withAuth';
+import {
+  GET_CONFIGURATION_LIST,
+  useFetchConfiguration,
+} from '@hook/configuration/useFetchConfiguration';
 import { RoleEnum } from '@util/constant';
 import { copy } from '@util/functions';
 import { Button, Form, Input, message, Popconfirm } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { v4  } from 'uuid';
+import { GetServerSideProps, NextPage } from 'next';
+import { v4 } from 'uuid';
+import { useEffect } from 'react';
+import { userUpdateConfiguration } from '@hook/configuration/useUpdateConfiguration';
 
-const initialValues = {
-  forStudent: v4(),
-  forTeacher: v4(),
+type FormProps = {
+  forStudent: string;
+  forTeacher: string;
 };
 
 const SponsorSetting: NextPage = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormProps>();
+
+  const configuration = useFetchConfiguration({});
+  const updateConfiguration = userUpdateConfiguration([GET_CONFIGURATION_LIST]);
 
   const forStudent = Form.useWatch('forStudent', form);
   const forTeacher = Form.useWatch('forTeacher', form);
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
+  const handleSubmit = async (values: FormProps) => {
+    const mappingConfiguration: Record<string, string> =
+      configuration?.reduce(
+        (obj, item) => ({ ...obj, [item?.key]: item?.value }),
+        {}
+      ) ?? {};
+
+    if (values.forStudent !== mappingConfiguration.student_registry_code) {
+      await updateConfiguration.mutate({
+        key: 'student_registry_code',
+        value: values.forStudent,
+      });
+    }
+
+    if (values.forTeacher !== mappingConfiguration.teacher_registry_code) {
+      await updateConfiguration.mutate({
+        key: 'teacher_registry_code',
+        value: values.forTeacher,
+      });
+    }
   };
+
+  useEffect(() => {
+    if (configuration) {
+      const mappingConfiguration: Record<string, string> =
+        configuration?.reduce(
+          (obj, item) => ({ ...obj, [item?.key]: item?.value }),
+          {}
+        ) ?? {};
+
+      form.setFieldsValue({
+        forStudent: mappingConfiguration?.student_registry_code ?? '',
+        forTeacher: mappingConfiguration?.teacher_registry_code ?? '',
+      });
+    }
+  }, [configuration]);
 
   return (
     <div className="w-full flex py-10 items-center justify-center">
       <div className="max-w-xl w-full rounded-sm bg-white p-5">
         <Form
-          initialValues={initialValues}
           onFinish={handleSubmit}
           autoComplete="off"
           layout="vertical"
@@ -92,7 +133,7 @@ const SponsorSetting: NextPage = () => {
 
             <div className="w-full flex flex-row gap-2 items-end justify-end">
               <Button key="button">Huỷ</Button>
-              <Button key="submit" type="primary">
+              <Button htmlType="submit" type="primary">
                 Lưu
               </Button>
             </div>
@@ -103,13 +144,10 @@ const SponsorSetting: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
-  RoleEnum.admin
-);
+export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+  return {
+    props: {},
+  };
+}, RoleEnum.admin);
 
 export default SponsorSetting;

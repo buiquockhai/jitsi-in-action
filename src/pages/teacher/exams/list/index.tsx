@@ -3,40 +3,42 @@ import ExamsTable from '@layout/pages/teachers/exams/list';
 import ViewExam from '@layout/pages/teachers/exams/list/view-exam';
 import SlideLayout from '@layout/utils/slide-layout';
 import { RoleEnum } from '@util/constant';
+import { ROUTES } from '@util/routes';
 import { Button } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext } from 'next';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 const TeacherExams = () => {
-  const [openView, setOpenView] = useState<boolean>(false);
-  const [examData, setExamData] = useState<any>({});
+  const { push } = useRouter();
 
-  const handleViewData = (data) => {
-    setExamData(data);
+  const [openView, setOpenView] = useState(false);
+  const [focusExamId, setFocusExamId] = useState('');
+
+  const handleFocusView = (id: string) => {
+    setFocusExamId(id);
     setOpenView(true);
   };
 
   return (
     <div className="w-full relative p-5 flex flex-col gap-3">
       <div className="w-fit h-fit relative">
-        <Button type="primary">Thêm</Button>
+        <Button type="primary" onClick={() => push(ROUTES.TEACHER_NEW_EXAM)}>
+          Thêm
+        </Button>
       </div>
-      <ExamsTable setData={handleViewData} />
+      <ExamsTable onFocus={handleFocusView} />
       <ViewExam
         open={openView}
-        onClose={setOpenView.bind(null, false)}
-        data={examData}
+        onClose={() => setOpenView(false)}
+        id={focusExamId}
       />
     </div>
   );
 };
 
 export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+  async () => ({ props: {} }),
   RoleEnum.teacher
 );
 

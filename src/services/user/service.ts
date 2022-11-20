@@ -1,10 +1,5 @@
 import qs from 'query-string';
 import { BaseResponse, LoginResponse } from '@schema/system';
-import {
-  GetFolderRequest,
-  GetQuestionRequest,
-  GetQuestionResponse,
-} from '@schema/questions';
 import fetcher from '@util/fetcher';
 import { __token } from '@util/constant';
 import { Client } from '@util/apis';
@@ -15,6 +10,7 @@ import {
   UpdateUserDetailRequest,
   UpdateUserPasswordRequest,
 } from './types';
+import { uuidVerify } from '@util/functions';
 
 class UserService extends Client {
   public login(data: { username: string; password: string }) {
@@ -27,7 +23,7 @@ class UserService extends Client {
 
   public getUserList(req: GetUserListRequest) {
     return fetcher<BaseResponse<GetUserListResponse[]>>(
-      `${this.baseUrl}/v1/user?${qs.stringify(req)}`,
+      `${this.baseUrl}/v1/user?${qs.stringify(uuidVerify(req))}`,
       {
         headers: this.privateHeaders,
       }
@@ -57,24 +53,6 @@ class UserService extends Client {
       method: 'PUT',
       body: JSON.stringify(req),
     });
-  }
-
-  public getQuestions(params: GetQuestionRequest) {
-    return fetcher<BaseResponse<GetQuestionResponse>>(
-      `${this.baseUrl}/v1/question?${qs.stringify(params)}`,
-      {
-        headers: this.privateHeaders,
-      }
-    );
-  }
-
-  public getFolders(params: GetFolderRequest) {
-    return fetcher<BaseResponse<GetQuestionResponse>>(
-      `${this.baseUrl}/v1/question/folder?${qs.stringify(params)}`,
-      {
-        headers: this.privateHeaders,
-      }
-    );
   }
 }
 

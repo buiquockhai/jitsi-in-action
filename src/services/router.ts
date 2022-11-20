@@ -1,8 +1,11 @@
 import { __token } from '@util/constant';
 import { getCookie } from '@util/functions';
 import { userService } from '@service/user/service';
+import { configurationService } from '@service/configuration/service';
+import { questionService } from '@service/question/service';
+import { examService } from '@service/exam/service';
 
-const services = [userService];
+const services = [userService, configurationService, questionService, examService];
 
 const dispatch = {
   setAuthToken: (token: string) => {
@@ -27,4 +30,4 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export { userService };
+export { userService, configurationService, questionService, examService };

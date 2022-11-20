@@ -1,75 +1,26 @@
-import { ANPHABET, EXAM_RANGE, QUESTION_RANGE, QUESTION_TYPE } from '@util/constant';
+import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
+import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { Button, Descriptions, Drawer, Tag } from 'antd';
 import moment from 'moment';
-import React, { useCallback } from 'react';
+import { FC } from 'react';
 
-const ViewExam: React.FC<{
+type Props = {
   open: boolean;
-  data: any;
   onClose: () => void;
-}> = ({ open, data, onClose }) => {
-  console.log({ data });
+  id: string;
+};
 
-  const Overview = useCallback(
-    () => (
-      <Descriptions size="small" column={2}>
-        <Descriptions.Item label="Ngày tạo">
-          {moment(data?.createdAt).format('LLL')}
-        </Descriptions.Item>
-        <Descriptions.Item label="Mức độ">
-          {EXAM_RANGE?.[data?.range]}
-        </Descriptions.Item>
-        <Descriptions.Item label="Điểm tối đa">{data?.maxPoint}</Descriptions.Item>
-        <Descriptions.Item label="Thời gian làm bài">
-          {data?.workingTime} phút
-        </Descriptions.Item>
-      </Descriptions>
-    ),
-    [data, open]
-  );
+const ViewExam: FC<Props> = ({ open, id, onClose }) => {
+  const examDetail = useFetchExamDetail(id);
 
-  const QuestionDetail = useCallback((question) => {
-    return (
-      <div className="w-full flex flex-col gap-2 border-b pb-5" key={question?.id}>
-        <div className="flex flex-row gap-1">
-          <Tag color="magenta">{QUESTION_TYPE[question?.type]}</Tag>
-          <Tag color="green">{QUESTION_RANGE[question?.range]}</Tag>
-          <Tag color="purple">Điểm: {question?.point}</Tag>
-        </div>
-
-        <p className="font-semibold">{question?.questionContent}</p>
-
-        <div className="w-full grid grid-cols-2 gap-3 mt-5">
-          {question?.answers?.map((item, index) => {
-            const correct =
-              item?.id == question?.singleCorrect ||
-              question?.multipleCorrect?.includes(item?.id);
-            return (
-              <div
-                key={item?.id}
-                className="px-4 py-1 border rounded-sm border-dashed"
-                style={
-                  correct
-                    ? { borderColor: '#52c41a', backgroundColor: '#f0fdf4' }
-                    : {}
-                }
-              >
-                <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
-                {item?.content}
-              </div>
-            );
-          })}
-        </div>
-      </div>
-    );
-  }, []);
+  const exam = examDetail?.exam;
 
   return (
     <Drawer
-      title={data?.title}
+      title={exam?.title}
       width="50vw"
       onClose={onClose}
-      visible={open}
+      open={open}
       extra={
         <div className="flex flex-row gap-2">
           <Button onClick={onClose}>Chỉnh sửa</Button>
@@ -80,10 +31,54 @@ const ViewExam: React.FC<{
       }
     >
       <div className="w-full flex flex-col gap-5">
-        <Overview />
+        <Descriptions size="small" column={2}>
+          <Descriptions.Item label="Ngày tạo">
+            {moment(exam?.created_date).format('DD/MM/YYYY')}
+          </Descriptions.Item>
+          <Descriptions.Item label="Mức độ">
+            {LevelEnum[exam?.level ?? '']}
+          </Descriptions.Item>
+          <Descriptions.Item label="Điểm tối đa">
+            {exam?.max_point}
+          </Descriptions.Item>
+          <Descriptions.Item label="Thời gian làm bài">
+            {exam?.duration} phút
+          </Descriptions.Item>
+        </Descriptions>
 
-        {data?.questions?.map((question) => (
-          <QuestionDetail {...question} />
+        {examDetail?.questionList?.map((question) => (
+          <div
+            className="w-full flex flex-col gap-2 border-b pb-5"
+            key={question?.id}
+          >
+            <div className="flex flex-row gap-1">
+              <Tag color="magenta">{QuestionTypeEnum[question?.type]}</Tag>
+              <Tag color="green">{LevelEnum[question?.level]}</Tag>
+              <Tag color="purple">Điểm: {question?.point}</Tag>
+            </div>
+
+            <p className="font-semibold">{question?.content}</p>
+
+            <div className="w-full grid grid-cols-2 gap-3 mt-5">
+              {question?.tb_answers?.map((item, index) => {
+                const isCorrect = item.percent > 0;
+                return (
+                  <div
+                    key={item?.id}
+                    className="px-4 py-1 border rounded-sm border-dashed"
+                    style={
+                      isCorrect
+                        ? { borderColor: '#52c41a', backgroundColor: '#f0fdf4' }
+                        : {}
+                    }
+                  >
+                    <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+                    {item?.content}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
         ))}
       </div>
     </Drawer>

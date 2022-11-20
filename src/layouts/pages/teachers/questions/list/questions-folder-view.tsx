@@ -9,9 +9,17 @@ import {
   QuestionCircleOutlined,
 } from '@ant-design/icons';
 import { useQuestionListContext } from './context';
+import { useUpdateFolder } from '@hook/question/useUpdateFolder';
+import { DeleteFlagEnum } from '@util/constant';
+import { useRouter } from 'next/router';
+import { ROUTES } from '@util/routes';
+import { GET_FOLDER } from '@hook/question/keys';
 
 export function QuestionsFolderView() {
-  const { treeNode, path, setPath } = useQuestionListContext();
+  const { treeNode, path, setPath, setUpdateFolderData } = useQuestionListContext();
+  const { push } = useRouter();
+
+  const updateFolderMutation = useUpdateFolder([GET_FOLDER]);
 
   const getTreeView = (
     treeNode: DataNode[],
@@ -42,6 +50,27 @@ export function QuestionsFolderView() {
     }
   };
 
+  const handleRemove = (node) => {
+    if (Array.isArray(node.children)) {
+      updateFolderMutation.mutate({
+        id: node.id.toString(),
+        deleted: DeleteFlagEnum.Y,
+      });
+    }
+  };
+
+  const handleEdit = (node) => {
+    if (Array.isArray(node.children)) {
+      setUpdateFolderData({
+        open: true,
+        data: node.title,
+        id: node.key,
+      });
+    } else {
+      push(ROUTES.TEACHER_UPDATE_QUESTION(node.key));
+    }
+  };
+
   return (
     <div className="w-full col-span-4 bg-white p-5 rounded-sm h-fit flex flex-col">
       {currentTree?.map((node) => {
@@ -67,6 +96,7 @@ export function QuestionsFolderView() {
                   type="dashed"
                   shape="circle"
                   size="small"
+                  onClick={() => handleEdit(node)}
                 />
               </Tooltip>
               <Tooltip title="Di chuyển">
@@ -80,6 +110,7 @@ export function QuestionsFolderView() {
               <Popconfirm
                 title="Bạn có chắc chắn？"
                 icon={<QuestionCircleOutlined />}
+                onConfirm={() => handleRemove(node)}
               >
                 <Button
                   icon={<DeleteOutlined />}

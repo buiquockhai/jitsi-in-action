@@ -82,6 +82,23 @@ export const DeleteFlagEnum = {
 
 export type DeleteFlagTypes = keyof typeof DeleteFlagEnum;
 
+export const LevelEnum = {
+  0: 'Dễ',
+  1: 'Trung bình',
+  2: 'Khá',
+  3: 'Khó',
+  4: 'Nâng cao',
+} as const;
+
+export type LevelTypes = keyof typeof LevelEnum;
+
+export const QuestionTypeEnum = {
+  single: 'Trắc nghiệm',
+  multiple: 'TN nhiều đáp án',
+} as const;
+
+export type QuestionTypes = keyof typeof QuestionTypeEnum;
+
 export const VERIFY_STATUS = {
   0: 'Chưa kiểm duyệt',
   1: 'Đã kiểm duyệt',
