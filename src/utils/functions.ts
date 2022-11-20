@@ -2,19 +2,20 @@ import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
 import { __token, __username, __role, __avatar, __fullname } from '@util/constant';
 import { JwtResponse } from '@schema/system';
+import { GetTreeResponse } from '@service/question/types';
 
-export const flattenAnswer = (treeNode) => {
-  return treeNode?.flatMap((node) => {
-    if (node?.isLeaf) return [node];
-    return [...flattenAnswer(node?.children)];
-  });
-};
+// export const flattenAnswer = (treeNode) => {
+//   return treeNode?.flatMap((node) => {
+//     if (node?.isLeaf) return [node];
+//     return [...flattenAnswer(node?.children)];
+//   });
+// };
 
-export const getAnswersFromKeys = (keys, flattenNode) => {
-  return flattenNode?.flatMap((node) =>
-    keys?.includes(node?.key) ? node?.data : []
-  );
-};
+// export const getAnswersFromKeys = (keys, flattenNode) => {
+//   return flattenNode?.flatMap((node) =>
+//     keys?.includes(node?.key) ? node?.data : []
+//   );
+// };
 
 export const getPreviousMonth = (month: number) => {
   return month > 1 ? month - 1 : 12;
@@ -77,11 +78,36 @@ export function uuidVerify<T>(data: T, keys?: string[]) {
   return Object.entries(data as Record<string, string>).reduce(
     (obj, [key, value]) => {
       if (parseKeys.includes(key)) {
-        return value.length === 36 ? { ...obj, [key]: value } : { ...obj };
+        return value.length === 36 || Array.isArray(value)
+          ? { ...obj, [key]: value }
+          : { ...obj };
       }
 
       return { ...obj, [key]: value };
     },
     {}
   );
+}
+
+export function rawToDataNode(raw?: GetTreeResponse) {
+  const markupParent =
+    raw?.parents?.map(({ name, id, tb_questions }) => ({
+      key: id,
+      title: name,
+      disableCheckbox: tb_questions.length <= 0,
+      children: tb_questions.map(({ id, title }) => ({
+        key: id,
+        title: title,
+        isLeaf: true,
+      })),
+    })) ?? [];
+
+  const markupLeaf =
+    raw?.aloneLeafs?.map(({ id, title }) => ({
+      key: id,
+      title: title,
+      isLeaf: true,
+    })) ?? [];
+
+  return [...markupParent, ...markupLeaf];
 }

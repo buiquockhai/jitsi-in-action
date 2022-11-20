@@ -30,6 +30,15 @@ class UserService extends Client {
     );
   }
 
+  public getUserFreeze() {
+    return fetcher<BaseResponse<GetUserListResponse[]>>(
+      `${this.baseUrl}/v1/user/freeze`,
+      {
+        headers: this.privateHeaders,
+      }
+    );
+  }
+
   public getUserDetail() {
     return fetcher<BaseResponse<GetUserDetailResponse>>(
       `${this.baseUrl}/v1/user/detail`,

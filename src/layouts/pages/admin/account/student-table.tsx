@@ -3,7 +3,8 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { GET_USER_LIST, useFetchUserList } from '@hook/user/useFetchUserList';
+import { GET_USER_LIST } from '@hook/user/keys';
+import { useFetchUsers } from '@hook/user/useFetchUsers';
 import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 import { GetUserListResponse } from '@service/user/types';
 import { DeleteFlagEnum, RoleEnum } from '@util/constant';
@@ -15,7 +16,7 @@ const StudentAccountTable = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState<Partial<GetUserListResponse>>({});
 
-  const userList = useFetchUserList({
+  const userList = useFetchUsers({
     role: RoleEnum.student,
   });
 

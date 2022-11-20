@@ -2,7 +2,13 @@ import qs from 'query-string';
 import fetcher from '@util/fetcher';
 import { Client } from '@util/apis';
 import { BaseResponse } from '@schema/system';
-import { GetExamRequest, ExamResponse, GetExamDetailResponse } from './types';
+import {
+  GetExamRequest,
+  ExamResponse,
+  GetExamDetailResponse,
+  NewExamRequest,
+  UpdateExamRequest,
+} from './types';
 import { uuidVerify } from '@util/functions';
 
 class Exam extends Client {
@@ -22,6 +28,22 @@ class Exam extends Client {
         headers: this.privateHeaders,
       }
     );
+  }
+
+  public newExam(req: NewExamRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/exam`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public updateExam(req: UpdateExamRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/exam`, {
+      headers: this.privateHeaders,
+      method: 'PUT',
+      body: JSON.stringify(req),
+    });
   }
 }
 

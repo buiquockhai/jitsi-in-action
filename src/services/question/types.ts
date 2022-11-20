@@ -57,7 +57,14 @@ export interface GetFolderRequest {
   created_id?: string;
 }
 
+export interface GetQuestionRequest {
+  id?: string | string[];
+  created_id?: string;
+}
+
 export interface GetFolderResponse extends FolderResponse {}
+
+export interface GetQuestionResponse extends GetQuestionDetailResponse {}
 
 export interface NewFolderRequest {
   name: string;

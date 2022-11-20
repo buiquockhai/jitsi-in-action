@@ -1,17 +1,46 @@
 import { Button, Form, Tag, InputNumber, Popconfirm } from 'antd';
-import React from 'react';
-import { ANPHABET, QUESTION_RANGE, QUESTION_TYPE } from '@util/constant';
-import { v4  } from 'uuid';
+import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { v4 } from 'uuid';
 import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
+import { FormInstance } from 'antd/es/form/Form';
+import { useFetchQuestion } from '@hook/question/useFetchQuestion';
+import { useRouter } from 'next/router';
+import { useEffect, FC, useRef } from 'react';
+import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 
-const QuestionDefine: React.FC<any> = ({ form }) => {
+type Props = {
+  form: FormInstance;
+};
+
+const QuestionDefine: FC<Props> = ({ form }) => {
+  const { query } = useRouter();
+
   const questions = Form.useWatch('questions', form);
 
-  console.log({ questions });
+  const examDetail = useFetchExamDetail(query.id as string);
+  const questionList = useFetchQuestion({
+    id: questions ?? undefined,
+  });
+
+  const exam = examDetail?.exam;
+
+  const questionRender = questions?.length > 0 ? questionList : [];
+
+  useEffect(() => {
+    if (query.id && examDetail) {
+      form.setFieldsValue({
+        title: exam?.title,
+        range: exam?.level,
+        maxPoint: exam?.max_point,
+        workingTime: exam?.duration,
+        questions: examDetail?.questionList?.map((item) => item.id),
+      });
+    }
+  }, [query, examDetail]);
 
   return (
     <div className="w-full flex flex-col gap-3 col-span-2">
-      {questions?.map((node, index) => {
+      {questionRender?.map((node) => {
         return (
           <div
             key={v4()}
@@ -19,8 +48,8 @@ const QuestionDefine: React.FC<any> = ({ form }) => {
           >
             <div className="w-full flex flex-row gap-5 justify-between items-center">
               <div className="flex flex-row">
-                <Tag color="green">{QUESTION_TYPE?.[node?.type]}</Tag>
-                <Tag color="magenta">{QUESTION_RANGE?.[node?.range]}</Tag>
+                <Tag color="green">{QuestionTypeEnum?.[node?.type]}</Tag>
+                <Tag color="magenta">{LevelEnum?.[node?.level]}</Tag>
               </div>
               <div className="flex flex-row items-center gap-2">
                 <InputNumber
@@ -41,14 +70,12 @@ const QuestionDefine: React.FC<any> = ({ form }) => {
 
             <div className="w-full flex flex-col gap-2">
               <p className="font-semibold">{node?.title}</p>
-              <p>{node?.questionContent}</p>
+              <p>{node?.content}</p>
             </div>
 
             <div className="w-full grid grid-cols-2 gap-3 mt-5">
-              {node?.answers?.map((item, index) => {
-                const correct =
-                  item?.id == node?.singleCorrect ||
-                  node?.multipleCorrect?.includes(item?.id);
+              {node?.tb_answers?.map((item, index) => {
+                const correct = item.percent > 0;
                 return (
                   <div
                     key={item?.id}

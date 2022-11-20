@@ -1,9 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
 import { userService } from '@service/router';
-
-export const GET_USER_DETAIL = 'GET_USER_DETAIL';
+import { GET_USER_DETAIL, GET_USER_LIST } from './keys';
 
 export function useFetchUserDetail() {
-  const res = useQuery([GET_USER_DETAIL], () => userService.getUserDetail());
+  const res = useQuery([GET_USER_DETAIL, GET_USER_LIST], () =>
+    userService.getUserDetail()
+  );
   return res.data?.data;
 }

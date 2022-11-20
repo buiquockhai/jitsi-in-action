@@ -4,29 +4,7 @@ import { QuestionsFolderView } from './questions-folder-view';
 import { QuestionListPath } from './questions-path-view';
 import { useEffect } from 'react';
 import { useFetchTree } from '@hook/question/useFetchTree';
-import { GetTreeResponse } from '@service/question/types';
-
-export const rawToDataNode = (raw?: GetTreeResponse) => {
-  const markupParent =
-    raw?.parents?.map(({ name, id, tb_questions }) => ({
-      key: id,
-      title: name,
-      children: tb_questions.map(({ id, title }) => ({
-        key: id,
-        title: title,
-        isLeaf: true,
-      })),
-    })) ?? [];
-
-  const markupLeaf =
-    raw?.aloneLeafs?.map(({ id, title }) => ({
-      key: id,
-      title: title,
-      isLeaf: true,
-    })) ?? [];
-
-  return [...markupParent, ...markupLeaf];
-};
+import { rawToDataNode } from '@util/functions';
 
 export function QuestionView() {
   const { setTreeNode } = useQuestionListContext();

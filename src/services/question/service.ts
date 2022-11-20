@@ -6,6 +6,8 @@ import {
   GetFolderRequest,
   GetFolderResponse,
   GetQuestionDetailResponse,
+  GetQuestionRequest,
+  GetQuestionResponse,
   GetTreeResponse,
   NewFolderRequest,
   NewQuestionRequest,
@@ -36,6 +38,15 @@ class Question extends Client {
   public getFolder(req: GetFolderRequest) {
     return fetcher<BaseResponse<GetFolderResponse[]>>(
       `${this.baseUrl}/v1/question/folder?${qs.stringify(uuidVerify(req))}`,
+      {
+        headers: this.privateHeaders,
+      }
+    );
+  }
+
+  public getQuestion(req: GetQuestionRequest) {
+    return fetcher<BaseResponse<GetQuestionResponse[]>>(
+      `${this.baseUrl}/v1/question?${qs.stringify(uuidVerify(req))}`,
       {
         headers: this.privateHeaders,
       }

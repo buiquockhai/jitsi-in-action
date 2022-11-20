@@ -24,3 +24,22 @@ export interface GetExamDetailResponse {
   exam: ExamResponse;
   questionList: GetQuestionDetailResponse[];
 }
+
+export interface NewExamRequest {
+  max_point: number;
+  duration: number;
+  level: number;
+  status: boolean;
+  title: string;
+  questions: string[];
+}
+export interface UpdateExamRequest {
+  id: string;
+  max_point?: number;
+  duration?: number;
+  level?: number;
+  status?: boolean;
+  title?: string;
+  deleted?: DeleteFlagTypes;
+  questions?: string[];
+}

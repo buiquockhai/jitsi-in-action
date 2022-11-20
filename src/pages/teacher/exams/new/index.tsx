@@ -1,19 +1,60 @@
 import withAuth from '@hoc/withAuth';
+import { GET_EXAM_DETAIL } from '@hook/exam/useFetchExamDetail';
+import { GET_EXAMS } from '@hook/exam/useFetchExams';
+import { useNewExam } from '@hook/exam/useNewExam';
+import { useUpdateExam } from '@hook/exam/useUpdateExam';
 import PageHeaderExamsCreation from '@layout/pages/teachers/exams/new/page-header';
 import QuestionDefine from '@layout/pages/teachers/exams/new/question-define';
 import QuestionTree from '@layout/pages/teachers/exams/new/question-tree';
-import { ANSWER_MOCK } from '@mock/answers';
+import { NewExamRequest } from '@service/exam/types';
 import { RoleEnum } from '@util/constant';
 import { Form } from 'antd';
-import type { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import type { NextPage } from 'next';
+import { useRouter } from 'next/router';
 
-const treeData = ANSWER_MOCK;
+type FormProps = {
+  title: string;
+  range: number;
+  maxPoint: number;
+  workingTime: number;
+  questions: string[];
+};
+
+const initialValues: FormProps = {
+  title: '',
+  range: 0,
+  maxPoint: 0,
+  workingTime: 0,
+  questions: [],
+};
 
 const TeacherExams: NextPage = () => {
-  const [form] = Form.useForm();
+  const { query } = useRouter();
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
+  const [form] = Form.useForm<FormProps>();
+
+  const newExamMutation = useNewExam([GET_EXAMS, GET_EXAM_DETAIL]);
+  const updateExamMutaion = useUpdateExam([GET_EXAMS, GET_EXAM_DETAIL]);
+
+  const handleSubmit = async (values: FormProps) => {
+    const object = {
+      max_point: values.maxPoint,
+      duration: values.workingTime,
+      level: values.range,
+      status: false,
+      title: values.title,
+      questions: values.questions,
+    };
+
+    if ((query.id ?? '').length > 0) {
+      await updateExamMutaion.mutate({
+        id: query.id as string,
+        ...object,
+      });
+    } else {
+      await newExamMutation.mutate(object);
+      form.setFieldsValue(initialValues);
+    }
   };
 
   return (
@@ -27,7 +68,7 @@ const TeacherExams: NextPage = () => {
       <div className="w-full flex flex-col">
         <PageHeaderExamsCreation />
         <div className="p-5 w-full grid grid-cols-3 gap-5">
-          <QuestionTree treeData={treeData} form={form} />
+          <QuestionTree form={form} />
           <QuestionDefine form={form} />
         </div>
       </div>
@@ -35,26 +76,10 @@ const TeacherExams: NextPage = () => {
   );
 };
 
-const initialValues: {
-  title: string;
-  range: number;
-  maxPoint: number;
-  workingTime: number;
-  questions: Array<any>;
-} = {
-  title: '',
-  range: 0,
-  maxPoint: 0,
-  workingTime: 0,
-  questions: [],
-};
-
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  async () => ({
+    props: {},
+  }),
   RoleEnum.teacher
 );
 

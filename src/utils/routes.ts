@@ -13,6 +13,9 @@ export const ROUTES = {
   TEACHER_SCHEDULE: '/teacher/schedule',
   TEACHER_EXAM_LIST: '/teacher/exams/list',
   TEACHER_NEW_EXAM: '/teacher/exams/new',
+  TEACHER_UPDATE_EXAM: (id: string) => {
+    return `/teacher/exams/new?id=${id}`;
+  },
   TEACHER_INFORMATION: '/teacher/user/information',
   TEACHER_LOGOUT: '/teacher/notification/logout',
   TEACHER_NOTICE: '/teacher/notification/notice',
@@ -40,6 +43,9 @@ export const ROUTES = {
   ADMIN_EXAM_LIST: '/admin/room/exam-list',
   ADMIN_ROOM_LIST: '/admin/room/list',
   ADMIN_NEW_GROUP: '/admin/group/new',
+  ADMIN_UPDATE_GROUP: (id: string) => {
+    return `/admin/group/new?id=${id}`;
+  },
   ADMIN_GROUP_LIST: '/admin/group/list',
   ADMIN_SPONSOR: '/admin/account/sponsor',
   ADMIN_ACCOUNT_LIST: '/admin/account/list',

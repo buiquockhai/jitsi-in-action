@@ -2,7 +2,7 @@ import withAuth from '@hoc/withAuth';
 import ExamsTable from '@layout/pages/admin/room/exam-list';
 import ViewExam from '@layout/pages/admin/room/exam-list/view-exam';
 import { RoleEnum } from '@util/constant';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { NextPage } from 'next';
 import { useState } from 'react';
 
 const AdminExamList: NextPage = () => {
@@ -26,12 +26,10 @@ const AdminExamList: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  async (_) => ({
+    props: {},
+  }),
   RoleEnum.admin
 );
 

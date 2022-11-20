@@ -9,7 +9,7 @@ import { Button, Popconfirm, Table, Tag } from 'antd';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 
-const ExamsTable: React.FC<{ setData: (data: any) => void }> = ({ setData }) => {
+const ExamsTable = ({ setData }) => {
   const columns: any = useMemo(
     () => [
       {

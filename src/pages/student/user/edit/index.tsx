@@ -15,9 +15,10 @@ import ImgCrop from 'antd-img-crop';
 import moment from 'moment';
 import { GetServerSideProps, NextPage } from 'next';
 import { useEffect, useState } from 'react';
-import { GET_USER_DETAIL, useFetchUserDetail } from '@hook/user/useFetchUserDetail';
+import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { GenderEnum } from '@util/constant';
 import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
+import { GET_USER_DETAIL } from '@hook/user/keys';
 
 type FormProps = {
   code: string;

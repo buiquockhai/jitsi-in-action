@@ -1,7 +1,9 @@
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { ROUTES } from '@util/routes';
 import { Button, Descriptions, Drawer, Tag } from 'antd';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { FC } from 'react';
 
 type Props = {
@@ -11,6 +13,7 @@ type Props = {
 };
 
 const ViewExam: FC<Props> = ({ open, id, onClose }) => {
+  const { push } = useRouter();
   const examDetail = useFetchExamDetail(id);
 
   const exam = examDetail?.exam;
@@ -23,7 +26,9 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
       open={open}
       extra={
         <div className="flex flex-row gap-2">
-          <Button onClick={onClose}>Chỉnh sửa</Button>
+          <Button onClick={() => push(ROUTES.TEACHER_UPDATE_EXAM(id))}>
+            Chỉnh sửa
+          </Button>
           <Button onClick={onClose} type="primary">
             Submit
           </Button>

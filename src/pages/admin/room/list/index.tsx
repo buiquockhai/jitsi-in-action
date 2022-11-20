@@ -1,22 +1,28 @@
 import withAuth from '@hoc/withAuth';
 import RoomTable from '@layout/pages/admin/room/list/room-table';
 import { RoleEnum } from '@util/constant';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { ROUTES } from '@util/routes';
+import { Button } from 'antd';
+import { NextPage } from 'next';
+import { useRouter } from 'next/router';
 
 const AdminRoomList: NextPage = () => {
+  const { push } = useRouter();
+
   return (
-    <div className="w-full relative p-5 flex flex-col gap-3">
+    <div className="space-y-3 p-5">
+      <Button type="primary" onClick={() => push(ROUTES.ADMIN_NEW_ROOM)}>
+        Thêm
+      </Button>
       <RoomTable />
     </div>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  async () => ({
+    props: {},
+  }),
   RoleEnum.admin
 );
 

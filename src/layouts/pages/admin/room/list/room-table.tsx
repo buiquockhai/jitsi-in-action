@@ -1,16 +1,19 @@
 import {
   QuestionCircleOutlined,
   EyeOutlined,
-  CloseOutlined,
+  EditOutlined,
+  DeleteOutlined,
 } from '@ant-design/icons';
-import { ROOMS_MOCK } from '@mock/rooms';
-import { EXAM_RANGE, ROOM_STATUS } from '@util/constant';
+import { useFetchRooms } from '@hook/room/useFetchRooms';
+import { ROOM_STATUS } from '@util/constant';
 import { Button, Popconfirm, Table, Tag } from 'antd';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 
-const RoomTable: React.FC<any> = ({}) => {
-  const columns: any = useMemo(
+const RoomTable = ({}) => {
+  const rooms = useFetchRooms();
+
+  const columns = useMemo(
     () => [
       {
         title: 'Phòng thi',
@@ -18,35 +21,19 @@ const RoomTable: React.FC<any> = ({}) => {
         width: '20%',
       },
       {
-        title: 'Độ khó',
-        dataIndex: 'exam',
+        title: 'Tên đề thi',
+        dataIndex: 'exam_title',
         width: '10%',
-        sorter: (a, b) => a.range - b.range,
-        render: (exam) => <Tag color="green">{EXAM_RANGE[exam?.range]}</Tag>,
-        filters: Object.entries(EXAM_RANGE).map(([key, value]) => ({
-          text: value,
-          value: key,
-        })),
-        onFilter: (value, record) => record?.exam?.range == parseInt(value),
       },
       {
-        title: 'Điểm tối đa',
-        dataIndex: 'exam',
+        title: 'Nhóm thi',
+        dataIndex: 'group_title',
         width: '10%',
-        sorter: (a, b) => a.maxPoint - b.maxPoint,
-        render: (exam) => exam?.maxPoint,
       },
       {
-        title: 'Thời gian làm bài',
-        dataIndex: 'workingTime',
+        title: 'Giám thị',
+        dataIndex: 'proctor_name',
         width: '10%',
-        sorter: (a, b) => a.workingTime - b.workingTime,
-      },
-      {
-        title: 'Người cho đề',
-        dataIndex: 'teacher',
-        width: '10%',
-        render: (teacher) => teacher?.fullname,
       },
       {
         title: 'Xáo trộn câu hỏi',
@@ -56,11 +43,13 @@ const RoomTable: React.FC<any> = ({}) => {
         sorter: (a, b) => a.shuffle - b.shuffle,
       },
       {
-        title: 'Ngày tạo',
-        dataIndex: 'createdAt',
+        title: 'Thời gian bắt đầu',
+        dataIndex: 'start_date',
         width: '10%',
-        sorter: (a, b) => a.createdAt - b.createdAt,
-        render: (createdAt) => moment(createdAt).format('L'),
+        sorter: (a, b) =>
+          moment(a.start_date).toDate().getTime() -
+          moment(b.start_date).toDate().getTime(),
+        render: (start_date) => moment(start_date).format('HH:mm DD/MM/YYYY'),
       },
       {
         title: 'Trạng thái',
@@ -79,11 +68,19 @@ const RoomTable: React.FC<any> = ({}) => {
           return (
             <div className="flex flex-row gap-3 items-center">
               <Button icon={<EyeOutlined />} size="small" type="link" />
+
+              <Button
+                icon={<EditOutlined />}
+                size="small"
+                type="link"
+                // onClick={() => push(ROUTES.ADMIN_UPDATE_GROUP(row.id))}
+              />
+
               <Popconfirm
-                title="Bạn có chắc chắn từ chối đề thi?"
+                title="Bạn có chắc chắn xoá đề thi?"
                 icon={<QuestionCircleOutlined />}
               >
-                <Button icon={<CloseOutlined />} size="small" type="link" danger />
+                <Button icon={<DeleteOutlined />} size="small" type="link" danger />
               </Popconfirm>
             </div>
           );
@@ -93,30 +90,7 @@ const RoomTable: React.FC<any> = ({}) => {
     []
   );
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
-  const resource = ROOMS_MOCK?.map((item) => {
-    const current = new Date();
-    if (item?.startAt > current) {
-      return { ...item, status: 3 };
-    } else if (
-      item?.startAt < new Date(current.getTime() + item?.workingTime * 60000)
-    ) {
-      return { ...item, status: 0 };
-    }
-    return { ...item, status: 1 };
-  });
-
-  return (
-    <Table
-      size="small"
-      columns={columns}
-      dataSource={resource}
-      onChange={onChange}
-    />
-  );
+  return <Table size="small" columns={columns} dataSource={rooms ?? []} />;
 };
 
 export default RoomTable;

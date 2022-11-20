@@ -1,6 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import { usePreview } from '@hook/system/usePreview';
-import { GET_USER_DETAIL, useFetchUserDetail } from '@hook/user/useFetchUserDetail';
+import { GET_USER_DETAIL } from '@hook/user/keys';
+import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 import { GenderEnum, GenderTypes, RoleEnum } from '@util/constant';
 import {

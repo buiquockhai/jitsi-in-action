@@ -1,54 +1,55 @@
-import { EXAMS_MOCK } from '@mock/exams';
-import {
-  AutoComplete,
-  Button,
-  Checkbox,
-  DatePicker,
-  Form,
-  Input,
-  InputNumber,
-  Radio,
-} from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { useState } from 'react';
-import { debounce } from 'lodash';
-import { GROUPS_MOCK } from '@mock/groups';
-import { TEACHERS_MOCK } from '@mock/teachers';
+import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
+import { NextPage } from 'next';
 import moment from 'moment';
 import withAuth from '@hoc/withAuth';
 import { RoleEnum } from '@util/constant';
+import { useFetchExams } from '@hook/exam/useFetchExams';
+import { useFetchGroups } from '@hook/group/useFetchGroup';
+import { useFetchUsers } from '@hook/user/useFetchUsers';
+import { useNewRoom } from '@hook/room/useNewRoom';
+import { GET_ROOMS } from '@hook/room/useFetchRooms';
+
+type FormProps = {
+  title: string;
+  examId: string;
+  teacherId: string;
+  groupId: string;
+  duration: number;
+  startAt: any;
+};
+
+const initialValues: FormProps = {
+  title: '',
+  examId: '',
+  teacherId: '',
+  groupId: '',
+  duration: 0,
+  startAt: moment('01/01/2022 00:00:00', 'DD/MM/YYYY hh:mm:ss'),
+};
 
 const NewRoomPage: NextPage = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormProps>();
 
-  const [examList, setExamList] = useState(EXAMS_MOCK);
-  const [groupList, setGroupList] = useState(GROUPS_MOCK);
-  const [teacherList, setTeacherList] = useState(TEACHERS_MOCK);
+  const exams = useFetchExams({ status: true });
+  const groups = useFetchGroups();
+  const teachers = useFetchUsers({ role: RoleEnum.teacher });
 
-  const handleSubmit = (values: any) => {
-    console.log({ values });
-  };
+  const newRoomMutation = useNewRoom([GET_ROOMS]);
 
-  const handleSearchExam = (value: string) => {
-    const searchExam = EXAMS_MOCK?.filter(
-      (item) => !value || item?.title?.toLowerCase().includes(value?.toLowerCase())
-    );
-    setExamList(searchExam);
-  };
+  const handleSubmit = async (values: FormProps) => {
+    await newRoomMutation.mutate({
+      title: values.title,
+      exam_id: values.examId,
+      exam_title: exams?.find((item) => item.id === values.examId)?.title ?? '',
+      group_id: values.groupId,
+      group_title: groups?.find((item) => item.id === values.groupId)?.title ?? '',
+      proctor_id: values.teacherId,
+      proctor_name:
+        teachers?.find((item) => item.id === values.teacherId)?.name ?? '',
+      start_date: moment(values.startAt).toDate(),
+    });
 
-  const handleSearchGroup = (value: string) => {
-    const searchGroup = GROUPS_MOCK?.filter(
-      (item) => !value || item?.name?.toLowerCase().includes(value?.toLowerCase())
-    );
-    setGroupList(searchGroup);
-  };
-
-  const handleSearchTeacher = (value: string) => {
-    const searchTeacher = TEACHERS_MOCK?.filter(
-      (item) =>
-        !value || item?.fullname?.toLowerCase().includes(value?.toLowerCase())
-    );
-    setTeacherList(searchTeacher);
+    form.setFieldsValue(initialValues);
   };
 
   return (
@@ -71,7 +72,7 @@ const NewRoomPage: NextPage = () => {
             </Form.Item>
 
             <Form.Item
-              name="workingTime"
+              name="duration"
               label="Thời gian làm bài"
               rules={[
                 { required: true, message: 'Vui lòng nhập thời gian làm bài' },
@@ -81,45 +82,45 @@ const NewRoomPage: NextPage = () => {
             </Form.Item>
 
             <Form.Item
-              name="exam"
+              name="examId"
               label="Bài thi"
               rules={[{ required: true, message: 'Vui lòng chọn bài thi' }]}
             >
-              <AutoComplete onSearch={debounce(handleSearchExam, 500)}>
-                {examList.map((exam) => (
-                  <AutoComplete.Option key={exam?.id} value={exam?.title}>
-                    {exam?.title}
-                  </AutoComplete.Option>
+              <Select placeholder="Chọn bài thi" allowClear>
+                {exams?.map((item) => (
+                  <Select.Option key={item?.id} value={item?.id}>
+                    {item.title}
+                  </Select.Option>
                 ))}
-              </AutoComplete>
+              </Select>
             </Form.Item>
 
             <Form.Item
-              name="group"
+              name="groupId"
               label="Nhóm"
               rules={[{ required: true, message: 'Vui lòng chọn nhóm thi' }]}
             >
-              <AutoComplete onSearch={debounce(handleSearchGroup, 500)}>
-                {groupList.map((group) => (
-                  <AutoComplete.Option key={group?.id} value={group?.name}>
-                    {group?.name}
-                  </AutoComplete.Option>
+              <Select placeholder="Chọn nhóm" allowClear>
+                {groups?.map((item) => (
+                  <Select.Option key={item?.id} value={item?.id}>
+                    {item.title}
+                  </Select.Option>
                 ))}
-              </AutoComplete>
+              </Select>
             </Form.Item>
 
             <Form.Item
-              name="teacher"
+              name="teacherId"
               label="Người coi thi"
               rules={[{ required: true, message: 'Vui lòng chọn người coi thi' }]}
             >
-              <AutoComplete onSearch={debounce(handleSearchTeacher, 500)}>
-                {teacherList.map((teacher) => (
-                  <AutoComplete.Option key={teacher?.id} value={teacher?.fullname}>
-                    {teacher?.fullname}
-                  </AutoComplete.Option>
+              <Select placeholder="Chọn người coi thi" allowClear>
+                {teachers?.map((item) => (
+                  <Select.Option key={item?.id} value={item?.id}>
+                    {item.name}
+                  </Select.Option>
                 ))}
-              </AutoComplete>
+              </Select>
             </Form.Item>
 
             <Form.Item
@@ -134,16 +135,8 @@ const NewRoomPage: NextPage = () => {
               />
             </Form.Item>
 
-            <Form.Item
-              label="Xáo trộn câu hỏi"
-              name="shuffle"
-              valuePropName="checked"
-            >
-              <Checkbox />
-            </Form.Item>
-
             <div className="w-full flex items-end justify-end">
-              <Button key="submit" type="primary">
+              <Button htmlType="submit" type="primary">
                 Lưu
               </Button>
             </div>
@@ -154,48 +147,10 @@ const NewRoomPage: NextPage = () => {
   );
 };
 
-const initialValues: {
-  title: string;
-  exam: {
-    id: string;
-    name: string;
-  };
-  teacher: {
-    id: string;
-    name: string;
-  };
-  group: {
-    id: string;
-    name: string;
-  };
-  warkingTime: number;
-  shuffle: boolean;
-  startAt: any;
-} = {
-  title: '',
-  exam: {
-    id: '',
-    name: '',
-  },
-  teacher: {
-    id: '',
-    name: '',
-  },
-  group: {
-    id: '',
-    name: '',
-  },
-  warkingTime: 0,
-  shuffle: false,
-  startAt: moment('01/01/2022 00:00:00', 'DD/MM/YYYY hh:mm:ss'),
-};
-
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  async () => ({
+    props: {},
+  }),
   RoleEnum.admin
 );
 

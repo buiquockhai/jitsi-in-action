@@ -4,8 +4,17 @@ import { userService } from '@service/user/service';
 import { configurationService } from '@service/configuration/service';
 import { questionService } from '@service/question/service';
 import { examService } from '@service/exam/service';
+import { groupService } from '@service/group/service';
+import { roomService } from '@service/room/service';
 
-const services = [userService, configurationService, questionService, examService];
+const services = [
+  userService,
+  configurationService,
+  questionService,
+  examService,
+  groupService,
+  roomService,
+];
 
 const dispatch = {
   setAuthToken: (token: string) => {
@@ -30,4 +39,11 @@ if (typeof window !== 'undefined') {
   });
 }
 
-export { userService, configurationService, questionService, examService };
+export {
+  userService,
+  configurationService,
+  questionService,
+  examService,
+  groupService,
+  roomService,
+};
