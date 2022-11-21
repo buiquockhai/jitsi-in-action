@@ -6,6 +6,7 @@ import { questionService } from '@service/question/service';
 import { examService } from '@service/exam/service';
 import { groupService } from '@service/group/service';
 import { roomService } from '@service/room/service';
+import { notificationService } from '@service/notification/service';
 
 const services = [
   userService,
@@ -14,6 +15,7 @@ const services = [
   examService,
   groupService,
   roomService,
+  notificationService,
 ];
 
 const dispatch = {
@@ -46,4 +48,5 @@ export {
   examService,
   groupService,
   roomService,
+  notificationService,
 };

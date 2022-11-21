@@ -1,7 +1,7 @@
 import { DataNode } from 'antd/lib/tree';
 import { useMemo } from 'react';
 import { isArray } from 'lodash';
-import { Button, Popconfirm, Tooltip } from 'antd';
+import { Button, Empty, Popconfirm, Tooltip } from 'antd';
 import {
   DeleteOutlined,
   EditOutlined,
@@ -35,7 +35,7 @@ export function QuestionsFolderView() {
 
   const currentTree: DataNode[] = useMemo(() => {
     return getTreeView(treeNode, path);
-  }, [path, getTreeView]);
+  }, [path, treeNode]);
 
   const handleEnterNode = (node: DataNode) => {
     if (!node?.isLeaf && isArray(node?.children)) {
@@ -70,6 +70,14 @@ export function QuestionsFolderView() {
       push(ROUTES.TEACHER_UPDATE_QUESTION(node.key));
     }
   };
+
+  if (currentTree.length <= 0) {
+    return (
+      <div className="w-full col-span-4 bg-white p-5 rounded-sm h-fit flex flex-col">
+        <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />
+      </div>
+    );
+  }
 
   return (
     <div className="w-full col-span-4 bg-white p-5 rounded-sm h-fit flex flex-col">
