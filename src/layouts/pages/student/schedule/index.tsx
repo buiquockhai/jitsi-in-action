@@ -1,8 +1,8 @@
 import { getNextMonth, getPreviousMonth } from '@util/functions';
-import { Badge, BadgeProps, Calendar, List, Modal } from 'antd';
+import { Badge, Calendar, List, Modal } from 'antd';
 import moment, { Moment } from 'moment';
 import React from 'react';
-import { v4  } from 'uuid';
+import { v4 } from 'uuid';
 
 const getListByMonth = (month: number, year: number) => {
   const monthData = {
@@ -113,8 +113,6 @@ const StudentCalendar: React.FC<any> = () => {
   };
 
   const handleOpenDetail = (data) => {
-    console.log({ data });
-
     const time = data?.[0]?.startDate;
 
     return Modal.info({

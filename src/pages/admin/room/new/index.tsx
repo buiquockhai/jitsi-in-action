@@ -39,7 +39,7 @@ const NewRoomPage: NextPage = () => {
   const watchExamId = Form.useWatch('examId', form);
 
   const allExams = useFetchExams({});
-  const exams = useFetchExams({ status: true });
+  const exams = useFetchExams({ status: 'N' });
   const groups = useFetchGroups();
   const teachers = useFetchUsers({ role: RoleEnum.teacher });
 

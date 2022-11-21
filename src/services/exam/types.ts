@@ -2,7 +2,8 @@ import { GetQuestionDetailResponse } from '@service/question/types';
 import { DeleteFlagTypes, LevelTypes } from '@util/constant';
 
 export interface GetExamRequest {
-  status?: boolean;
+  status?: string;
+  submitted?: string;
   created_id?: string;
 }
 
@@ -11,7 +12,8 @@ export type ExamResponse = {
   max_point: string;
   duration: number;
   level: LevelTypes;
-  status: boolean;
+  status: string;
+  submitted: string;
   title: string;
   created_date: string;
   created_id: string;
@@ -29,7 +31,8 @@ export interface NewExamRequest {
   max_point: number;
   duration: number;
   level: number;
-  status: boolean;
+  status: string;
+  submitted: string;
   title: string;
   questions: string[];
 }
@@ -38,7 +41,8 @@ export interface UpdateExamRequest {
   max_point?: number;
   duration?: number;
   level?: number;
-  status?: boolean;
+  status?: string;
+  submitted?: string;
   title?: string;
   deleted?: DeleteFlagTypes;
   questions?: string[];
