@@ -25,5 +25,3 @@ export type RoleTypes = 'admin' | 'teacher' | 'student';
 export interface LoginResponse {
   data: string;
 }
-
-export type DeletedFlag = 'Y' | 'N';

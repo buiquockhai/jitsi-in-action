@@ -1,5 +1,3 @@
-import { QuestionLevelType, QuestionType } from '@schema/questions';
-
 export const __token = '__token';
 
 export const __avatar = '__avatar';
@@ -117,26 +115,4 @@ export const ROOM_STATUS = {
     label: 'Sắp diễn ra',
     color: 'purple',
   },
-};
-
-export const QUESTION_TYPE_ENUM: Record<string, QuestionType> = {
-  CONTENT: 'content',
-  MULTIPLE: 'multiple',
-  SINGLE: 'single',
-};
-
-export const QUESTION_LEVEL_ENUM: Record<string, QuestionLevelType> = {
-  EASY: 0,
-  NORMAL: 1,
-  MEDIUM: 2,
-  HIGH: 3,
-  HARD: 4,
-};
-
-export const QUESTION_LEVEL_LABEL_ENUM: Record<QuestionLevelType, string> = {
-  0: 'Dễ',
-  1: 'Trung bình',
-  2: 'Khá',
-  3: 'Nâng cao',
-  4: 'Khó',
 };
