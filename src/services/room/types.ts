@@ -1,8 +1,9 @@
-import { DeleteFlagTypes } from '@util/constant';
+import { DeleteFlagTypes, RoomStatusTypes } from '@util/constant';
 
 export type RoomResponse = {
   id: string;
   title: string;
+  status: RoomStatusTypes;
   exam_id: string;
   exam_title: string;
   group_id: string;
@@ -20,6 +21,7 @@ export type RoomResponse = {
 
 export interface NewRoomRequest {
   title: string;
+  status: RoomStatusTypes;
   exam_id: string;
   exam_title: string;
   group_id: string;
@@ -33,6 +35,7 @@ export interface NewRoomRequest {
 export interface UpdateRoomRequest {
   id: string;
   title?: string;
+  status?: RoomStatusTypes;
   exam_id?: string;
   exam_title?: string;
   group_id?: string;

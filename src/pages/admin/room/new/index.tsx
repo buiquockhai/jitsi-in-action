@@ -2,7 +2,7 @@ import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
 import { NextPage } from 'next';
 import moment from 'moment';
 import withAuth from '@hoc/withAuth';
-import { RoleEnum } from '@util/constant';
+import { RoleEnum, RoomStatusTypes } from '@util/constant';
 import { useFetchExams } from '@hook/exam/useFetchExams';
 import { useFetchGroups } from '@hook/group/useFetchGroup';
 import { useFetchUsers } from '@hook/user/useFetchUsers';
@@ -20,6 +20,7 @@ type FormProps = {
   groupId: string;
   duration: number;
   startAt: any;
+  status: RoomStatusTypes;
 };
 
 const initialValues: FormProps = {
@@ -27,6 +28,7 @@ const initialValues: FormProps = {
   examId: '',
   teacherId: '',
   groupId: '',
+  status: '0',
   duration: 0,
   startAt: moment('01/01/2022 00:00:00', 'DD/MM/YYYY hh:mm:ss'),
 };
@@ -39,7 +41,7 @@ const NewRoomPage: NextPage = () => {
   const watchExamId = Form.useWatch('examId', form);
 
   const allExams = useFetchExams({});
-  const exams = useFetchExams({ status: 'N' });
+  const exams = useFetchExams({ submitted: 'Y' });
   const groups = useFetchGroups();
   const teachers = useFetchUsers({ role: RoleEnum.teacher });
 
@@ -59,6 +61,7 @@ const NewRoomPage: NextPage = () => {
       proctor_name:
         teachers?.find((item) => item.id === values.teacherId)?.name ?? '',
       start_date: moment(values.startAt).toDate(),
+      status: values.status,
     };
 
     if (query.id) {
@@ -67,7 +70,7 @@ const NewRoomPage: NextPage = () => {
         ...object,
       });
     } else {
-      await newRoomMutation.mutate(object);
+      await newRoomMutation.mutate({ ...object, status: '0' });
       form.setFieldsValue(initialValues);
     }
   };

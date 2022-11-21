@@ -97,6 +97,14 @@ export const QuestionTypeEnum = {
 
 export type QuestionTypes = keyof typeof QuestionTypeEnum;
 
+export const RoomStatusEnum = {
+  '0': 'Chưa bắt đầu',
+  '1': 'Đang diễn ra',
+  '2': 'Kết thúc',
+} as const;
+
+export type RoomStatusTypes = keyof typeof RoomStatusEnum;
+
 export const VERIFY_STATUS = {
   0: 'Chưa kiểm duyệt',
   1: 'Đã kiểm duyệt',
