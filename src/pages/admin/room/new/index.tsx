@@ -8,6 +8,10 @@ import { useFetchGroups } from '@hook/group/useFetchGroup';
 import { useFetchUsers } from '@hook/user/useFetchUsers';
 import { useNewRoom } from '@hook/room/useNewRoom';
 import { GET_ROOMS } from '@hook/room/useFetchRooms';
+import { useRouter } from 'next/router';
+import { useEffect } from 'react';
+import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
+import { useUpdateRoom } from '@hook/room/useUpdateRoom';
 
 type FormProps = {
   title: string;
@@ -28,16 +32,24 @@ const initialValues: FormProps = {
 };
 
 const NewRoomPage: NextPage = () => {
+  const { query } = useRouter();
+
   const [form] = Form.useForm<FormProps>();
 
-  const exams = useFetchExams({ status: true });
+  const watchExamId = Form.useWatch('examId', form);
+
+  const allExams = useFetchExams({});
+  const exams = useFetchExams({ status: 'N' });
   const groups = useFetchGroups();
   const teachers = useFetchUsers({ role: RoleEnum.teacher });
 
+  const roomDetail = useFetchRoomDetail(query.id as string);
+
   const newRoomMutation = useNewRoom([GET_ROOMS]);
+  const updateRoomMutation = useUpdateRoom([GET_ROOMS, GET_ROOM_DETAIL]);
 
   const handleSubmit = async (values: FormProps) => {
-    await newRoomMutation.mutate({
+    const object = {
       title: values.title,
       exam_id: values.examId,
       exam_title: exams?.find((item) => item.id === values.examId)?.title ?? '',
@@ -47,10 +59,44 @@ const NewRoomPage: NextPage = () => {
       proctor_name:
         teachers?.find((item) => item.id === values.teacherId)?.name ?? '',
       start_date: moment(values.startAt).toDate(),
-    });
+    };
 
-    form.setFieldsValue(initialValues);
+    if (query.id) {
+      await updateRoomMutation.mutate({
+        id: query.id as string,
+        ...object,
+      });
+    } else {
+      await newRoomMutation.mutate(object);
+      form.setFieldsValue(initialValues);
+    }
   };
+
+  useEffect(() => {
+    if (query.id && roomDetail && allExams) {
+      const matchExam = allExams.find((item) => item.id === roomDetail.exam_id);
+      form.setFieldsValue({
+        title: roomDetail.title,
+        examId: roomDetail.exam_id,
+        teacherId: roomDetail.proctor_id,
+        groupId: roomDetail.group_id,
+        duration: matchExam?.duration,
+        startAt: moment(
+          moment(roomDetail.start_date).format('DD/MM/YYYY'),
+          'DD/MM/YYYY'
+        ),
+      });
+    }
+  }, [query, roomDetail, form, allExams]);
+
+  useEffect(() => {
+    if (watchExamId?.length > 0 && Array.isArray(allExams)) {
+      const matchExam = allExams.find((item) => item.id === watchExamId);
+      form.setFieldsValue({
+        duration: matchExam?.duration,
+      });
+    }
+  }, [watchExamId, allExams, form]);
 
   return (
     <div className="w-full flex py-10 items-center justify-center">
@@ -78,7 +124,7 @@ const NewRoomPage: NextPage = () => {
                 { required: true, message: 'Vui lòng nhập thời gian làm bài' },
               ]}
             >
-              <InputNumber min={0} />
+              <InputNumber min={0} disabled />
             </Form.Item>
 
             <Form.Item

@@ -6,28 +6,28 @@ import { NextPage } from 'next';
 import { useState } from 'react';
 
 const AdminExamList: NextPage = () => {
-  const [openView, setOpenView] = useState<boolean>(false);
-  const [examData, setExamData] = useState<any>({});
+  const [examFocusId, setExamFocusId] = useState('');
+  const [openView, setOpenView] = useState(false);
 
-  const handleViewData = (data) => {
-    setExamData(data);
+  const handleFocus = (id: string) => {
+    setExamFocusId(id);
     setOpenView(true);
   };
 
   return (
     <div className="w-full relative p-5 flex flex-col gap-3">
-      <ExamsTable setData={handleViewData} />
+      <ExamsTable onFocus={handleFocus} />
       <ViewExam
         open={openView}
-        onClose={setOpenView.bind(null, false)}
-        data={examData}
+        onClose={() => setOpenView(false)}
+        id={examFocusId}
       />
     </div>
   );
 };
 
 export const getServerSideProps = withAuth(
-  async (_) => ({
+  async () => ({
     props: {},
   }),
   RoleEnum.admin

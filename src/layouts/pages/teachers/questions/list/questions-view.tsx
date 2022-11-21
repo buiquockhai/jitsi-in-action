@@ -15,7 +15,7 @@ export function QuestionView() {
     if (tree) {
       setTreeNode(rawToDataNode(tree));
     }
-  }, [tree]);
+  }, [tree, setTreeNode]);
 
   return (
     <div className="w-full flex flex-col gap-3 p-5">

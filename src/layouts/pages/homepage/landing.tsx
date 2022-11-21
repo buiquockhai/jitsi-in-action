@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Timeline, Button } from 'antd';
 import Container from '@layout/main/container';
 import { useRouter } from 'next/router';
@@ -15,7 +15,9 @@ const Landing = () => {
   };
 
   const handleViewSchedule = () => {
-    push(role === RoleEnum.teacher ? ROUTES.TEACHER_SCHEDULE : ROUTES.STUDENT_SCHEDULE);
+    push(
+      role === RoleEnum.teacher ? ROUTES.TEACHER_SCHEDULE : ROUTES.STUDENT_SCHEDULE
+    );
   };
 
   return (

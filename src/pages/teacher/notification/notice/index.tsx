@@ -1,34 +1,40 @@
+import { useSystemContext } from '@context/system';
 import withAuth from '@hoc/withAuth';
+import { useFetchNotification } from '@hook/notification/useFetchNotification';
 import { RoleEnum } from '@util/constant';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
-import { v4  } from 'uuid';
+import { Empty } from 'antd';
+import { NextPage } from 'next';
 
 const Notification: NextPage = () => {
+  const { userId } = useSystemContext();
+
+  const notifications = useFetchNotification(userId);
+
+  if (!notifications || notifications.length <= 0) {
+    return <Empty image={Empty.PRESENTED_IMAGE_SIMPLE} />;
+  }
+
   return (
     <div className="w-full flex py-5 items-center justify-center">
       <div className="max-w-2xl w-full flex flex-col gap-2">
-        {Array(30)
-          .fill(null)
-          .map(() => (
-            <div
-              key={v4()}
-              className="rounded-sm bg-blue-50 border-blue-300 border p-5 flex flex-col"
-            >
-              <p className="font-semibold">Tiêu đề thông báo</p>
-              <p>Nội dung thông báo ...</p>
-            </div>
-          ))}
+        {(notifications ?? []).map((item) => (
+          <div
+            key={item.id}
+            className="rounded-sm bg-blue-50 border-blue-300 border p-5 flex flex-col"
+          >
+            <p className="font-semibold">{item.title}</p>
+            <p>{item.content}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  async () => ({
+    props: {},
+  }),
   RoleEnum.teacher
 );
 

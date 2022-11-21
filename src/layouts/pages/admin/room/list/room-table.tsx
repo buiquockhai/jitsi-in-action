@@ -4,14 +4,28 @@ import {
   EditOutlined,
   DeleteOutlined,
 } from '@ant-design/icons';
-import { useFetchRooms } from '@hook/room/useFetchRooms';
+import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
+import { GET_ROOMS, useFetchRooms } from '@hook/room/useFetchRooms';
+import { useUpdateRoom } from '@hook/room/useUpdateRoom';
 import { ROOM_STATUS } from '@util/constant';
+import { ROUTES } from '@util/routes';
 import { Button, Popconfirm, Table, Tag } from 'antd';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { useMemo } from 'react';
 
 const RoomTable = ({}) => {
+  const { push } = useRouter();
+
   const rooms = useFetchRooms();
+  const updateRoomMutation = useUpdateRoom([GET_ROOMS, GET_ROOM_DETAIL]);
+
+  const handleRemove = (id: string) => {
+    updateRoomMutation.mutate({
+      id: id,
+      deleted: 'Y',
+    });
+  };
 
   const columns = useMemo(
     () => [
@@ -73,12 +87,13 @@ const RoomTable = ({}) => {
                 icon={<EditOutlined />}
                 size="small"
                 type="link"
-                // onClick={() => push(ROUTES.ADMIN_UPDATE_GROUP(row.id))}
+                onClick={() => push(ROUTES.ADMIN_UPDATE_ROOM(row.id))}
               />
 
               <Popconfirm
                 title="Bạn có chắc chắn xoá đề thi?"
                 icon={<QuestionCircleOutlined />}
+                onConfirm={() => handleRemove(row.id)}
               >
                 <Button icon={<DeleteOutlined />} size="small" type="link" danger />
               </Popconfirm>

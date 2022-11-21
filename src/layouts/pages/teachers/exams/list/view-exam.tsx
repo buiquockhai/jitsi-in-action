@@ -1,4 +1,6 @@
-import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
+import { GET_EXAM_DETAIL, useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
+import { GET_EXAMS } from '@hook/exam/useFetchExams';
+import { useUpdateExam } from '@hook/exam/useUpdateExam';
 import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button, Descriptions, Drawer, Tag } from 'antd';
@@ -15,8 +17,16 @@ type Props = {
 const ViewExam: FC<Props> = ({ open, id, onClose }) => {
   const { push } = useRouter();
   const examDetail = useFetchExamDetail(id);
+  const updateExamMutation = useUpdateExam([GET_EXAMS, GET_EXAM_DETAIL]);
 
   const exam = examDetail?.exam;
+
+  const handleSubmit = () => {
+    updateExamMutation.mutate({
+      id: id,
+      submitted: 'Y',
+    });
+  };
 
   return (
     <Drawer
@@ -29,7 +39,11 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
           <Button onClick={() => push(ROUTES.TEACHER_UPDATE_EXAM(id))}>
             Chỉnh sửa
           </Button>
-          <Button onClick={onClose} type="primary">
+          <Button
+            onClick={handleSubmit}
+            type="primary"
+            disabled={exam?.submitted === 'Y'}
+          >
             Submit
           </Button>
         </div>
@@ -48,6 +62,12 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
           </Descriptions.Item>
           <Descriptions.Item label="Thời gian làm bài">
             {exam?.duration} phút
+          </Descriptions.Item>
+          <Descriptions.Item label="Phê duyệt">
+            {exam?.status === 'Y' ? 'Đã phê duyệt' : 'Chưa phê duyệt'}
+          </Descriptions.Item>
+          <Descriptions.Item label="Submit">
+            {exam?.submitted === 'Y' ? 'Đã submit' : 'Chưa submit'}
           </Descriptions.Item>
         </Descriptions>
 

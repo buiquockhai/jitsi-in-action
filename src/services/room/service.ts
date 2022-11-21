@@ -11,6 +11,12 @@ class Room extends Client {
     });
   }
 
+  public getRoomDetail(id: string) {
+    return fetcher<BaseResponse<RoomResponse>>(`${this.baseUrl}/v1/room/${id}`, {
+      headers: this.privateHeaders,
+    });
+  }
+
   public newRoom(req: NewRoomRequest) {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room`, {
       headers: this.privateHeaders,

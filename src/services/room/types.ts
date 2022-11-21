@@ -41,5 +41,5 @@ export interface UpdateRoomRequest {
   proctor_name?: string;
   start_date?: Date;
   meeting?: string;
-  deleted: DeleteFlagTypes;
+  deleted?: DeleteFlagTypes;
 }

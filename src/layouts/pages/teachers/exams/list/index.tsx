@@ -39,12 +39,12 @@ const ExamsTable: FC<Props> = ({ onFocus }) => {
       {
         title: 'Tiêu đề',
         dataIndex: 'title',
-        width: '30%',
+        width: '20%',
       },
       {
         title: 'Độ khó',
         dataIndex: 'level',
-        width: '20%',
+        width: '10%',
         sorter: (a, b) => a.level - b.level,
         render: (level) => <Tag color="green">{LevelEnum[level]}</Tag>,
         filters: Object.entries(LevelEnum).map(([key, value]) => ({
@@ -66,18 +66,40 @@ const ExamsTable: FC<Props> = ({ onFocus }) => {
         sorter: (a, b) => a.duration - b.duration,
       },
       {
+        title: 'Phê duyệt',
+        dataIndex: 'status',
+        width: '10%',
+        render: (status) => (
+          <Tag color={status === 'Y' ? 'green' : ''}>
+            {status === 'Y' ? 'Đã phê duyệt' : 'Chưa phê duyệt'}
+          </Tag>
+        ),
+        sorter: (a, b) => a.status - b.status,
+      },
+      {
+        title: 'Submit',
+        dataIndex: 'submitted',
+        width: '10%',
+        render: (submitted) => (
+          <Tag color={submitted === 'Y' ? 'green' : ''}>
+            {submitted === 'Y' ? 'Yes' : 'No'}
+          </Tag>
+        ),
+        sorter: (a, b) => a.submitted - b.submitted,
+      },
+      {
         title: 'Ngày tạo',
         dataIndex: 'created_date',
-        width: '20%',
+        width: '15%',
         sorter: (a, b) =>
           moment(a.created_date).toDate().getTime() -
           moment(b.created_date).toDate().getTime(),
-        render: (created_date) => moment(created_date).format('DD/MM/YYYY'),
+        render: (created_date) => moment(created_date).format('HH:mm DD/MM/YYYY'),
       },
       {
         title: 'Hoạt động',
         dataIndex: '',
-        width: '10%',
+        width: '15%',
         render: (row: ExamResponse) => {
           return (
             <div className="flex flex-row gap-3 items-center">
@@ -105,7 +127,7 @@ const ExamsTable: FC<Props> = ({ onFocus }) => {
         },
       },
     ],
-    []
+    [onFocus, push]
   );
 
   return <Table size="small" columns={columns} dataSource={examList} />;

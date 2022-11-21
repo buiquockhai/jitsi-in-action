@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Badge, Drawer, Dropdown, Menu, Tag } from 'antd';
 import Container from './container';
@@ -8,7 +8,7 @@ import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
 import { RoleEnum } from '@util/constant';
 import { adminMenu, studentMenu, teacherMenu } from '@util/menu';
-import { v4  } from 'uuid';
+import { v4 } from 'uuid';
 
 const Header = () => {
   const { push } = useRouter();
@@ -16,10 +16,10 @@ const Header = () => {
 
   const [visible, setVisible] = useState(false);
 
-  const handleLogout = async () => {
+  const handleLogout = useCallback(async () => {
     await removeAuthentication();
     push(ROUTES.LOGIN);
-  };
+  }, [push]);
 
   const menu = useMemo(() => {
     const menuData: any[] = [];

@@ -40,6 +40,9 @@ export const ROUTES = {
   ADMIN_LOGOUT: '/admin/notification/logout',
   ADMIN_NOTICE: '/admin/notification/notice',
   ADMIN_NEW_ROOM: '/admin/room/new',
+  ADMIN_UPDATE_ROOM: (id: string) => {
+    return `/admin/room/new?id=${id}`;
+  },
   ADMIN_EXAM_LIST: '/admin/room/exam-list',
   ADMIN_ROOM_LIST: '/admin/room/list',
   ADMIN_NEW_GROUP: '/admin/group/new',

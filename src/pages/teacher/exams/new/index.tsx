@@ -6,7 +6,6 @@ import { useUpdateExam } from '@hook/exam/useUpdateExam';
 import PageHeaderExamsCreation from '@layout/pages/teachers/exams/new/page-header';
 import QuestionDefine from '@layout/pages/teachers/exams/new/question-define';
 import QuestionTree from '@layout/pages/teachers/exams/new/question-tree';
-import { NewExamRequest } from '@service/exam/types';
 import { RoleEnum } from '@util/constant';
 import { Form } from 'antd';
 import type { NextPage } from 'next';
@@ -17,6 +16,8 @@ type FormProps = {
   range: number;
   maxPoint: number;
   workingTime: number;
+  status: string;
+  submitted: string;
   questions: string[];
 };
 
@@ -25,6 +26,8 @@ const initialValues: FormProps = {
   range: 0,
   maxPoint: 0,
   workingTime: 0,
+  status: '',
+  submitted: '',
   questions: [],
 };
 
@@ -34,25 +37,26 @@ const TeacherExams: NextPage = () => {
   const [form] = Form.useForm<FormProps>();
 
   const newExamMutation = useNewExam([GET_EXAMS, GET_EXAM_DETAIL]);
-  const updateExamMutaion = useUpdateExam([GET_EXAMS, GET_EXAM_DETAIL]);
+  const updateExamMutation = useUpdateExam([GET_EXAMS, GET_EXAM_DETAIL]);
 
   const handleSubmit = async (values: FormProps) => {
     const object = {
       max_point: values.maxPoint,
       duration: values.workingTime,
       level: values.range,
-      status: false,
+      status: values.status,
+      submitted: values.submitted,
       title: values.title,
       questions: values.questions,
     };
 
     if ((query.id ?? '').length > 0) {
-      await updateExamMutaion.mutate({
+      await updateExamMutation.mutate({
         id: query.id as string,
         ...object,
       });
     } else {
-      await newExamMutation.mutate(object);
+      await newExamMutation.mutate({ ...object, status: 'N', submitted: 'N' });
       form.setFieldsValue(initialValues);
     }
   };

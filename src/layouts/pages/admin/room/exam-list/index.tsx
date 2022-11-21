@@ -3,14 +3,20 @@ import {
   EyeOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import { ADMIN_EXAMS_MOCK } from '@mock/exams';
-import { EXAM_RANGE, VERIFY_STATUS } from '@util/constant';
+import { useFetchExams } from '@hook/exam/useFetchExams';
+import { LevelEnum } from '@util/constant';
 import { Button, Popconfirm, Table, Tag } from 'antd';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import { FC, useMemo } from 'react';
 
-const ExamsTable = ({ setData }) => {
-  const columns: any = useMemo(
+type Props = {
+  onFocus: (id: string) => void;
+};
+
+const ExamsTable: FC<Props> = ({ onFocus }) => {
+  const exams = useFetchExams({ submitted: 'Y' });
+
+  const columns = useMemo(
     () => [
       {
         title: 'Tiêu đề',
@@ -19,55 +25,52 @@ const ExamsTable = ({ setData }) => {
       },
       {
         title: 'Độ khó',
-        dataIndex: 'range',
+        dataIndex: 'level',
         width: '10%',
-        sorter: (a, b) => a.range - b.range,
-        render: (range) => <Tag color="green">{EXAM_RANGE[range]}</Tag>,
-        filters: Object.entries(EXAM_RANGE).map(([key, value]) => ({
+        sorter: (a, b) => a.level - b.level,
+        render: (level) => <Tag color="green">{LevelEnum[level]}</Tag>,
+        filters: Object.entries(LevelEnum).map(([key, value]) => ({
           text: value,
           value: key,
         })),
-        onFilter: (value, record) => record?.range == parseInt(value),
+        onFilter: (value, record) => record?.level == parseInt(value),
       },
       {
         title: 'Điểm tối đa',
-        dataIndex: 'maxPoint',
+        dataIndex: 'max_point',
         width: '10%',
-        sorter: (a, b) => a.maxPoint - b.maxPoint,
+        sorter: (a, b) => a.max_point - b.max_point,
       },
       {
         title: 'Thời gian làm bài',
-        dataIndex: 'workingTime',
+        dataIndex: 'duration',
         width: '10%',
-        sorter: (a, b) => a.workingTime - b.workingTime,
-      },
-      {
-        title: 'Người cho đề',
-        dataIndex: 'createdBy',
-        width: '10%',
-        render: (createdBy) => createdBy?.fullname,
+        sorter: (a, b) => a.duration - b.duration,
       },
       {
         title: 'Trạng thái',
-        dataIndex: 'verified',
-        width: '10%',
-        render: (verified) => (
-          <Tag color={verified ? 'green' : 'red'}>
-            {VERIFY_STATUS[verified ? '1' : '0']}
+        dataIndex: 'status',
+        width: '15%',
+        render: (status) => (
+          <Tag color={status === 'Y' ? 'green' : 'red'}>
+            {status === 'Y' ? 'Đã kiểm duyêt' : 'Chưa kiểm duyệt'}
           </Tag>
         ),
-        filters: Object.entries(VERIFY_STATUS).map(([key, value]) => ({
-          text: value,
-          value: key,
-        })),
-        onFilter: (value, record) => (record?.verified ? value == 1 : value == 0),
+        filters: [
+          { value: 'Y', text: 'Đã kiểm duyệt' },
+          { value: 'N', text: 'Chưa kiểm duyệt' },
+        ],
+        sorter: (a, b) => a.status - b.status,
+        onFilter: (value, record) => record?.status === value,
       },
       {
         title: 'Ngày tạo',
-        dataIndex: 'createdAt',
-        width: '10%',
-        sorter: (a, b) => a.createdAt - b.createdAt,
-        render: (createdAt) => moment(createdAt).format('L'),
+        dataIndex: 'created_date',
+        width: '15%',
+        sorter: (a, b) =>
+          moment(a.created_date).toDate().getTime() -
+          moment(b.created_date).toDate().getTime(),
+        render: (created_date) => moment(created_date).format('HH:mm DD/MM/YYYY'),
       },
       {
         title: 'Hoạt động',
@@ -80,7 +83,7 @@ const ExamsTable = ({ setData }) => {
                 icon={<EyeOutlined />}
                 size="small"
                 type="link"
-                onClick={setData.bind(null, row)}
+                onClick={() => onFocus(row.id)}
               />
               <Popconfirm
                 title="Bạn có chắc chắn từ chối đề thi?"
@@ -96,18 +99,7 @@ const ExamsTable = ({ setData }) => {
     []
   );
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
-  return (
-    <Table
-      size="small"
-      columns={columns}
-      dataSource={ADMIN_EXAMS_MOCK}
-      onChange={onChange}
-    />
-  );
+  return <Table size="small" columns={columns} dataSource={exams ?? []} />;
 };
 
 export default ExamsTable;
