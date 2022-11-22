@@ -5,6 +5,7 @@ import { QueryClient, QueryClientProvider, Hydrate } from '@tanstack/react-query
 import SystemContextProvider from '@context/system';
 import SlideLayout from '@layout/utils/slide-layout';
 import Loading from '@layout/main/loading';
+import SocketContextProvider from '@context/socket';
 
 const queryClient = new QueryClient();
 
@@ -27,11 +28,13 @@ const App = ({ Component, pageProps }: any) => {
     <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <SystemContextProvider>
-          <Loading>
-            <MainLayout>
-              <Component {...pageProps} />
-            </MainLayout>
-          </Loading>
+          <SocketContextProvider>
+            <Loading>
+              <MainLayout>
+                <Component {...pageProps} />
+              </MainLayout>
+            </Loading>
+          </SocketContextProvider>
         </SystemContextProvider>
       </Hydrate>
     </QueryClientProvider>

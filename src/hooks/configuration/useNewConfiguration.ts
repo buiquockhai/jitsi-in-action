@@ -3,7 +3,7 @@ import { configurationService } from '@service/router';
 import { message } from 'antd';
 import { UpdateConfigurationRequest } from '@service/configuration/types';
 
-export function userNewConfiguration(invalidateKeys?: string[]) {
+export function useNewConfiguration(invalidateKeys?: string[]) {
   const queryClient = useQueryClient();
 
   return useMutation({

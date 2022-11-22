@@ -1,7 +1,10 @@
+import { SocketEmitter, useSocketContext } from '@context/socket';
 import { GET_EXAM_DETAIL, useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { GET_EXAMS } from '@hook/exam/useFetchExams';
 import { useUpdateExam } from '@hook/exam/useUpdateExam';
-import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { GET_NOTIFICATIONS } from '@hook/notification/useFetchNotification';
+import { useNewNotification } from '@hook/notification/useNewNotification';
+import { ANPHABET, LevelEnum, QuestionTypeEnum, __adminId } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button, Descriptions, Drawer, Tag } from 'antd';
 import moment from 'moment';
@@ -16,15 +19,29 @@ type Props = {
 
 const ViewExam: FC<Props> = ({ open, id, onClose }) => {
   const { push } = useRouter();
+  const { socket } = useSocketContext();
   const examDetail = useFetchExamDetail(id);
   const updateExamMutation = useUpdateExam([GET_EXAMS, GET_EXAM_DETAIL]);
+  const newNotificationMutation = useNewNotification([GET_NOTIFICATIONS]);
 
   const exam = examDetail?.exam;
 
-  const handleSubmit = () => {
-    updateExamMutation.mutate({
+  const handleSubmit = async () => {
+    await updateExamMutation.mutate({
       id: id,
       submitted: 'Y',
+    });
+    onClose();
+
+    await newNotificationMutation.mutate({
+      user_id: __adminId,
+      title: 'Giảng viên submit đề thi',
+      content: exam?.title ?? '',
+    });
+
+    socket.emit(SocketEmitter.clientSendSubmitExam, {
+      examTitle: exam?.title,
+      examId: exam?.id,
     });
   };
 

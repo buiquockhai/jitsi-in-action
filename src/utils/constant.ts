@@ -8,6 +8,8 @@ export const __role = '__role';
 
 export const __fullname = '__fullname';
 
+export const __adminId = '88785352-c404-4546-8bd9-8efedbe9182f';
+
 export const ANPHABET = {
   0: 'A',
   1: 'B',

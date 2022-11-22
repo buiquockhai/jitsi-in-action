@@ -3,6 +3,7 @@ import withAuth from '@hoc/withAuth';
 import { useFetchNotification } from '@hook/notification/useFetchNotification';
 import { RoleEnum } from '@util/constant';
 import { Empty } from 'antd';
+import moment from 'moment';
 import { NextPage } from 'next';
 
 const Notification: NextPage = () => {
@@ -24,6 +25,9 @@ const Notification: NextPage = () => {
           >
             <p className="font-semibold">{item.title}</p>
             <p>{item.content}</p>
+            <p className="w-full text-right">
+              {moment(item.created_date).format('HH:mm DD/MM/YYYY')}
+            </p>
           </div>
         ))}
       </div>

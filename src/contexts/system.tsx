@@ -6,8 +6,7 @@ import { getCookie } from '@util/functions';
 import { __token } from './../utils/constant';
 import jwt_decode from 'jwt-decode';
 import { notification } from 'antd';
-import { NotificationPlacement } from 'antd/lib/notification';
-import {} from 'react';
+import { NotificationInstance, NotificationPlacement } from 'antd/lib/notification';
 
 type NotificationProps = {
   message: string;
@@ -30,7 +29,7 @@ export interface SystemContextProps {
   setUsername: Dispatch<SetStateAction<string>>;
   avatar: string;
   setAvatar: Dispatch<SetStateAction<string>>;
-  triggerNotification: (data: NotificationProps) => void;
+  notification: NotificationInstance;
 }
 
 const [Provider, useSystemContext] = createContext<SystemContextProps>({
@@ -71,14 +70,6 @@ const SystemContextProvider = ({ children }) => {
 
   const [api, contextHolder] = notification.useNotification();
 
-  const triggerNotification = (props: NotificationProps) => {
-    api.info({
-      message: props.message,
-      description: props.description,
-      placement: props.placement ?? 'bottomRight',
-    });
-  };
-
   const context: SystemContextProps = {
     toast,
     setToast,
@@ -94,7 +85,7 @@ const SystemContextProvider = ({ children }) => {
     setUsername,
     avatar,
     setAvatar,
-    triggerNotification,
+    notification: api,
   };
 
   return (

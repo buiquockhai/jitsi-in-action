@@ -11,3 +11,9 @@ export interface GetNotificationResponse {
   updated_id: string;
   deleted: DeleteFlagTypes;
 }
+
+export interface NewNotificationRequest {
+  user_id: string;
+  title: string;
+  content: string;
+}
