@@ -74,7 +74,13 @@ export async function ErrorHandler<T>(
 }
 
 export function uuidVerify<T>(data: T, keys?: string[]) {
-  const parseKeys = keys ?? ['id', 'created_id', 'updated_id'];
+  const parseKeys = keys ?? [
+    'id',
+    'created_id',
+    'updated_id',
+    'group_id',
+    'proctor_id',
+  ];
   return Object.entries(data as Record<string, string>).reduce(
     (obj, [key, value]) => {
       if (parseKeys.includes(key)) {

@@ -4,6 +4,8 @@ import { GET_FOLDER } from './keys';
 import { GetFolderRequest } from '@service/question/types';
 
 export function useFetchFolder(req: GetFolderRequest) {
-  const res = useQuery([GET_FOLDER], () => questionService.getFolder(req));
+  const res = useQuery([GET_FOLDER, JSON.stringify(req)], () =>
+    questionService.getFolder(req)
+  );
   return res.data?.data;
 }

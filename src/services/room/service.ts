@@ -8,11 +8,12 @@ import {
   RoomResponse,
   UpdateRoomRequest,
 } from './types';
+import { uuidVerify } from '@util/functions';
 
 class Room extends Client {
   public getRooms(req: GetRoomRequest) {
     return fetcher<BaseResponse<RoomResponse[]>>(
-      `${this.baseUrl}/v1/room?${qs.stringify(req)}`,
+      `${this.baseUrl}/v1/room?${qs.stringify(uuidVerify(req))}`,
       {
         headers: this.privateHeaders,
       }

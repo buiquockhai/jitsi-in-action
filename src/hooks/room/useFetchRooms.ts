@@ -5,6 +5,8 @@ import { GetRoomRequest } from '@service/room/types';
 export const GET_ROOMS = 'GET_ROOMS';
 
 export function useFetchRooms(req: GetRoomRequest) {
-  const res = useQuery([GET_ROOMS], () => roomService.getRooms(req));
+  const res = useQuery([GET_ROOMS, JSON.stringify(req)], () =>
+    roomService.getRooms(req)
+  );
   return res.data?.data;
 }

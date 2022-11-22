@@ -1,6 +1,6 @@
 import { useSystemContext } from '@context/system';
 import { useFetchRooms } from '@hook/room/useFetchRooms';
-import { Badge, Calendar, List, Modal } from 'antd';
+import { Badge, Button, Calendar, List, Modal } from 'antd';
 import moment, { Moment } from 'moment';
 import React from 'react';
 
@@ -10,6 +10,8 @@ const TeacherCalendar = () => {
   const rooms = useFetchRooms({
     proctor_id: userId,
   });
+
+  console.log({ rooms, userId });
 
   const getDayEvent = (date: Moment) => {
     const events = (rooms ?? []).filter((item) => {
@@ -46,18 +48,32 @@ const TeacherCalendar = () => {
     );
   };
 
+  const handleJoin = (id: string) => {
+    console.log({ id });
+  };
+
   const handleOpenDetail = (data) => {
     const time = data?.[0]?.startDate;
 
     return Modal.info({
       width: '40vw',
-      title: `Lịch thi ngày ${moment(time).format('L')}`,
+      title: `Lịch thi ngày ${moment(time).format('DD/MM/YYYY')}`,
       content: (
         <List
           itemLayout="horizontal"
           dataSource={data}
           renderItem={(item: any) => (
-            <List.Item actions={[<a key="text-primary">Tham gia</a>]}>
+            <List.Item
+              actions={[
+                <Button
+                  key={item.id}
+                  type="primary"
+                  onClick={() => handleJoin(item.id)}
+                >
+                  Tham gia
+                </Button>,
+              ]}
+            >
               {moment(item?.startDate).format('HH:mm DD/MM/YYYY')} - {item?.title}
             </List.Item>
           )}
