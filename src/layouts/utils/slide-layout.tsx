@@ -1,11 +1,10 @@
 import MenuSlide from '@layout/main/side';
-import Topbar from '@layout/main/topbar';
+import TopBar from '@layout/main/topbar';
 import { useSystemContext } from '@context/system';
 import { ROUTES } from '@util/routes';
 import { useRouter } from 'next/router';
-import React from 'react';
 
-const SlideLayout: React.FC<any> = ({ children }) => {
+const SlideLayout = ({ children }) => {
   const { hideMenu } = useSystemContext();
   const { push } = useRouter();
 
@@ -31,7 +30,7 @@ const SlideLayout: React.FC<any> = ({ children }) => {
         className="flex flex-col h-screen transition-all duration-300 relative"
         style={{ width: hideMenu ? 'calc(100vw - 5rem)' : 'calc(100vw - 18rem)' }}
       >
-        <Topbar />
+        <TopBar />
 
         <div className="w-full h-screen overflow-auto bg-background pt-[50px]">
           {children}

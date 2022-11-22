@@ -6,11 +6,10 @@ import {
 import { removeAuthentication } from '@util/functions';
 import { Button, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
-import React from 'react';
 import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
 
-const Topbar: React.FC<any> = () => {
+const TopBar = () => {
   const router = useRouter();
 
   const { hideMenu, setHideMenu } = useSystemContext();
@@ -21,14 +20,14 @@ const Topbar: React.FC<any> = () => {
   };
 
   return (
-    <div className="w-full h-[50px] px-5 flex flex-row items-center justify-between absolute top-0 z-10 bg-white">
+    <div className="w-full h-[50px] px-5 flex items-center justify-between absolute top-0 z-10 bg-white">
       <Button
         icon={hideMenu ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
         type="primary"
-        onClick={setHideMenu.bind(null, !hideMenu)}
+        onClick={() => setHideMenu(!hideMenu)}
       />
 
-      <div className="flex flex-row gap-3">
+      <div className="flex gap-3">
         <Tooltip title="Đăng xuất">
           <Button icon={<LogoutOutlined />} onClick={handleLogout} />
         </Tooltip>
@@ -37,4 +36,4 @@ const Topbar: React.FC<any> = () => {
   );
 };
 
-export default Topbar;
+export default TopBar;

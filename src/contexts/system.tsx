@@ -1,26 +1,36 @@
 import { Router } from 'next/router';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
 import { createContext } from '@util/createContext';
 import { JwtResponse, RoleTypes } from '@schema/system';
 import { getCookie } from '@util/functions';
 import { __token } from './../utils/constant';
 import jwt_decode from 'jwt-decode';
+import { notification } from 'antd';
+import { NotificationPlacement } from 'antd/lib/notification';
+import {} from 'react';
+
+type NotificationProps = {
+  message: string;
+  description: ReactNode;
+  placement?: NotificationPlacement;
+};
 
 export interface SystemContextProps {
   toast: boolean;
-  setToast: (status: boolean) => void;
+  setToast: Dispatch<SetStateAction<boolean>>;
   loading: boolean;
-  setLoading: (loading: boolean) => void;
+  setLoading: Dispatch<SetStateAction<boolean>>;
   userId: string;
-  setUserId: (userId: string) => void;
+  setUserId: Dispatch<SetStateAction<string>>;
   hideMenu: boolean;
-  setHideMenu: (value: boolean) => void;
+  setHideMenu: Dispatch<SetStateAction<boolean>>;
   role: RoleTypes;
-  setRole: (role: RoleTypes) => void;
+  setRole: Dispatch<SetStateAction<RoleTypes>>;
   username: string;
-  setUsername: (username: string) => void;
+  setUsername: Dispatch<SetStateAction<string>>;
   avatar: string;
-  setAvatar: (avatar: string) => void;
+  setAvatar: Dispatch<SetStateAction<string>>;
+  triggerNotification: (data: NotificationProps) => void;
 }
 
 const [Provider, useSystemContext] = createContext<SystemContextProps>({
@@ -59,7 +69,15 @@ const SystemContextProvider = ({ children }) => {
   const [username, setUsername] = useState('');
   const [avatar, setAvatar] = useState('');
 
-  console.log(userId);
+  const [api, contextHolder] = notification.useNotification();
+
+  const triggerNotification = (props: NotificationProps) => {
+    api.info({
+      message: props.message,
+      description: props.description,
+      placement: props.placement ?? 'bottomRight',
+    });
+  };
 
   const context: SystemContextProps = {
     toast,
@@ -76,9 +94,15 @@ const SystemContextProvider = ({ children }) => {
     setUsername,
     avatar,
     setAvatar,
+    triggerNotification,
   };
 
-  return <Provider value={context}>{children}</Provider>;
+  return (
+    <Provider value={context}>
+      {contextHolder}
+      {children}
+    </Provider>
+  );
 };
 
 export { useSystemContext };
