@@ -3,7 +3,7 @@ import { userService } from '@service/router';
 import { UpdateUserDetailRequest } from '@service/user/types';
 import { message } from 'antd';
 
-export function userUpdateUserDetail(invalidateKeys?: Array<string | string[]>) {
+export function useUpdateUserDetail(invalidateKeys?: Array<string | string[]>) {
   const queryClient = useQueryClient();
 
   return useMutation({

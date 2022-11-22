@@ -1,10 +1,9 @@
 import withAuth from '@hoc/withAuth';
-import React from 'react';
 import { RoleEnum } from '@util/constant';
 import { Form, Input, Button } from 'antd';
 import { GetServerSideProps } from 'next';
 import { message } from 'antd';
-import { userUpdatePassword } from '@hook/user/useUpdatePassword';
+import { useUpdatePassword } from '@hook/user/useUpdatePassword';
 
 type FormProps = {
   oldPassword: string;
@@ -12,10 +11,10 @@ type FormProps = {
   confirmationPassword: string;
 };
 
-const ChangePassword: React.FC<any> = () => {
+const ChangePassword = () => {
   const [form] = Form.useForm();
 
-  const userChangePasswordMutation = userUpdatePassword();
+  const userChangePasswordMutation = useUpdatePassword();
 
   const handleSubmit = (values: FormProps) => {
     if (values?.newPassword !== values?.confirmationPassword) {
@@ -73,7 +72,7 @@ const ChangePassword: React.FC<any> = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
+export const getServerSideProps: GetServerSideProps = withAuth(() => {
   return {
     props: {},
   };

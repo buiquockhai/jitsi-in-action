@@ -6,8 +6,10 @@ import { useUpdateExam } from '@hook/exam/useUpdateExam';
 import { GET_NOTIFICATIONS } from '@hook/notification/useFetchNotification';
 import { useNewNotification } from '@hook/notification/useNewNotification';
 import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { ROUTES } from '@util/routes';
 import { Button, Descriptions, Drawer, Popconfirm, Tag } from 'antd';
 import moment from 'moment';
+import { useRouter } from 'next/router';
 import { FC } from 'react';
 
 type Props = {
@@ -17,6 +19,8 @@ type Props = {
 };
 
 const ViewExam: FC<Props> = ({ open, id, onClose }) => {
+  const { push } = useRouter();
+
   const { socket } = useSocketContext();
 
   const newNotificationMutation = useNewNotification([GET_NOTIFICATIONS]);
@@ -31,7 +35,7 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
     });
   };
 
-  const handleReturnExam = async () => {
+  const handleRejectExam = async () => {
     await updateExamMutation.mutate({
       id: exams?.id ?? '',
       submitted: 'N',
@@ -73,11 +77,11 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
             title="Bạn có chắc chắn muốn trả đề trở lại người cho đề?"
             disabled={exams?.status === 'Y'}
             icon={<QuestionCircleOutlined />}
-            onConfirm={handleReturnExam}
+            onConfirm={handleRejectExam}
           >
             <Button disabled={exams?.status === 'Y'}>Trả đề</Button>
           </Popconfirm>
-          <Button onClick={onClose} type="primary">
+          <Button onClick={() => push(ROUTES.ADMIN_NEW_ROOM)} type="primary">
             Tạo phòng thi
           </Button>
         </div>

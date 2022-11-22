@@ -1,7 +1,6 @@
 import { Descriptions } from 'antd';
-import React from 'react';
 
-const StudentList: React.FC<any> = () => {
+const StudentList = () => {
   return (
     <div className="w-full min-h-full flex flex-col gap-3">
       <Descriptions size="small" column={1} title="Thông tin phòng thi">

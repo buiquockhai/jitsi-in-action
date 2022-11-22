@@ -1,5 +1,5 @@
 import withAuth from '@hoc/withAuth';
-import { userUpdatePassword } from '@hook/user/useUpdatePassword';
+import { useUpdatePassword } from '@hook/user/useUpdatePassword';
 import { RoleEnum } from '@util/constant';
 import { Form, Input, Button, message } from 'antd';
 import { GetServerSideProps } from 'next';
@@ -13,7 +13,7 @@ type FormProps = {
 const ChangePassword = () => {
   const [form] = Form.useForm();
 
-  const userChangePasswordMutation = userUpdatePassword();
+  const userChangePasswordMutation = useUpdatePassword();
 
   const handleSubmit = (values: FormProps) => {
     if (values?.newPassword !== values?.confirmationPassword) {

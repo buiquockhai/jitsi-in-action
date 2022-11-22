@@ -1,7 +1,7 @@
 import { FC, useEffect, useState } from 'react';
 import { Input, Modal, message } from 'antd';
 import { useUpdateFolder } from '@hook/question/useUpdateFolder';
-import { GET_FOLDER } from '@hook/question/keys';
+import { GET_FOLDER, GET_QUESTION } from '@hook/question/keys';
 
 type UpdateFolderProps = {
   open: boolean;
@@ -13,7 +13,7 @@ type UpdateFolderProps = {
 const UpdateFolderModal: FC<UpdateFolderProps> = ({ open, id, data, onClose }) => {
   const [internalText, setInternalText] = useState('');
 
-  const updateFolderMutation = useUpdateFolder([GET_FOLDER]);
+  const updateFolderMutation = useUpdateFolder([GET_FOLDER, GET_QUESTION]);
 
   const handleSave = async () => {
     if (internalText.trim().length <= 0) {

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import CheckoutResult from './checkout';
 import Playground from './playground';
 
-const ExamPane: React.FC<any> = () => {
+const ExamPane = () => {
   const [currentQuestion, setCurrentQuestion] = useState<number>(0);
 
   return (

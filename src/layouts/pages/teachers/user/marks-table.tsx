@@ -2,12 +2,12 @@ import { EyeOutlined } from '@ant-design/icons';
 import { MARKS_STUDENT_MOCK } from '@mock/marks';
 import { Button, Table } from 'antd';
 import moment from 'moment';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import ViewExam from './view-exam';
 
-const MarksTable: React.FC<any> = () => {
+const MarksTable = () => {
   const [data, setData] = useState<any>({});
-  const [open, setOpen] = useState<boolean>(false);
+  const [open, setOpen] = useState(false);
 
   const handleSetData = (data) => {
     setData(data);

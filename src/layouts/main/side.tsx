@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import { useMemo } from 'react';
 import { Menu } from 'antd';
 import { useRouter } from 'next/router';
 import { isArray } from 'lodash';
@@ -7,7 +7,7 @@ import Cookies from 'js-cookie';
 import { RoleEnum, __role } from '@util/constant';
 import { useSystemContext } from '@context/system';
 
-const MenuSlide: React.FC<any> = () => {
+const MenuSlide = () => {
   const router = useRouter();
 
   const { hideMenu } = useSystemContext();
@@ -32,7 +32,7 @@ const MenuSlide: React.FC<any> = () => {
       isArray(item?.children) ? [item, ...item?.children] : [item]
     );
     return keys?.flatMap((item) => (item?.href == router?.asPath ? item?.key : []));
-  }, [router?.asPath]);
+  }, [router?.asPath, menu]);
 
   return (
     <Menu

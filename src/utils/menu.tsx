@@ -1,11 +1,10 @@
-import { v4  } from 'uuid';
+import { v4 } from 'uuid';
 import {
   AppstoreOutlined,
   BellOutlined,
   CalendarOutlined,
   CloudOutlined,
   NumberOutlined,
-  RocketOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -111,14 +110,6 @@ export const adminMenu = [
 export const studentMenu = [
   {
     key: v4(),
-    label: 'Tham gia',
-    icon: <RocketOutlined />,
-    onClick: () => {
-      router.push(ROUTES.STUDENT_START('__room_1'));
-    },
-  },
-  {
-    key: v4(),
     label: 'Lịch thi',
     icon: <CalendarOutlined />,
     href: ROUTES.STUDENT_SCHEDULE,
@@ -183,14 +174,6 @@ export const studentMenu = [
 ];
 
 export const teacherMenu = [
-  {
-    key: v4(),
-    label: 'Tham gia',
-    icon: <RocketOutlined />,
-    onClick: () => {
-      router.push(ROUTES.TEACHER_START('__room_1'));
-    },
-  },
   {
     key: v4(),
     label: 'Lịch thi',

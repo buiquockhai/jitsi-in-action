@@ -1,9 +1,8 @@
 import dynamic from 'next/dynamic';
 import { IJitsiMeetingProps } from '@jitsi/react-sdk/lib/types';
-import React from 'react';
 import { useRouter } from 'next/router';
 
-const JitsiFrame: React.FC<any> = () => {
+const JitsiFrame = () => {
   const { replace } = useRouter();
 
   const JitsiMeeting = dynamic(

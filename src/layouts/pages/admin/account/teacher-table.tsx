@@ -3,9 +3,9 @@ import {
   EyeOutlined,
   QuestionCircleOutlined,
 } from '@ant-design/icons';
-import { GET_USER_LIST } from '@hook/user/keys';
+import { GET_USER_DETAIL, GET_USER_LIST } from '@hook/user/keys';
 import { useFetchUsers } from '@hook/user/useFetchUsers';
-import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
+import { useUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 import { GetUserListResponse } from '@service/user/types';
 import { DeleteFlagEnum, RoleEnum } from '@util/constant';
 import { Button, Popconfirm, Table } from 'antd';
@@ -20,7 +20,7 @@ const TeacherAccountTable = () => {
     role: RoleEnum.teacher,
   });
 
-  const mutationUser = userUpdateUserDetail([GET_USER_LIST]);
+  const mutationUser = useUpdateUserDetail([GET_USER_LIST, GET_USER_DETAIL]);
 
   const handleBindingData = (row: GetUserListResponse) => {
     setData(row);

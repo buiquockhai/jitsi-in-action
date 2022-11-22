@@ -39,9 +39,9 @@ class UserService extends Client {
     );
   }
 
-  public getUserDetail() {
+  public getUserDetail(id: string) {
     return fetcher<BaseResponse<GetUserDetailResponse>>(
-      `${this.baseUrl}/v1/user/detail`,
+      `${this.baseUrl}/v1/user/${id}`,
       {
         headers: this.privateHeaders,
       }

@@ -100,7 +100,7 @@ export const QuestionTypeEnum = {
 export type QuestionTypes = keyof typeof QuestionTypeEnum;
 
 export const RoomStatusEnum = {
-  '0': 'Chưa bắt đầu',
+  '0': 'Chưa mở',
   '1': 'Đang diễn ra',
   '2': 'Kết thúc',
 } as const;

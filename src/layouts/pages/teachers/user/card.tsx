@@ -5,27 +5,26 @@ import { ROUTES } from '@util/routes';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { GenderEnum } from '@util/constant';
 import moment from 'moment';
+import { useSystemContext } from '@context/system';
 
-const TeacherInfomationCard = () => {
-  const router = useRouter();
+const TeacherInformationCard = () => {
+  const { push } = useRouter();
+  const { userId } = useSystemContext();
 
-  const user = useFetchUserDetail();
+  const user = useFetchUserDetail(userId);
 
   return (
     <div className="w-full bg-white rounded-sm p-5 flex flex-col gap-3 h-fit">
       <div className="w-full flex flex-row gap-5 justify-between items-end mb-5">
-        <Avatar icon={<AntDesignOutlined />} size={100} />
+        <Avatar icon={<AntDesignOutlined />} size={100} src={user?.avatar} />
         <div className="flex flex-row gap-2">
-          <Button
-            size="small"
-            onClick={() => router.push(ROUTES.TEACHER_CHANGE_PASSWORD)}
-          >
+          <Button size="small" onClick={() => push(ROUTES.TEACHER_CHANGE_PASSWORD)}>
             Đổi mật khẩu
           </Button>
           <Button
             size="small"
             type="primary"
-            onClick={() => router.push(ROUTES.TEACHER_EDIT)}
+            onClick={() => push(ROUTES.TEACHER_EDIT)}
           >
             Chỉnh sửa
           </Button>
@@ -47,13 +46,11 @@ const TeacherInfomationCard = () => {
         <Descriptions.Item label="Số điện thoại">{user?.phone}</Descriptions.Item>
         <Descriptions.Item label="Địa chỉ">{user?.address}</Descriptions.Item>
         <Descriptions.Item label="Liên hệ">
-          <a href={user?.contact} target="_blank">
-            {user?.contact}
-          </a>
+          <a href={user?.contact}>{user?.contact}</a>
         </Descriptions.Item>
       </Descriptions>
     </div>
   );
 };
 
-export default TeacherInfomationCard;
+export default TeacherInformationCard;

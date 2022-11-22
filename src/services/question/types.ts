@@ -91,7 +91,7 @@ export interface NewQuestionRequest {
 }
 
 export interface UpdateQuestionRequest {
-  id: string;
+  id: string | string[];
   type?: QuestionTypes;
   level?: LevelTypes;
   point?: number;

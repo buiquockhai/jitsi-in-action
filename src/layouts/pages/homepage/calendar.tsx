@@ -40,7 +40,7 @@ const getMonthData = (value: Moment) => {
   }
 };
 
-const HomeCalendar: React.FC<any> = ({}) => {
+const HomeCalendar = () => {
   const monthCellRender = (value: Moment) => {
     const num = getMonthData(value);
     return num ? (

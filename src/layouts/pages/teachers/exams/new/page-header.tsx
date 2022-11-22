@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Button,
   Form,
@@ -12,7 +11,7 @@ import { useRouter } from 'next/router';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { EXAM_RANGE } from '@util/constant';
 
-const PageHeaderExamsCreation: React.FC<any> = () => {
+const PageHeaderExamsCreation = () => {
   const router = useRouter();
 
   return (
@@ -25,6 +24,7 @@ const PageHeaderExamsCreation: React.FC<any> = () => {
         subTitle="Tạo mới đề thi"
         extra={[
           <Popconfirm
+            key=""
             title="Bạn có chắc chắn muốn thoát?"
             icon={<QuestionCircleOutlined />}
           >
@@ -75,7 +75,9 @@ const PageHeaderExamsCreation: React.FC<any> = () => {
           >
             <Select placeholder="Chọn đáp án đúng" allowClear>
               {Object.entries(EXAM_RANGE)?.map(([key, value]) => (
-                <Select.Option value={key}>{value}</Select.Option>
+                <Select.Option key={key} value={key}>
+                  {value}
+                </Select.Option>
               ))}
             </Select>
           </Form.Item>

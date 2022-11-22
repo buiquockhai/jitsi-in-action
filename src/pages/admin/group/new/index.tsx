@@ -8,7 +8,6 @@ import { useFetchUserFreeze } from '@hook/user/useFetchUserFreeze';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@util/routes';
 import { useNewGroup } from '@hook/group/useNewGroup';
-import { v4 } from 'uuid';
 import {
   GET_USER_DETAIL,
   GET_USER_FREEZE_LIST,

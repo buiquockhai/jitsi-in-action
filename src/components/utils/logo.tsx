@@ -1,6 +1,11 @@
-import React from 'react';
+import { FC, memo } from 'react';
 
-const Logo: React.FC<any> = ({ color = '#2b6777', size = 24 }) => {
+type Props = {
+  color: string;
+  size: number;
+};
+
+const Logo: FC<Props> = ({ color = '#2b6777', size = 24 }) => {
   return (
     <svg
       width={size}
@@ -18,4 +23,4 @@ const Logo: React.FC<any> = ({ color = '#2b6777', size = 24 }) => {
   );
 };
 
-export default React.memo(Logo);
+export default memo(Logo);

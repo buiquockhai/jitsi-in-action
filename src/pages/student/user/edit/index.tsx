@@ -1,24 +1,15 @@
 import withAuth from '@hoc/withAuth';
-import { usePreview } from '@hook/system/usePreview';
 import { GenderTypes, RoleEnum } from '@util/constant';
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Radio,
-  Upload,
-  UploadFile,
-  UploadProps,
-} from 'antd';
-import ImgCrop from 'antd-img-crop';
+import { Button, DatePicker, Form, Input, Radio } from 'antd';
 import moment from 'moment';
 import { GetServerSideProps, NextPage } from 'next';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, createRef, useEffect, useState } from 'react';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { GenderEnum } from '@util/constant';
-import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
-import { GET_USER_DETAIL } from '@hook/user/keys';
+import { useUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
+import { GET_USER_DETAIL, GET_USER_LIST } from '@hook/user/keys';
+import { upload } from '@util/upload';
+import { useSystemContext } from '@context/system';
 
 type FormProps = {
   code: string;
@@ -29,19 +20,26 @@ type FormProps = {
   phone: string;
   address: string;
   contact: string;
-  avatar: UploadFile[];
+  avatar: string;
 };
 
 const StudentUpdateInformation: NextPage = () => {
   const [form] = Form.useForm();
-  const [onPreview] = usePreview();
 
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const ref = createRef<HTMLInputElement>();
 
-  const user = useFetchUserDetail();
-  const userMutation = userUpdateUserDetail([GET_USER_DETAIL]);
+  const { userId } = useSystemContext();
 
-  // const avatar = Form.useWatch('avatar', form);
+  const user = useFetchUserDetail(userId);
+  const userMutation = useUpdateUserDetail([GET_USER_DETAIL, GET_USER_LIST]);
+
+  const handleClickAvatar = () => {
+    if (ref.current) {
+      ref.current.click();
+    }
+  };
+
+  const avatar = Form.useWatch('avatar', form);
 
   const handleSubmit = (values: FormProps) => {
     userMutation.mutate({
@@ -54,11 +52,17 @@ const StudentUpdateInformation: NextPage = () => {
       name: values?.fullname,
       gender: values?.gender,
       phone: values?.phone,
+      avatar: values?.avatar,
     });
   };
 
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
+  const handleAvatarChange = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const url = await upload(event.target.files[0], 'avatar/');
+      form.setFieldsValue({
+        avatar: url,
+      });
+    }
   };
 
   useEffect(() => {
@@ -75,10 +79,10 @@ const StudentUpdateInformation: NextPage = () => {
         phone: user?.phone ?? '',
         address: user?.address ?? '',
         contact: user?.contact ?? '',
-        avatar: [],
+        avatar: user?.avatar ?? '',
       });
     }
-  }, [user]);
+  }, [user, form]);
 
   return (
     <div className="w-full flex py-10 items-center justify-center">
@@ -91,21 +95,28 @@ const StudentUpdateInformation: NextPage = () => {
         >
           <div className="w-full flex flex-col">
             <Form.Item
-              name="code"
+              name="avatar"
               label="Ảnh đại diện"
-              rules={[{ required: false, message: 'Vui lòng nhập mã học sinh' }]}
+              rules={[{ required: true, message: 'Vui lòng nhập mã học sinh' }]}
             >
-              <ImgCrop rotate>
-                <Upload
-                  action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                  listType="picture-card"
-                  fileList={fileList}
-                  onChange={onChange}
-                  onPreview={onPreview}
+              <div className="relative">
+                <input
+                  className="absolute inset-0 !hidden"
+                  type="file"
+                  ref={ref}
+                  onChange={handleAvatarChange}
+                />
+                <button
+                  type="button"
+                  className="hover:opacity-75"
+                  onClick={handleClickAvatar}
                 >
-                  {fileList?.length < 1 && '+ Upload'}
-                </Upload>
-              </ImgCrop>
+                  <img
+                    className="rounded-sm h-[100px] min-h-[100px] w-[100px] min-w-[100px] object-cover"
+                    src={avatar}
+                  />
+                </button>
+              </div>
             </Form.Item>
 
             <Form.Item
@@ -142,11 +153,7 @@ const StudentUpdateInformation: NextPage = () => {
             >
               <DatePicker style={{ width: '100%' }} format="DD-MM-YYYY" />
             </Form.Item>
-            <Form.Item
-              name="class"
-              label="Lớp chủ nhiệm"
-              rules={[{ required: true, message: 'Vui lòng nhập lớp chủ nhiệm' }]}
-            >
+            <Form.Item name="class" label="Nhóm">
               <Input allowClear disabled />
             </Form.Item>
             <Form.Item

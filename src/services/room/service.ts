@@ -2,13 +2,21 @@ import qs from 'query-string';
 import fetcher from '@util/fetcher';
 import { Client } from '@util/apis';
 import { BaseResponse } from '@schema/system';
-import { NewRoomRequest, RoomResponse, UpdateRoomRequest } from './types';
+import {
+  GetRoomRequest,
+  NewRoomRequest,
+  RoomResponse,
+  UpdateRoomRequest,
+} from './types';
 
 class Room extends Client {
-  public getRooms() {
-    return fetcher<BaseResponse<RoomResponse[]>>(`${this.baseUrl}/v1/room`, {
-      headers: this.privateHeaders,
-    });
+  public getRooms(req: GetRoomRequest) {
+    return fetcher<BaseResponse<RoomResponse[]>>(
+      `${this.baseUrl}/v1/room?${qs.stringify(req)}`,
+      {
+        headers: this.privateHeaders,
+      }
+    );
   }
 
   public getRoomDetail(id: string) {

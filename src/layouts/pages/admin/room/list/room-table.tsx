@@ -7,7 +7,7 @@ import {
 import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
 import { GET_ROOMS, useFetchRooms } from '@hook/room/useFetchRooms';
 import { useUpdateRoom } from '@hook/room/useUpdateRoom';
-import { RoomStatusEnum, ROOM_STATUS } from '@util/constant';
+import { RoomStatusEnum } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button, Popconfirm, Table, Tag } from 'antd';
 import { useRouter } from 'next/router';
@@ -32,7 +32,7 @@ const initialValues: DetaiProps = {
 const RoomTable = ({}) => {
   const { push } = useRouter();
 
-  const rooms = useFetchRooms();
+  const rooms = useFetchRooms({});
   const updateRoomMutation = useUpdateRoom([GET_ROOMS, GET_ROOM_DETAIL]);
 
   const [data, setData] = useState<DetaiProps>(initialValues);
@@ -88,15 +88,6 @@ const RoomTable = ({}) => {
           moment(a.start_date).toDate().getTime() -
           moment(b.start_date).toDate().getTime(),
         render: (start_date) => moment(start_date).format('HH:mm DD/MM/YYYY'),
-      },
-      {
-        title: 'Trạng thái',
-        dataIndex: 'status',
-        width: '10%',
-        sorter: (a, b) => a.status - b.status,
-        render: (status) => (
-          <Tag color={ROOM_STATUS[status]?.color}>{ROOM_STATUS[status]?.label}</Tag>
-        ),
       },
       {
         title: 'Hoạt động',

@@ -19,6 +19,12 @@ export type RoomResponse = {
   deleted: DeleteFlagTypes;
 };
 
+export interface GetRoomRequest {
+  id?: string;
+  group_id?: string;
+  proctor_id?: string;
+}
+
 export interface NewRoomRequest {
   title: string;
   status: RoomStatusTypes;

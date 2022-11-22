@@ -3,18 +3,50 @@ import {
   EyeOutlined,
   CloseOutlined,
 } from '@ant-design/icons';
-import { useFetchExams } from '@hook/exam/useFetchExams';
+import moment from 'moment';
+import { GET_EXAMS, useFetchExams } from '@hook/exam/useFetchExams';
 import { LevelEnum } from '@util/constant';
 import { Button, Popconfirm, Table, Tag } from 'antd';
-import moment from 'moment';
-import { FC, useMemo } from 'react';
+import { FC, useCallback, useMemo } from 'react';
+import { useUpdateExam } from '@hook/exam/useUpdateExam';
+import { GET_EXAM_DETAIL } from '@hook/exam/useFetchExamDetail';
+import { useNewNotification } from '@hook/notification/useNewNotification';
+import { GET_NOTIFICATIONS } from '@hook/notification/useFetchNotification';
+import { SocketEmitter, useSocketContext } from '@context/socket';
 
 type Props = {
   onFocus: (id: string) => void;
 };
 
 const ExamsTable: FC<Props> = ({ onFocus }) => {
+  const newNotificationMutation = useNewNotification([GET_NOTIFICATIONS]);
+  const updateExamMutation = useUpdateExam([GET_EXAMS, GET_EXAM_DETAIL]);
   const exams = useFetchExams({ submitted: 'Y' });
+
+  const { socket } = useSocketContext();
+
+  const handleReject = useCallback(
+    async (row) => {
+      await updateExamMutation.mutate({
+        id: row?.id ?? '',
+        submitted: 'N',
+        status: 'N',
+      });
+
+      await newNotificationMutation.mutate({
+        user_id: row?.created_id ?? '',
+        content: row?.title ?? '',
+        title: 'Đề thi bị quản trị viên từ chối',
+      });
+
+      socket.emit(SocketEmitter.clientSendRejectExam, {
+        target: row?.created_id,
+        examTitle: row?.title,
+        examId: row?.id,
+      });
+    },
+    [newNotificationMutation, updateExamMutation, socket]
+  );
 
   const columns = useMemo(
     () => [
@@ -88,6 +120,7 @@ const ExamsTable: FC<Props> = ({ onFocus }) => {
               <Popconfirm
                 title="Bạn có chắc chắn từ chối đề thi?"
                 icon={<QuestionCircleOutlined />}
+                onConfirm={() => handleReject(row)}
               >
                 <Button icon={<CloseOutlined />} size="small" type="link" danger />
               </Popconfirm>
@@ -96,7 +129,7 @@ const ExamsTable: FC<Props> = ({ onFocus }) => {
         },
       },
     ],
-    []
+    [onFocus, handleReject]
   );
 
   return <Table size="small" columns={columns} dataSource={exams ?? []} />;

@@ -1,7 +1,8 @@
+import { useSystemContext } from '@context/system';
 import withAuth from '@hoc/withAuth';
-import { GET_USER_DETAIL } from '@hook/user/keys';
+import { GET_USER_DETAIL, GET_USER_LIST } from '@hook/user/keys';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
-import { userUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
+import { useUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
 import { GenderEnum, GenderTypes, RoleEnum } from '@util/constant';
 import { upload } from '@util/upload';
 import { Button, DatePicker, Form, Input, Radio } from 'antd';
@@ -26,12 +27,14 @@ const TeacherUpdateInformation: NextPage = () => {
 
   const [form] = Form.useForm();
 
-  const user = useFetchUserDetail();
-  const userMutation = userUpdateUserDetail([GET_USER_DETAIL]);
+  const { userId } = useSystemContext();
+
+  const user = useFetchUserDetail(userId);
+  const userMutation = useUpdateUserDetail([GET_USER_DETAIL, GET_USER_LIST]);
 
   const avatar = Form.useWatch('avatar', form);
 
-  const handleChangeAvatar = () => {
+  const handleClickAvatar = () => {
     if (ref.current) {
       ref.current.click();
     }
@@ -105,7 +108,7 @@ const TeacherUpdateInformation: NextPage = () => {
                 <button
                   type="button"
                   className="hover:opacity-75"
-                  onClick={handleChangeAvatar}
+                  onClick={handleClickAvatar}
                 >
                   <img
                     className="rounded-sm h-[100px] min-h-[100px] w-[100px] min-w-[100px] object-cover"

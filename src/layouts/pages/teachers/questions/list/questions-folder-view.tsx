@@ -1,5 +1,5 @@
 import { DataNode } from 'antd/lib/tree';
-import { useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 import { isArray } from 'lodash';
 import { Button, Empty, Popconfirm, Tooltip } from 'antd';
 import {
@@ -10,32 +10,39 @@ import {
 } from '@ant-design/icons';
 import { useQuestionListContext } from './context';
 import { useUpdateFolder } from '@hook/question/useUpdateFolder';
-import { DeleteFlagEnum } from '@util/constant';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@util/routes';
-import { GET_FOLDER } from '@hook/question/keys';
+import { GET_FOLDER, GET_QUESTION, GET_QUESTION_DETAIL } from '@hook/question/keys';
+import { useUpdateQuestion } from '@hook/question/useUpdateQuestion';
 
 export function QuestionsFolderView() {
   const { treeNode, path, setPath, setUpdateFolderData } = useQuestionListContext();
   const { push } = useRouter();
 
-  const updateFolderMutation = useUpdateFolder([GET_FOLDER]);
+  const updateFolderMutation = useUpdateFolder([GET_FOLDER, GET_QUESTION]);
+  const updateQuestionMutation = useUpdateQuestion([
+    GET_QUESTION,
+    GET_QUESTION_DETAIL,
+  ]);
 
-  const getTreeView = (
-    treeNode: DataNode[],
-    path: Array<{
-      key: string;
-      title: string;
-    }>
-  ) => {
-    if (isArray(path) && path?.length <= 0) return treeNode;
-    const childNode: any = treeNode?.find((node) => node?.key == path[0]?.key);
-    return getTreeView(childNode?.children, path.slice(1));
-  };
+  const getTreeView = useCallback(
+    (
+      treeNode: DataNode[],
+      path: Array<{
+        key: string;
+        title: string;
+      }>
+    ) => {
+      if (isArray(path) && path?.length <= 0) return treeNode;
+      const childNode: any = treeNode?.find((node) => node?.key == path[0]?.key);
+      return getTreeView(childNode?.children, path.slice(1));
+    },
+    []
+  );
 
   const currentTree: DataNode[] = useMemo(() => {
     return getTreeView(treeNode, path);
-  }, [path, treeNode]);
+  }, [path, treeNode, getTreeView]);
 
   const handleEnterNode = (node: DataNode) => {
     if (!node?.isLeaf && isArray(node?.children)) {
@@ -50,11 +57,21 @@ export function QuestionsFolderView() {
     }
   };
 
-  const handleRemove = (node) => {
+  const handleRemove = async (node) => {
     if (Array.isArray(node.children)) {
-      updateFolderMutation.mutate({
-        id: node.id.toString(),
-        deleted: DeleteFlagEnum.Y,
+      await updateFolderMutation.mutate({
+        id: node.key,
+        deleted: 'Y',
+      });
+      const questionChildren = node.children.map((item) => item.key);
+      await updateQuestionMutation.mutate({
+        id: questionChildren,
+        deleted: 'Y',
+      });
+    } else {
+      updateQuestionMutation.mutate({
+        id: node.key,
+        deleted: 'Y',
       });
     }
   };

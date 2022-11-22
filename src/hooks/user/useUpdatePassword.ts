@@ -3,7 +3,7 @@ import { userService } from '@service/router';
 import { UpdateUserPasswordRequest } from '@service/user/types';
 import { message } from 'antd';
 
-export function userUpdatePassword(invalidateKeys?: Array<string | string[]>) {
+export function useUpdatePassword(invalidateKeys?: Array<string | string[]>) {
   const queryClient = useQueryClient();
 
   return useMutation({
