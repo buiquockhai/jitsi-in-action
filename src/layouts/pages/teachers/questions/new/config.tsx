@@ -15,7 +15,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import ImgCrop from 'antd-img-crop';
 import { usePreview } from '@hook/system/usePreview';
 import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
-import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { ALPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { isArray, isNil } from 'lodash';
 import { v4 } from 'uuid';
 import { useSystemContext } from '@context/system';
@@ -44,7 +44,7 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
   useEffect(() => {
     if (isArray(answers)) {
       const formatAnswers = answers?.map((item, index) =>
-        isNil(item) ? { content: '', id: v4(), label: ANPHABET[index] } : item
+        isNil(item) ? { content: '', id: v4(), label: ALPHABET[index] } : item
       );
       form.setFieldValue('answers', formatAnswers);
     }
@@ -160,7 +160,7 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
                         name={[name, 'content']}
                         rules={[{ required: true, message: 'Vui lòng điền đáp án' }]}
                       >
-                        <Input addonBefore={ANPHABET[index % 26]} />
+                        <Input addonBefore={ALPHABET[index % 26]} />
                       </Form.Item>
                       <MinusCircleOutlined onClick={() => handleRemove(name)} />
                     </div>

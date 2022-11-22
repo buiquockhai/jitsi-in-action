@@ -1,17 +1,20 @@
 import { useSystemContext } from '@context/system';
 import { useFetchRooms } from '@hook/room/useFetchRooms';
-import { Badge, Button, Calendar, List, Modal } from 'antd';
+import { RoomResponse } from '@service/room/types';
+import { Badge, Calendar } from 'antd';
 import moment, { Moment } from 'moment';
-import React from 'react';
+import { Fragment, useState } from 'react';
+import EventModal from './event-modal';
 
 const TeacherCalendar = () => {
   const { userId } = useSystemContext();
 
+  const [open, setOpen] = useState(false);
+  const [events, setEvents] = useState<RoomResponse[]>([]);
+
   const rooms = useFetchRooms({
     proctor_id: userId,
   });
-
-  console.log({ rooms, userId });
 
   const getDayEvent = (date: Moment) => {
     const events = (rooms ?? []).filter((item) => {
@@ -25,11 +28,16 @@ const TeacherCalendar = () => {
     return events;
   };
 
+  const handleShowDetail = (events: RoomResponse[]) => {
+    setOpen(true);
+    setEvents(events);
+  };
+
   const dateCellRender = (date: Moment) => {
     const dayEvents = getDayEvent(date);
 
     return (
-      <ul onClick={() => handleOpenDetail(dayEvents)}>
+      <ul onClick={() => handleShowDetail(dayEvents)}>
         {dayEvents.map((item) => {
           const currentTime = new Date();
           const time = moment(item.start_date).toDate().getTime();
@@ -48,41 +56,12 @@ const TeacherCalendar = () => {
     );
   };
 
-  const handleJoin = (id: string) => {
-    console.log({ id });
-  };
-
-  const handleOpenDetail = (data) => {
-    const time = data?.[0]?.startDate;
-
-    return Modal.info({
-      width: '40vw',
-      title: `Lịch thi ngày ${moment(time).format('DD/MM/YYYY')}`,
-      content: (
-        <List
-          itemLayout="horizontal"
-          dataSource={data}
-          renderItem={(item: any) => (
-            <List.Item
-              actions={[
-                <Button
-                  key={item.id}
-                  type="primary"
-                  onClick={() => handleJoin(item.id)}
-                >
-                  Tham gia
-                </Button>,
-              ]}
-            >
-              {moment(item?.startDate).format('HH:mm DD/MM/YYYY')} - {item?.title}
-            </List.Item>
-          )}
-        />
-      ),
-    });
-  };
-
-  return <Calendar dateCellRender={dateCellRender} />;
+  return (
+    <Fragment>
+      <Calendar dateCellRender={dateCellRender} />
+      <EventModal open={open} data={events} onClose={() => setOpen(false)} />
+    </Fragment>
+  );
 };
 
 export default TeacherCalendar;

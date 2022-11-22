@@ -1,5 +1,5 @@
 import { Button, Form, Tag, InputNumber, Popconfirm } from 'antd';
-import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { ALPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { v4 } from 'uuid';
 import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/es/form/Form';
@@ -86,7 +86,7 @@ const QuestionDefine: FC<Props> = ({ form }) => {
                         : {}
                     }
                   >
-                    <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+                    <span className="font-semibold">{ALPHABET?.[index]}.</span>{' '}
                     {item?.content}
                   </div>
                 );

@@ -52,3 +52,8 @@ export interface UpdateRoomRequest {
   meeting?: string;
   deleted?: DeleteFlagTypes;
 }
+
+export interface StudentJoinRoomRequest {
+  group_id: string;
+  id: string;
+}

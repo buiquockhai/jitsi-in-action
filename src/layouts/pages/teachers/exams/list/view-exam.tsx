@@ -4,7 +4,7 @@ import { GET_EXAMS } from '@hook/exam/useFetchExams';
 import { useUpdateExam } from '@hook/exam/useUpdateExam';
 import { GET_NOTIFICATIONS } from '@hook/notification/useFetchNotification';
 import { useNewNotification } from '@hook/notification/useNewNotification';
-import { ANPHABET, LevelEnum, QuestionTypeEnum, __adminId } from '@util/constant';
+import { ALPHABET, LevelEnum, QuestionTypeEnum, __adminId } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button, Descriptions, Drawer, Tag } from 'antd';
 import moment from 'moment';
@@ -114,7 +114,7 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
                         : {}
                     }
                   >
-                    <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+                    <span className="font-semibold">{ALPHABET?.[index]}.</span>{' '}
                     {item?.content}
                   </div>
                 );

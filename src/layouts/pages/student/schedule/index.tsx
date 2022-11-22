@@ -1,12 +1,17 @@
 import { useSystemContext } from '@context/system';
 import { useFetchRooms } from '@hook/room/useFetchRooms';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
+import { RoomResponse } from '@service/room/types';
 import { Badge, Calendar, List, Modal } from 'antd';
 import moment, { Moment } from 'moment';
-import React from 'react';
+import React, { Fragment, useState } from 'react';
+import EventModal from './event-modal';
 
 const StudentCalendar = () => {
   const { userId } = useSystemContext();
+
+  const [open, setOpen] = useState(false);
+  const [events, setEvents] = useState<RoomResponse[]>([]);
 
   const userDetail = useFetchUserDetail(userId);
   const rooms = useFetchRooms({ group_id: userDetail?.group_id });
@@ -23,11 +28,16 @@ const StudentCalendar = () => {
     return events;
   };
 
+  const handleShowDetail = (events: RoomResponse[]) => {
+    setOpen(true);
+    setEvents(events);
+  };
+
   const dateCellRender = (date: Moment) => {
     const dayEvents = getDayEvent(date);
 
     return (
-      <ul onClick={() => handleOpenDetail(dayEvents)}>
+      <ul onClick={() => handleShowDetail(dayEvents)}>
         {dayEvents.map((item) => {
           const currentTime = new Date();
           const time = moment(item.start_date).toDate().getTime();
@@ -46,27 +56,12 @@ const StudentCalendar = () => {
     );
   };
 
-  const handleOpenDetail = (data) => {
-    const time = data?.[0]?.startDate;
-
-    return Modal.info({
-      width: '40vw',
-      title: `Lịch thi ngày ${moment(time).format('L')}`,
-      content: (
-        <List
-          itemLayout="horizontal"
-          dataSource={data}
-          renderItem={(item: any) => (
-            <List.Item actions={[<a key="text-primary">Tham gia</a>]}>
-              {moment(item?.startDate).format('HH:mm DD/MM/YYYY')} - {item?.title}
-            </List.Item>
-          )}
-        />
-      ),
-    });
-  };
-
-  return <Calendar dateCellRender={dateCellRender} />;
+  return (
+    <Fragment>
+      <Calendar dateCellRender={dateCellRender} />
+      <EventModal open={open} data={events} onClose={() => setOpen(false)} />
+    </Fragment>
+  );
 };
 
 export default StudentCalendar;

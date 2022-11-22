@@ -6,6 +6,7 @@ import {
   GetRoomRequest,
   NewRoomRequest,
   RoomResponse,
+  StudentJoinRoomRequest,
   UpdateRoomRequest,
 } from './types';
 import { uuidVerify } from '@util/functions';
@@ -38,6 +39,24 @@ class Room extends Client {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room`, {
       headers: this.privateHeaders,
       method: 'PUT',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public joinRoomTeacher(roomId: string) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/teacher-join`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify({
+        id: roomId,
+      }),
+    });
+  }
+
+  public joinRoomStudent(req: StudentJoinRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/student-join`, {
+      headers: this.privateHeaders,
+      method: 'POST',
       body: JSON.stringify(req),
     });
   }

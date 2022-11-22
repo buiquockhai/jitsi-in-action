@@ -1,4 +1,4 @@
-import { ANPHABET } from '@util/constant';
+import { ALPHABET } from '@util/constant';
 import { Empty, Form } from 'antd';
 import { Fragment } from 'react';
 
@@ -40,7 +40,7 @@ const QuestionPreview = ({ form }) => {
                     : {}
                 }
               >
-                <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+                <span className="font-semibold">{ALPHABET?.[index]}.</span>{' '}
                 {item?.content}
               </div>
             );

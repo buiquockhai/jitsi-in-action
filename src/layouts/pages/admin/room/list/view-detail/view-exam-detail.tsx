@@ -1,5 +1,5 @@
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
-import { ANPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
+import { ALPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { Tag } from 'antd';
 import { FC } from 'react';
 
@@ -37,7 +37,7 @@ const ViewExamDetail: FC<Props> = ({ examId }) => {
                       : {}
                   }
                 >
-                  <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+                  <span className="font-semibold">{ALPHABET?.[index]}.</span>{' '}
                   {item?.content}
                 </div>
               );

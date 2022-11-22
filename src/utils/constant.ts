@@ -10,7 +10,7 @@ export const __fullname = '__fullname';
 
 export const __adminId = '88785352-c404-4546-8bd9-8efedbe9182f';
 
-export const ANPHABET = {
+export const ALPHABET = {
   0: 'A',
   1: 'B',
   2: 'C',
@@ -37,20 +37,6 @@ export const ANPHABET = {
   23: 'X',
   24: 'W',
   25: 'Z',
-};
-
-export const QUESTION_TYPE = {
-  __1__: 'Trắc nghiệm',
-  __2__: 'TN nhiều đáp án',
-  __3__: 'Tự luận',
-};
-
-export const QUESTION_RANGE = {
-  0: 'Dễ',
-  25: 'Trung bình',
-  50: 'Vận dụng',
-  75: 'Nâng cao',
-  100: 'Khó',
 };
 
 export const EXAM_RANGE = {
@@ -107,22 +93,10 @@ export const RoomStatusEnum = {
 
 export type RoomStatusTypes = keyof typeof RoomStatusEnum;
 
-export const VERIFY_STATUS = {
-  0: 'Chưa kiểm duyệt',
-  1: 'Đã kiểm duyệt',
-};
+export const RequestJoinRoomStatusEnum = {
+  '0': 'Chưa hoạt động',
+  '1': 'Yêu cầu tham gia...',
+  '2': 'Đã tham gia',
+} as const;
 
-export const ROOM_STATUS = {
-  0: {
-    label: 'Đã kết thúc',
-    color: 'default',
-  },
-  1: {
-    label: 'Đang diễn ra',
-    color: 'green',
-  },
-  2: {
-    label: 'Sắp diễn ra',
-    color: 'purple',
-  },
-};
+export type RequestJoinRoomStatusTypes = keyof typeof RequestJoinRoomStatusEnum;

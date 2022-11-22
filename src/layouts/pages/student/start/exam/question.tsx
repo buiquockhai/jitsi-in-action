@@ -1,4 +1,4 @@
-import { ANPHABET } from '@util/constant';
+import { ALPHABET } from '@util/constant';
 import React from 'react';
 
 export interface QuestionProps {
@@ -31,7 +31,7 @@ const Question: React.FC<QuestionProps> = (props) => {
               //     true ? { borderColor: '#52c41a', backgroundColor: '#f0fdf4' } : {}
               //   }
             >
-              <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+              <span className="font-semibold">{ALPHABET?.[index]}.</span>{' '}
               {item?.content}
             </div>
           );

@@ -1,5 +1,5 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { ANPHABET } from '@util/constant';
+import { ALPHABET } from '@util/constant';
 import { Button, Descriptions, Drawer, Tag } from 'antd';
 import moment from 'moment';
 import React, { useCallback } from 'react';
@@ -64,7 +64,7 @@ const ViewExam: React.FC<{
                     : {}
                 }
               >
-                <span className="font-semibold">{ANPHABET?.[index]}.</span>{' '}
+                <span className="font-semibold">{ALPHABET?.[index]}.</span>{' '}
                 {item?.content}
               </div>
             );

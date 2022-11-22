@@ -3,7 +3,7 @@ import PageHeaderQuestionCreation from '@layout/pages/teachers/questions/new/pag
 import { Form, UploadFile } from 'antd';
 import QuestionPreview from '@layout/pages/teachers/questions/new/preview';
 import withAuth from '@hoc/withAuth';
-import { RoleEnum, QuestionTypes, LevelTypes, ANPHABET } from '@util/constant';
+import { RoleEnum, QuestionTypes, LevelTypes, ALPHABET } from '@util/constant';
 import { useNewQuestion } from '@hook/question/useNewQuestion';
 import { useEffect, useRef } from 'react';
 import { useRouter } from 'next/router';
@@ -109,7 +109,7 @@ const TeacherQuestions = () => {
         answers: questionDetail.tb_answers.map((item, index) => ({
           id: item.id,
           content: item.content,
-          label: ANPHABET[index % 26],
+          label: ALPHABET[index % 26],
         })),
         singleCorrect:
           questionDetail.type === 'single'
