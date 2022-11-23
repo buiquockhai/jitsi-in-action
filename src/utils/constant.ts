@@ -97,6 +97,7 @@ export const RequestJoinRoomStatusEnum = {
   '0': 'Chưa hoạt động',
   '1': 'Yêu cầu tham gia...',
   '2': 'Đã tham gia',
+  '3': 'Đã nộp bài'
 } as const;
 
 export type RequestJoinRoomStatusTypes = keyof typeof RequestJoinRoomStatusEnum;

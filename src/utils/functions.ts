@@ -80,6 +80,7 @@ export function uuidVerify<T>(data: T, keys?: string[]) {
     'updated_id',
     'group_id',
     'proctor_id',
+    'question_id',
   ];
   return Object.entries(data as Record<string, string>).reduce(
     (obj, [key, value]) => {

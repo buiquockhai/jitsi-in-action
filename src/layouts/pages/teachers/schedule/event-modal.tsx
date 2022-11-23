@@ -1,4 +1,3 @@
-import { SocketEmitter, useSocketContext } from '@context/socket';
 import { RoomResponse } from '@service/room/types';
 import { roomService } from '@service/router';
 import { ROUTES } from '@util/routes';
@@ -14,13 +13,11 @@ type Props = {
 };
 
 const EventModal: FC<Props> = ({ data, open, onClose }) => {
-  const { socket } = useSocketContext();
   const { push } = useRouter();
 
   const handleJoin = async (id: string) => {
     const res = await roomService.joinRoomTeacher(id);
     if (res.data?.id) {
-      socket.emit(SocketEmitter.clientSendCreateRoom, res.data?.id);
       push(ROUTES.TEACHER_START(res.data?.id));
       onClose();
     }

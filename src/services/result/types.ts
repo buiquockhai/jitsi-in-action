@@ -19,3 +19,32 @@ export interface GetResultResponse extends ResultResponse {
   tb_question: GetQuestionDetailResponse;
   tb_user: GetUserDetailResponse;
 }
+
+export interface GetResultRequest {
+  room_id?: string;
+  question_id?: string;
+  created_id?: string;
+}
+
+export interface PushResultRequest {
+  room_id?: string;
+  question_id?: string;
+  selected_answer_id?: string;
+  selected_answer_label?: string;
+}
+
+export interface NewResultRequest {
+  room_id: string;
+  selected_answer_id: string;
+  selected_answer_label: string;
+  question_id: string;
+  proctor_id: string;
+}
+
+export interface UpdateResultRequest {
+  id: string;
+  selected_answer_id?: string;
+  selected_answer_label?: string;
+  question_id?: string;
+  proctor_id?: string;
+}

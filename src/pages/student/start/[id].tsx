@@ -1,9 +1,10 @@
 import withAuth from '@hoc/withAuth';
 import ExamPane from '@layout/pages/student/start/exam';
 import MeetingPane from '@layout/pages/student/start/meeting';
+import RoomInformation from '@layout/pages/student/start/room-info';
 import { RoleEnum } from '@util/constant';
 import { Tabs } from 'antd';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { NextPage } from 'next';
 
 const StartPage: NextPage = () => {
   return (
@@ -11,10 +12,13 @@ const StartPage: NextPage = () => {
       <div className="card-container min-h-full">
         <Tabs type="card">
           <Tabs.TabPane tab="Phòng họp" key="1">
-            <MeetingPane />
+            {/* <MeetingPane /> */}
           </Tabs.TabPane>
           <Tabs.TabPane tab="Bài thi" key="2">
             <ExamPane />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Thông tin phòng thi" key="3">
+            <RoomInformation />
           </Tabs.TabPane>
         </Tabs>
       </div>
@@ -22,12 +26,10 @@ const StartPage: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  () => ({
+    props: {},
+  }),
   RoleEnum.student
 );
 

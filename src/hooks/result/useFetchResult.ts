@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { resutlService } from '@service/router';
+import { resultService } from '@service/router';
+import { GetResultRequest } from '@service/result/types';
 
 export const GET_RESULTS = 'GET_RESULTS';
 
-export function useFetchResults(roomId: string) {
-  const res = useQuery([GET_RESULTS, roomId], () =>
-    resutlService.getResults(roomId)
+export function useFetchResults(req: GetResultRequest) {
+  const res = useQuery([GET_RESULTS, JSON.stringify(req)], () =>
+    resultService.getResults(req)
   );
   return res.data?.data;
 }

@@ -2,11 +2,10 @@ import { SocketEmitter, useSocketContext } from '@context/socket';
 import { useSystemContext } from '@context/system';
 import { RoomResponse } from '@service/room/types';
 import { roomService } from '@service/router';
-import { ROUTES } from '@util/routes';
-import { Button, List, Modal } from 'antd';
+import { Button, List, Modal, Spin } from 'antd';
 import moment from 'moment';
-import { useRouter } from 'next/router';
-import { FC } from 'react';
+import { FC, Fragment, useState } from 'react';
+import RequestModal from './request-modal';
 
 type Props = {
   data: RoomResponse[];
@@ -16,49 +15,72 @@ type Props = {
 
 const EventModal: FC<Props> = ({ data, open, onClose }) => {
   const { userId } = useSystemContext();
-  const { socket } = useSocketContext();
+  const { setOpenWaiting } = useSocketContext();
 
-  const handleJoin = async (id: string, groupId: string) => {
-    if (id && groupId) {
-      const res = await roomService.joinRoomStudent({ id: id, group_id: groupId });
+  const [controlRoomId, setControlRoomId] = useState('');
+
+  const handleJoin = async (roomId: string, groupId: string) => {
+    if (roomId && groupId) {
+      const res = await roomService.joinRoomStudent({
+        room_id: roomId,
+        group_id: groupId,
+      });
       if (res.data?.id) {
-        socket.emit(SocketEmitter.clientSendJoinRoom, {
-          roomId: res.data?.id,
-          studentId: userId,
-        });
         onClose();
+        setControlRoomId(roomId);
+        setOpenWaiting(true);
+        // Modal.confirm({
+        //   icon: null,
+        //   content: (
+        //     <div className="flex items-center justify-center">
+        //       <Spin tip="Vui lòng đợi quản trị viên chấp nhận..." />
+        //     </div>
+        //   ),
+        //   cancelButtonProps: {
+        //     style: {
+        //       display: 'none',
+        //     },
+        //   },
+        //   okText: 'Huỷ',
+        //   onOk: () => {
+        //     console.log('OK');
+        //   },
+        // });
       }
     }
   };
 
   return (
-    <Modal
-      width="50vw"
-      title={`Lịch thi ngày ${moment(data?.[0]?.start_date).format('DD/MM/YYYY')}`}
-      open={open}
-      onCancel={onClose}
-      footer={null}
-    >
-      <List
-        itemLayout="horizontal"
-        dataSource={data}
-        renderItem={(item) => (
-          <List.Item
-            actions={[
-              <Button
-                key={item.id}
-                type="primary"
-                onClick={() => handleJoin(item.id, item.group_id)}
-              >
-                Tham gia
-              </Button>,
-            ]}
-          >
-            {moment(item?.start_date).format('HH:mm DD/MM/YYYY')} - {item?.title}
-          </List.Item>
-        )}
-      />
-    </Modal>
+    <Fragment>
+      <Modal
+        width="50vw"
+        title={`Lịch thi ngày ${moment(data?.[0]?.start_date).format('DD/MM/YYYY')}`}
+        open={open}
+        onCancel={onClose}
+        footer={null}
+      >
+        <List
+          itemLayout="horizontal"
+          dataSource={data}
+          renderItem={(item) => (
+            <List.Item
+              actions={[
+                <Button
+                  key={item.id}
+                  type="primary"
+                  onClick={() => handleJoin(item.id, item.group_id)}
+                >
+                  Tham gia
+                </Button>,
+              ]}
+            >
+              {moment(item?.start_date).format('HH:mm DD/MM/YYYY')} - {item?.title}
+            </List.Item>
+          )}
+        />
+      </Modal>
+      <RequestModal roomId={controlRoomId} />
+    </Fragment>
   );
 };
 

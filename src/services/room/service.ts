@@ -6,7 +6,10 @@ import {
   GetRoomRequest,
   NewRoomRequest,
   RoomResponse,
+  StudentCancelJoinRoomRequest,
   StudentJoinRoomRequest,
+  TeacherAcceptJoinRoomRequest,
+  TeacherForceLeaveRoomRequest,
   UpdateRoomRequest,
 } from './types';
 import { uuidVerify } from '@util/functions';
@@ -55,6 +58,47 @@ class Room extends Client {
 
   public joinRoomStudent(req: StudentJoinRoomRequest) {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/student-join`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public teacherAcceptJoinRoom(req: TeacherAcceptJoinRoomRequest) {
+    return fetcher<BaseResponse<any>>(
+      `${this.baseUrl}/v1/room/teacher-accept-request`,
+      {
+        headers: this.privateHeaders,
+        method: 'POST',
+        body: JSON.stringify(req),
+      }
+    );
+  }
+
+  public teacherRejectJoinRoom(req: TeacherAcceptJoinRoomRequest) {
+    return fetcher<BaseResponse<any>>(
+      `${this.baseUrl}/v1/room/teacher-reject-request`,
+      {
+        headers: this.privateHeaders,
+        method: 'POST',
+        body: JSON.stringify(req),
+      }
+    );
+  }
+
+  public studentCancelJoinRoom(req: StudentCancelJoinRoomRequest) {
+    return fetcher<BaseResponse<any>>(
+      `${this.baseUrl}/v1/room/student-cancel-request`,
+      {
+        headers: this.privateHeaders,
+        method: 'POST',
+        body: JSON.stringify(req),
+      }
+    );
+  }
+
+  public forceLeaveRoom(req: TeacherForceLeaveRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/force-leave`, {
       headers: this.privateHeaders,
       method: 'POST',
       body: JSON.stringify(req),

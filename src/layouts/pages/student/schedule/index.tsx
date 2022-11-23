@@ -2,7 +2,7 @@ import { useSystemContext } from '@context/system';
 import { useFetchRooms } from '@hook/room/useFetchRooms';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { RoomResponse } from '@service/room/types';
-import { Badge, Calendar, List, Modal } from 'antd';
+import { Badge, Calendar } from 'antd';
 import moment, { Moment } from 'moment';
 import React, { Fragment, useState } from 'react';
 import EventModal from './event-modal';

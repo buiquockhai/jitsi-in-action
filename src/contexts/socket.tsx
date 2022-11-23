@@ -1,7 +1,10 @@
-import { RequestJoinRoomStatusTypes, RoleEnum } from '@util/constant';
+import { GET_RESULTS } from '@hook/result/useFetchResult';
+import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
+import { useQueryClient } from '@tanstack/react-query';
+import { RoleEnum } from '@util/constant';
 import { createContext } from '@util/createContext';
 import { ROUTES } from '@util/routes';
-import { notification } from 'antd';
+import { notification, message } from 'antd';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import { io, Socket } from 'socket.io-client';
@@ -9,10 +12,8 @@ import { useSystemContext } from './system';
 
 type SocketContextProps = {
   socket: Socket;
-  requestJoinRoom: Record<string, RequestJoinRoomStatusTypes>;
-  setRequestJoinRoom: Dispatch<
-    SetStateAction<Record<string, RequestJoinRoomStatusTypes>>
-  >;
+  openWaiting: boolean;
+  setOpenWaiting: Dispatch<SetStateAction<boolean>>;
 };
 
 export const SocketListener = {
@@ -23,6 +24,10 @@ export const SocketListener = {
   serverFeedbackRejectExam: 'server-feedback-reject-exam',
   serverFeedbackJoinRoom: 'server-feedback-join-room',
   serverFeedbackAcceptJoinRoom: 'server-feedback-accept-join-room',
+  serverFeedbackRejectJoinRoom: 'server-feedback-reject-join-room',
+  serverFeedbackCancelJoinRoom: 'server-feedback-cancel-join-room',
+  serverFeedbackUpdateAnswer: 'server-feedback-update-answer',
+  serverFeedbackForceLeave: 'server-feedback-force-leave',
 } as const;
 
 export const SocketEmitter = {
@@ -40,13 +45,13 @@ const [Provider, useSocketContext] = createContext<SocketContextProps>({
 });
 
 const SocketContextProvider = ({ children }) => {
+  const queryClient = useQueryClient();
+
+  const [openWaiting, setOpenWaiting] = useState(false);
+
   const { push } = useRouter();
 
   const { role, userId } = useSystemContext();
-
-  const [requestJoinRoom, setRequestJoinRoom] = useState<
-    Record<string, RequestJoinRoomStatusTypes>
-  >({});
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -80,20 +85,47 @@ const SocketContextProvider = ({ children }) => {
     });
 
     socket.on(SocketListener.serverFeedbackJoinRoom, (data) => {
-      setRequestJoinRoom((state) => ({
-        ...state,
-        [data.studentId]: '1',
-      }));
+      if (userId === data.proctorId) {
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+      }
     });
 
     socket.on(SocketListener.serverFeedbackAcceptJoinRoom, (data) => {
-      setRequestJoinRoom((state) => ({
-        ...state,
-        [data.userId]: '2',
-      }));
-
-      if (userId === data.userId) {
+      if (userId === data.studentId) {
         push(ROUTES.STUDENT_START(data.roomId));
+        setOpenWaiting(false);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackRejectJoinRoom, (data) => {
+      if (userId === data.studentId) {
+        message.error('Bị từ chối tham gia phòng thi!');
+        setOpenWaiting(false);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackCancelJoinRoom, (data) => {
+      if (userId === data.proctorId) {
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackUpdateAnswer, (data) => {
+      if (userId === data.proctorId) {
+        queryClient.invalidateQueries([GET_RESULTS]);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackForceLeave, (data) => {
+      if (userId === data.studentId) {
+        push(ROUTES.STUDENT_SCHEDULE);
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        api.error({
+          placement: 'bottomRight',
+          message: 'Bị buộc rời khỏi phòng thi',
+          description:
+            'Bạn đã bị giám thị mời ra khỏi phòng thi. Vui lòng liên hệ với cán bộ xem thi để biết thêm chi tiết.',
+        });
       }
     });
 
@@ -102,12 +134,12 @@ const SocketContextProvider = ({ children }) => {
         socket.off(item);
       });
     };
-  }, [api, role, userId, setRequestJoinRoom, push]);
+  }, [api, role, userId, push, queryClient]);
 
   const context: SocketContextProps = {
     socket,
-    requestJoinRoom,
-    setRequestJoinRoom,
+    openWaiting,
+    setOpenWaiting,
   };
 
   return (
