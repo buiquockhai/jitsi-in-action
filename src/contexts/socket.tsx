@@ -1,5 +1,6 @@
 import { GET_RESULTS } from '@hook/result/useFetchResult';
 import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
+import { GET_VIOLATING_RULES } from '@hook/violating-rule/useFetchViolatingRules';
 import { useQueryClient } from '@tanstack/react-query';
 import { RoleEnum } from '@util/constant';
 import { createContext } from '@util/createContext';
@@ -28,14 +29,12 @@ export const SocketListener = {
   serverFeedbackCancelJoinRoom: 'server-feedback-cancel-join-room',
   serverFeedbackUpdateAnswer: 'server-feedback-update-answer',
   serverFeedbackForceLeave: 'server-feedback-force-leave',
+  serverFeedbackPenalty: 'server-feedback-penalty',
 } as const;
 
 export const SocketEmitter = {
   clientSendSubmitExam: 'client-send-submit-exam',
   clientSendRejectExam: 'client-send-reject-exam',
-  clientSendCreateRoom: 'client-send-create-room',
-  clientSendJoinRoom: 'client-send-join-room',
-  clientAcceptJoinRoom: 'client-accept-join-room',
 } as const;
 
 const socket = io(process.env.NEXT_PUBLIC_BASE_URL ?? '');
@@ -106,7 +105,7 @@ const SocketContextProvider = ({ children }) => {
 
     socket.on(SocketListener.serverFeedbackCancelJoinRoom, (data) => {
       if (userId === data.proctorId) {
-        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_ROOM_DETAIL, GET_RESULTS]);
       }
     });
 
@@ -126,6 +125,19 @@ const SocketContextProvider = ({ children }) => {
           description:
             'Bạn đã bị giám thị mời ra khỏi phòng thi. Vui lòng liên hệ với cán bộ xem thi để biết thêm chi tiết.',
         });
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackPenalty, (data) => {
+      if (userId === data.studentId) {
+        api.warning({
+          placement: 'bottomRight',
+          message: 'Trừ điểm cảnh cáo',
+          description:
+            'Bạn bị giám thị cảnh cáo trừ 0.5 điểm. Hãy chú ý nghiêm túc tham gia bài kiểm tra.',
+        });
+
+        queryClient.invalidateQueries([GET_VIOLATING_RULES]);
       }
     });
 

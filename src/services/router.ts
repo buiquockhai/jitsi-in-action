@@ -8,6 +8,8 @@ import { groupService } from '@service/group/service';
 import { roomService } from '@service/room/service';
 import { notificationService } from '@service/notification/service';
 import { resultService } from '@service/result/service';
+import { violatingService } from '@service/violating-rule/service';
+import { markService } from '@service/mark/service';
 
 const services = [
   userService,
@@ -18,6 +20,8 @@ const services = [
   roomService,
   notificationService,
   resultService,
+  violatingService,
+  markService,
 ];
 
 const dispatch = {
@@ -52,4 +56,6 @@ export {
   roomService,
   notificationService,
   resultService,
+  violatingService,
+  markService,
 };

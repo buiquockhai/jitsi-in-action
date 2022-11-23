@@ -2,6 +2,7 @@ import { useSystemContext } from '@context/system';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
+import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
 import { Descriptions } from 'antd';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -13,6 +14,17 @@ const RoomInformation = () => {
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
   const userDetail = useFetchUserDetail(userId);
+  const violatingRules = useFetchViolatingRules({
+    user_id: userId,
+    room_id: query.id as string,
+  });
+
+  const penaltyPoint = violatingRules?.reduce(
+    (sum, item) => sum + parseFloat(item.minus_point),
+    0
+  );
+
+  console.log({ violatingRules });
 
   return (
     <div className="w-full min-h-full flex gap-10">
@@ -36,7 +48,9 @@ const RoomInformation = () => {
         <Descriptions.Item label="Trạng thái nộp bài">
           Chưa nộp bài
         </Descriptions.Item>
-        <Descriptions.Item label="Điểm trừ cảnh cáo">0.25</Descriptions.Item>
+        <Descriptions.Item label="Điểm trừ cảnh cáo" className="font-bold">
+          {penaltyPoint}
+        </Descriptions.Item>
       </Descriptions>
     </div>
   );

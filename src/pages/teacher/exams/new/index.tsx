@@ -6,14 +6,14 @@ import { useUpdateExam } from '@hook/exam/useUpdateExam';
 import PageHeaderExamsCreation from '@layout/pages/teachers/exams/new/page-header';
 import QuestionDefine from '@layout/pages/teachers/exams/new/question-define';
 import QuestionTree from '@layout/pages/teachers/exams/new/question-tree';
-import { RoleEnum } from '@util/constant';
+import { ExamLevelRangeTypes, RoleEnum } from '@util/constant';
 import { Form } from 'antd';
 import type { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
 type FormProps = {
   title: string;
-  range: number;
+  range: ExamLevelRangeTypes;
   maxPoint: number;
   workingTime: number;
   status: string;

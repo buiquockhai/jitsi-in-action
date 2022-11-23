@@ -31,6 +31,7 @@ export interface PushResultRequest {
   question_id?: string;
   selected_answer_id?: string;
   selected_answer_label?: string;
+  proctor_id?: string;
 }
 
 export interface NewResultRequest {

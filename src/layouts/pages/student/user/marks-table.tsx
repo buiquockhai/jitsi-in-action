@@ -1,20 +1,21 @@
 import { EyeOutlined } from '@ant-design/icons';
+import { useSystemContext } from '@context/system';
+import { useFetchMarks } from '@hook/mark/useFetchMarks';
+import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { MARKS_STUDENT_MOCK } from '@mock/marks';
 import { Button, Table } from 'antd';
 import moment from 'moment';
-import React, { useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import ViewExam from './view-exam';
 
 const MarksTable = () => {
-  const [data, setData] = useState<any>({});
-  const [open, setOpen] = useState<boolean>(false);
+  const { userId } = useSystemContext();
 
-  const handleSetData = (data) => {
-    setData(data);
-    setOpen(true);
-  };
+  const marks = useFetchMarks({ user_id: userId });
 
-  const columns: any = useMemo(
+  console.log({ marks });
+
+  const columns = useMemo(
     () => [
       {
         title: 'Tiêu đề',
@@ -51,33 +52,17 @@ const MarksTable = () => {
         dataIndex: '',
         width: '10%',
         render: (row) => {
-          return (
-            <Button
-              icon={<EyeOutlined />}
-              size="small"
-              type="link"
-              onClick={handleSetData.bind(null, row)}
-            />
-          );
+          return <Button icon={<EyeOutlined />} size="small" type="link" />;
         },
       },
     ],
     []
   );
 
-  const onChange = (pagination, filters, sorter, extra) => {
-    console.log('params', pagination, filters, sorter, extra);
-  };
-
   return (
     <div className="w-full col-span-2 bg-white rounded-sm p-5">
-      <ViewExam data={data} open={open} onClose={setOpen.bind(null, false)} />
-      <Table
-        size="small"
-        columns={columns}
-        dataSource={MARKS_STUDENT_MOCK}
-        onChange={onChange}
-      />
+      {/* <ViewExam data={data} open={open} onClose={setOpen.bind(null, false)} /> */}
+      <Table size="small" columns={columns} dataSource={MARKS_STUDENT_MOCK} />
     </div>
   );
 };

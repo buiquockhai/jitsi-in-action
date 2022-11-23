@@ -9,7 +9,7 @@ import {
 } from 'antd';
 import { useRouter } from 'next/router';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { EXAM_RANGE } from '@util/constant';
+import { ExamLevelRangeEnum } from '@util/constant';
 
 const PageHeaderExamsCreation = () => {
   const router = useRouter();
@@ -73,8 +73,8 @@ const PageHeaderExamsCreation = () => {
             label="Mức độ đề thi"
             rules={[{ required: true, message: 'Vui lòng chọn mức độ đề thi' }]}
           >
-            <Select placeholder="Chọn đáp án đúng" allowClear>
-              {Object.entries(EXAM_RANGE)?.map(([key, value]) => (
+            <Select placeholder="Mức độ đề thi" allowClear>
+              {Object.entries(ExamLevelRangeEnum)?.map(([key, value]) => (
                 <Select.Option key={key} value={key}>
                   {value}
                 </Select.Option>

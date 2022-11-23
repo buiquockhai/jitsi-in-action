@@ -49,8 +49,6 @@ const ViewExam: React.FC<{
                 question?.multipleChoosen?.includes(item?.id)) &&
               !correct;
 
-            console.log({ correct, wrong });
-
             return (
               <div
                 key={item?.id}

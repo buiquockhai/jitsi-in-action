@@ -5,6 +5,8 @@ import { BaseResponse } from '@schema/system';
 import {
   GetRoomRequest,
   NewRoomRequest,
+  PenaltyPointRequest,
+  PointingRoomRequest,
   RoomResponse,
   StudentCancelJoinRoomRequest,
   StudentJoinRoomRequest,
@@ -99,6 +101,14 @@ class Room extends Client {
 
   public forceLeaveRoom(req: TeacherForceLeaveRoomRequest) {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/force-leave`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public pointingRoom(req: PointingRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/pointing-room`, {
       headers: this.privateHeaders,
       method: 'POST',
       body: JSON.stringify(req),

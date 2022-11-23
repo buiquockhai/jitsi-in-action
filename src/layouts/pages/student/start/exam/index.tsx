@@ -34,6 +34,7 @@ const ExamPane = () => {
       question_id: focusQuestion?.id,
       selected_answer_id: answerId,
       selected_answer_label: label,
+      proctor_id: roomDetail?.proctor_id,
     });
   };
 

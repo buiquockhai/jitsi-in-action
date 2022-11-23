@@ -1,5 +1,5 @@
 import { GetQuestionDetailResponse } from '@service/question/types';
-import { DeleteFlagTypes, LevelTypes } from '@util/constant';
+import { DeleteFlagTypes, ExamLevelRangeTypes, LevelTypes } from '@util/constant';
 
 export interface GetExamRequest {
   status?: string;
@@ -11,7 +11,7 @@ export type ExamResponse = {
   id: string;
   max_point: string;
   duration: number;
-  level: LevelTypes;
+  level: ExamLevelRangeTypes;
   status: string;
   submitted: string;
   title: string;
@@ -30,7 +30,7 @@ export interface GetExamDetailResponse {
 export interface NewExamRequest {
   max_point: number;
   duration: number;
-  level: number;
+  level: ExamLevelRangeTypes;
   status: string;
   submitted: string;
   title: string;
@@ -40,7 +40,7 @@ export interface UpdateExamRequest {
   id: string;
   max_point?: number;
   duration?: number;
-  level?: number;
+  level?: ExamLevelRangeTypes;
   status?: string;
   submitted?: string;
   title?: string;

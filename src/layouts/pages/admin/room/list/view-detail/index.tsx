@@ -17,7 +17,13 @@ const ViewDetailModal: FC<Props> = ({ open, examId, roomId, groupId, onClose }) 
   const roomDetail = useFetchRoomDetail(roomId);
 
   return (
-    <Modal width="95vw" footer={[]} title="Title" onCancel={onClose} open={open}>
+    <Modal
+      width="95vw"
+      footer={[]}
+      title={roomDetail?.title}
+      onCancel={onClose}
+      open={open}
+    >
       <Tabs
         type="card"
         items={[
@@ -34,8 +40,10 @@ const ViewDetailModal: FC<Props> = ({ open, examId, roomId, groupId, onClose }) 
           {
             label: 'Bài nộp',
             key: 'submit-detail',
-            // disabled: roomDetail?.status !== '2',n
-            children: <ViewSubmission roomId={roomId} />,
+            // disabled: roomDetail?.status !== '2',
+            children: (
+              <ViewSubmission roomId={roomId} groupId={groupId} examId={examId} />
+            ),
           },
         ]}
       />

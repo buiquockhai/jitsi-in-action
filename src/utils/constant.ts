@@ -39,12 +39,14 @@ export const ALPHABET = {
   25: 'Z',
 };
 
-export const EXAM_RANGE = {
+export const ExamLevelRangeEnum = {
   0: 'Dễ',
   1: 'Trung bình',
   2: 'Nâng cao',
   3: 'Khó',
-};
+} as const;
+
+export type ExamLevelRangeTypes = keyof typeof ExamLevelRangeEnum;
 
 export const GenderEnum = {
   male: 'Nam',
@@ -97,7 +99,7 @@ export const RequestJoinRoomStatusEnum = {
   '0': 'Chưa hoạt động',
   '1': 'Yêu cầu tham gia...',
   '2': 'Đã tham gia',
-  '3': 'Đã nộp bài'
+  '3': 'Đã nộp bài',
 } as const;
 
 export type RequestJoinRoomStatusTypes = keyof typeof RequestJoinRoomStatusEnum;

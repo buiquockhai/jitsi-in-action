@@ -1,13 +1,18 @@
+import cx from 'classnames';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { GET_RESULTS, useFetchResults } from '@hook/result/useFetchResult';
 import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { useFetchUsers } from '@hook/user/useFetchUsers';
 import { RequestJoinRoomStatusEnum } from '@util/constant';
 import { useRouter } from 'next/router';
-import cx from 'classnames';
 import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useForceLeaveRoom } from '@hook/room/useForceLeaveRoom';
+import { useNewViolatingRule } from '@hook/violating-rule/useNewViolatingRule';
+import {
+  GET_VIOLATING_RULES,
+  useFetchViolatingRules,
+} from '@hook/violating-rule/useFetchViolatingRules';
 
 const TeacherStartManage = () => {
   const { query } = useRouter();
@@ -19,6 +24,8 @@ const TeacherStartManage = () => {
     room_id: query.id as string,
   });
   const forceLeaveMutation = useForceLeaveRoom([GET_ROOM_DETAIL, GET_RESULTS]);
+  const newViolatingRuleMutation = useNewViolatingRule([GET_VIOLATING_RULES]);
+  const violatingRules = useFetchViolatingRules({ room_id: query.id as string });
 
   const roomMemberStatus = roomDetail?.member_status
     ? JSON.parse(roomDetail?.member_status)
@@ -31,17 +38,41 @@ const TeacherStartManage = () => {
     });
   };
 
+  const handlePenalty = (studentId: string) => {
+    newViolatingRuleMutation.mutate({
+      room_id: query.id as string,
+      user_id: studentId,
+      minus_point: '0.5',
+    });
+  };
+
   return (
     <ul className="space-y-5">
       {(members ?? []).map((user) => {
         const status = roomMemberStatus[user?.id] ?? '0';
+        const penaltyPoint =
+          violatingRules?.reduce(
+            (sum, item) =>
+              item.user_id === user.id ? sum + parseFloat(item.minus_point) : sum,
+            0
+          ) ?? 0;
 
         return (
           <div className="space-y-5" key={user.id}>
             <div className="w-full flex items-center justify-between">
               <div className="flex items-center">
-                <p className="w-64 truncate">
+                <p className="w-52 truncate">
                   <b>Tên</b>: {user?.name}
+                </p>
+                <p className="w-40 truncate">
+                  <b>Mã</b>: {user?.code}
+                </p>
+                <p
+                  className={cx('w-40 truncate', {
+                    'text-red-500': penaltyPoint > 0,
+                  })}
+                >
+                  <b>Điểm trừ</b>: {penaltyPoint}
                 </p>
                 <p>
                   <b>Trạng thái</b>:{' '}
@@ -54,15 +85,26 @@ const TeacherStartManage = () => {
                   </span>
                 </p>
               </div>
-              <Popconfirm
-                title="Bạn có chắc chắn bắt buộc thí sinh nộp bài. Thí sẽ đồng thời sẽ bị đuổi ra khỏi phòng thi."
-                icon={<QuestionCircleOutlined />}
-                onConfirm={() => handleForceLeave(user.id)}
-              >
-                <Button size="small" danger disabled={status !== '2'}>
-                  Buộc nộp bài
-                </Button>
-              </Popconfirm>
+              <div className="flex gap-3">
+                <Popconfirm
+                  title="Bạn có chắc chắn muốn trừ điểm cảnh cáo vi phạm. Mỗi lần cảnh cáo thí sinh sẽ bị trừ 0.5 điểm vào kết quả thi."
+                  icon={<QuestionCircleOutlined />}
+                  onConfirm={() => handlePenalty(user.id)}
+                >
+                  <Button size="small" danger disabled={status !== '2'}>
+                    Trừ điểm cảnh cáo
+                  </Button>
+                </Popconfirm>
+                <Popconfirm
+                  title="Bạn có chắc chắn bắt buộc thí sinh nộp bài. Thí sẽ đồng thời sẽ bị đuổi ra khỏi phòng thi."
+                  icon={<QuestionCircleOutlined />}
+                  onConfirm={() => handleForceLeave(user.id)}
+                >
+                  <Button size="small" danger disabled={status !== '2'}>
+                    Buộc nộp bài
+                  </Button>
+                </Popconfirm>
+              </div>
             </div>
 
             <ul className="flex overflow-x-auto border">

@@ -1,4 +1,5 @@
 import withAuth from '@hoc/withAuth';
+import ExamView from '@layout/pages/teachers/start/exam-view';
 import TeacherStartManage from '@layout/pages/teachers/start/manage';
 import MeetingPane from '@layout/pages/teachers/start/meeting';
 import RoomInformation from '@layout/pages/teachers/start/room-info';
@@ -17,7 +18,10 @@ const StartPage: NextPage = () => {
           <Tabs.TabPane tab="Chi tiết" key="2">
             <TeacherStartManage />
           </Tabs.TabPane>
-          <Tabs.TabPane tab="Thông tin phòng thi" key="3">
+          <Tabs.TabPane tab="Đề thi" key="3">
+            <ExamView />
+          </Tabs.TabPane>
+          <Tabs.TabPane tab="Thông tin phòng thi" key="4">
             <RoomInformation />
           </Tabs.TabPane>
         </Tabs>
