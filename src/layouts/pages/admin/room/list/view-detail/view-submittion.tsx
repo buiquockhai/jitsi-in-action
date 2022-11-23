@@ -6,8 +6,8 @@ type Props = {
   roomId: string;
 };
 
-const ViewSubmittion: FC<Props> = ({ roomId }) => {
-  const results = useFetchResults(roomId);
+const ViewSubmission: FC<Props> = ({ roomId }) => {
+  const results = useFetchResults({ room_id: roomId });
 
   const formatResult = (data?: GetResultResponse[]) => {
     const object = (data ?? []).reduce((obj, item: GetResultResponse) => {
@@ -43,4 +43,4 @@ const ViewSubmittion: FC<Props> = ({ roomId }) => {
   );
 };
 
-export default ViewSubmittion;
+export default ViewSubmission;

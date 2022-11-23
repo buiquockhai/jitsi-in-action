@@ -3,7 +3,7 @@ import { Modal, Tabs } from 'antd';
 import { FC } from 'react';
 import RoomCommonInformation from './common-information';
 import ViewExamDetail from './view-exam-detail';
-import ViewSubmittion from './view-submittion';
+import ViewSubmission from './view-submittion';
 
 type Props = {
   open: boolean;
@@ -35,7 +35,7 @@ const ViewDetailModal: FC<Props> = ({ open, examId, roomId, groupId, onClose }) 
             label: 'Bài nộp',
             key: 'submit-detail',
             // disabled: roomDetail?.status !== '2',n
-            children: <ViewSubmittion roomId={roomId} />,
+            children: <ViewSubmission roomId={roomId} />,
           },
         ]}
       />
