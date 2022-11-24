@@ -1,5 +1,5 @@
-import { GET_RESULTS, useFetchResults } from '@hook/result/useFetchResult';
-import { FC } from 'react';
+import { useFetchResults } from '@hook/result/useFetchResult';
+import { FC, useState } from 'react';
 import { useFetchUsers } from '@hook/user/useFetchUsers';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
@@ -9,11 +9,28 @@ import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDeta
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { usePointingRoom } from '@hook/room/usePoitingRoom';
 import { GET_MARKS, useFetchMarks } from '@hook/mark/useFetchMarks';
+import ViewSubmissionDetail from './view-submission-detail';
 
 type Props = {
   roomId: string;
   groupId: string;
   examId: string;
+};
+
+type SubmissionProps = {
+  open: boolean;
+  roomId: string;
+  examId: string;
+  markId: string;
+  userId: string;
+};
+
+const submissionDetailInitialValues: SubmissionProps = {
+  open: false,
+  roomId: '',
+  examId: '',
+  markId: '',
+  userId: '',
 };
 
 const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
@@ -26,8 +43,6 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
     room_id: roomId,
   });
 
-  console.log({ marks });
-
   const pointingMutation = usePointingRoom([GET_ROOM_DETAIL, GET_MARKS]);
 
   const handlePointing = () => {
@@ -38,8 +53,26 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
     });
   };
 
+  const [detail, setDetail] = useState<SubmissionProps>(
+    submissionDetailInitialValues
+  );
+
+  const handleShowDetail = (markId: string, userId: string) => {
+    setDetail({
+      open: true,
+      markId: markId,
+      roomId: roomId,
+      examId: examId,
+      userId: userId,
+    });
+  };
+
   return (
     <div className="space-y-5">
+      <ViewSubmissionDetail
+        {...detail}
+        onClose={() => setDetail(submissionDetailInitialValues)}
+      />
       <Popconfirm
         title="Bạn có chắc chắn chấm bài cho ?phòng thi"
         icon={<QuestionCircleOutlined />}
@@ -59,7 +92,7 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
               0
             ) ?? 0;
 
-          const point = (marks ?? [])?.find((item) => item.user_id === user.id);
+          const markDetail = (marks ?? [])?.find((item) => item.user_id === user.id);
 
           return (
             <div className="space-y-5" key={user.id}>
@@ -83,7 +116,7 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                       'text-green-500': penaltyPoint > 0,
                     })}
                   >
-                    <b>Điểm</b>: {point?.mark || ''}
+                    <b>Điểm</b>: {markDetail?.mark || ''}
                   </p>
                   <p
                     className={cx('w-40 truncate', {
@@ -91,16 +124,20 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                     })}
                   >
                     <b>Điểm chính thức</b>:{' '}
-                    {Math.max(0, parseFloat(point?.mark ?? '0') - penaltyPoint)}
+                    {Math.max(0, parseFloat(markDetail?.mark ?? '0') - penaltyPoint)}
                   </p>
                 </div>
-                <Button size="small" type="link">
+                <Button
+                  size="small"
+                  type="link"
+                  onClick={() => handleShowDetail(markDetail?.id ?? '', user.id)}
+                >
                   Xem bài làm
                 </Button>
               </div>
 
               <ul className="flex overflow-x-auto border">
-                {(examDetail?.questionList ?? []).map((question, index) => {
+                {(examDetail?.questionList ?? []).map((question) => {
                   const resultBelongToQuestion = (results ?? []).filter(
                     (item) =>
                       item.question_id === question?.id &&
@@ -115,7 +152,7 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                   const isCorrect =
                     resultBelongToQuestion.length === correctAnswers.length &&
                     resultBelongToQuestion.every((item) =>
-                      correctAnswers.includes(item.id)
+                      correctAnswers.includes(item.selected_answer_id)
                     );
 
                   const showAnswerLabel = resultBelongToQuestion

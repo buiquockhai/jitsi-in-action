@@ -30,7 +30,7 @@ export type AnswerResponse = {
   id: string;
   content: string;
   question_id: string;
-  percent: number;
+  percent: string;
   created_date: string;
   created_id: string;
   updated_date: string;

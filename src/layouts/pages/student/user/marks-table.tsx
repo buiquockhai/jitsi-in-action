@@ -1,58 +1,98 @@
 import { EyeOutlined } from '@ant-design/icons';
 import { useSystemContext } from '@context/system';
-import { useFetchMarks } from '@hook/mark/useFetchMarks';
-import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
-import { MARKS_STUDENT_MOCK } from '@mock/marks';
+import { useFetchFullMarks } from '@hook/mark/useFetchFullMarks';
 import { Button, Table } from 'antd';
 import moment from 'moment';
 import { useMemo, useState } from 'react';
 import ViewExam from './view-exam';
 
+type DetailProps = {
+  open: boolean;
+  roomId: string;
+  examId: string;
+  markId: string;
+};
+
+const detailInitialValues = {
+  open: false,
+  roomId: '',
+  examId: '',
+  markId: '',
+};
+
 const MarksTable = () => {
   const { userId } = useSystemContext();
 
-  const marks = useFetchMarks({ user_id: userId });
+  const [detail, setDetail] = useState<DetailProps>(detailInitialValues);
 
-  console.log({ marks });
+  const marks = useFetchFullMarks({ user_id: userId });
+
+  const handleViewDetail = (examId: string, roomId: string, markId: string) => {
+    setDetail({
+      open: true,
+      roomId: roomId,
+      examId: examId,
+      markId: markId,
+    });
+  };
 
   const columns = useMemo(
     () => [
       {
         title: 'Tiêu đề',
-        dataIndex: 'title',
+        dataIndex: 'tb_room.title',
         width: '40%',
+        render: (_, record) => record?.tb_room?.title,
       },
       {
         title: 'Điểm thi',
         dataIndex: 'mark',
         width: '10%',
-        render: (mark, record) => `${mark}/${record.maxPoint}`,
       },
       {
         title: 'Điểm tối đa',
-        dataIndex: 'maxPoint',
+        dataIndex: 'tb_room.tb_exam.max_point',
         width: '10%',
-        sorter: (a, b) => a.maxPoint - b.maxPoint,
+        render: (_, record) => record.tb_room?.tb_exam?.max_point,
+        sorter: (a, b) =>
+          parseFloat(a.tb_room?.tb_exam?.max_point) -
+          parseFloat(b.tb_room?.tb_exam?.max_point),
       },
       {
         title: 'Thời gian làm bài',
-        dataIndex: 'workingTime',
+        dataIndex: 'tb_room.tb_exam.duration',
         width: '20%',
-        sorter: (a, b) => a.workingTime - b.workingTime,
+        render: (_, record) => `${record.tb_room?.tb_exam?.duration} phút`,
+        sorter: (a, b) =>
+          parseFloat(a.tb_room?.tb_exam?.duration) -
+          parseFloat(b.tb_room?.tb_exam?.duration),
       },
       {
         title: 'Ngày thi',
-        dataIndex: 'createdAt',
+        dataIndex: 'tb_room.start_date',
         width: '20%',
-        sorter: (a, b) => a.createdAt - b.createdAt,
-        render: (createdAt) => moment(createdAt).format('LLL'),
+        sorter: (a, b) =>
+          moment(a.tb_room?.start_date).toDate().getTime() -
+          moment(b.tb_room?.start_date).toDate().getTime(),
+        render: (_, record) =>
+          moment(record?.tb_room?.start_date).format('HH:mm DD/MM/YYYY'),
       },
       {
         title: 'Hoạt động',
-        dataIndex: '',
+        dataIndex: 'action',
         width: '10%',
-        render: (row) => {
-          return <Button icon={<EyeOutlined />} size="small" type="link" />;
+        render: (_, row) => {
+          return (
+            <Button
+              icon={<EyeOutlined />}
+              size="small"
+              type="link"
+              disabled={row.tb_room?.marked === 'N'}
+              onClick={() =>
+                handleViewDetail(row.tb_room?.exam_id, row.tb_room?.id, row.id)
+              }
+            />
+          );
         },
       },
     ],
@@ -61,8 +101,8 @@ const MarksTable = () => {
 
   return (
     <div className="w-full col-span-2 bg-white rounded-sm p-5">
-      {/* <ViewExam data={data} open={open} onClose={setOpen.bind(null, false)} /> */}
-      <Table size="small" columns={columns} dataSource={MARKS_STUDENT_MOCK} />
+      <ViewExam {...detail} onClose={() => setDetail(detailInitialValues)} />
+      <Table size="small" columns={columns} dataSource={marks ?? []} />
     </div>
   );
 };

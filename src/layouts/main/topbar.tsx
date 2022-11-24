@@ -8,14 +8,17 @@ import { Button, Tooltip } from 'antd';
 import { useRouter } from 'next/router';
 import { ROUTES } from '@util/routes';
 import { useSystemContext } from '@context/system';
+import { useQueryClient } from '@tanstack/react-query';
 
 const TopBar = () => {
+  const queryClient = useQueryClient();
   const router = useRouter();
 
   const { hideMenu, setHideMenu } = useSystemContext();
 
   const handleLogout = async () => {
     await removeAuthentication();
+    queryClient.clear();
     router.push(ROUTES.LOGIN);
   };
 

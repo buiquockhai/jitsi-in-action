@@ -113,19 +113,20 @@ const TeacherQuestions = () => {
         })),
         singleCorrect:
           questionDetail.type === 'single'
-            ? questionDetail.tb_answers.find((item) => item.percent > 0)?.id
+            ? questionDetail.tb_answers.find((item) => parseInt(item.percent) > 0)
+                ?.id
             : '',
         multipleCorrect:
           questionDetail.type === 'multiple'
             ? questionDetail.tb_answers.flatMap((item) =>
-                item.percent > 0 ? item.id : []
+                parseInt(item.percent) > 0 ? item.id : []
               )
             : [],
       });
     } else {
       isEdit.current = false;
     }
-  }, [query, questionDetail]);
+  }, [query, questionDetail, form]);
 
   return (
     <Form

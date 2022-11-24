@@ -1,8 +1,8 @@
-import { SocketEmitter, useSocketContext } from '@context/socket';
+import { useSocketContext } from '@context/socket';
 import { useSystemContext } from '@context/system';
 import { RoomResponse } from '@service/room/types';
 import { roomService } from '@service/router';
-import { Button, List, Modal, Spin } from 'antd';
+import { Button, List, Modal } from 'antd';
 import moment from 'moment';
 import { FC, Fragment, useState } from 'react';
 import RequestModal from './request-modal';
@@ -29,23 +29,6 @@ const EventModal: FC<Props> = ({ data, open, onClose }) => {
         onClose();
         setControlRoomId(roomId);
         setOpenWaiting(true);
-        // Modal.confirm({
-        //   icon: null,
-        //   content: (
-        //     <div className="flex items-center justify-center">
-        //       <Spin tip="Vui lòng đợi quản trị viên chấp nhận..." />
-        //     </div>
-        //   ),
-        //   cancelButtonProps: {
-        //     style: {
-        //       display: 'none',
-        //     },
-        //   },
-        //   okText: 'Huỷ',
-        //   onOk: () => {
-        //     console.log('OK');
-        //   },
-        // });
       }
     }
   };

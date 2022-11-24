@@ -10,8 +10,6 @@ type Props = {
 const ViewExamDetail: FC<Props> = ({ examId }) => {
   const examDetail = useFetchExamDetail(examId);
 
-  console.log({ examDetail });
-
   return (
     <div className="flex flex-col gap-2">
       {examDetail?.questionList?.map((question) => (
@@ -26,7 +24,7 @@ const ViewExamDetail: FC<Props> = ({ examId }) => {
 
           <div className="w-full grid grid-cols-2 gap-3 mt-5">
             {question?.tb_answers?.map((item, index) => {
-              const isCorrect = item.percent > 0;
+              const isCorrect = parseInt(item.percent) > 0;
               return (
                 <div
                   key={item?.id}

@@ -9,8 +9,11 @@ import { useSystemContext } from '@context/system';
 import { RoleEnum } from '@util/constant';
 import { adminMenu, studentMenu, teacherMenu } from '@util/menu';
 import { v4 } from 'uuid';
+import { useQueryClient } from '@tanstack/react-query';
 
 const Header = () => {
+  const queryClient = useQueryClient();
+
   const { push } = useRouter();
   const { role, avatar } = useSystemContext();
 
@@ -18,6 +21,7 @@ const Header = () => {
 
   const handleLogout = useCallback(async () => {
     await removeAuthentication();
+    queryClient.clear();
     push(ROUTES.LOGIN);
   }, [push]);
 

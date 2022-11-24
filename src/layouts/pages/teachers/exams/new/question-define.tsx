@@ -75,7 +75,7 @@ const QuestionDefine: FC<Props> = ({ form }) => {
 
             <div className="w-full grid grid-cols-2 gap-3 mt-5">
               {node?.tb_answers?.map((item, index) => {
-                const correct = item.percent > 0;
+                const correct = parseInt(item.percent) > 0;
                 return (
                   <div
                     key={item?.id}

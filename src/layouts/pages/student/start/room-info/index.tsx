@@ -24,8 +24,6 @@ const RoomInformation = () => {
     0
   );
 
-  console.log({ violatingRules });
-
   return (
     <div className="w-full min-h-full flex gap-10">
       <Descriptions size="small" column={1} title="Thông tin phòng thi">

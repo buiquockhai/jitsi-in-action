@@ -1,4 +1,5 @@
 import { DeleteFlagTypes } from '@util/constant';
+import { RoomResponse } from '@service/room/types';
 
 export type MarkResponse = {
   id: string;
@@ -10,6 +11,7 @@ export type MarkResponse = {
   updated_date: string;
   updated_id: string;
   deleted: DeleteFlagTypes;
+  tb_room?: RoomResponse;
 };
 
 export interface GetMarkRequest {

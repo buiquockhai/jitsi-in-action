@@ -1,5 +1,6 @@
 import { LogoutOutlined } from '@ant-design/icons';
 import withAuth from '@hoc/withAuth';
+import { useQueryClient } from '@tanstack/react-query';
 import { RoleEnum } from '@util/constant';
 import { removeAuthentication } from '@util/functions';
 import { ROUTES } from '@util/routes';
@@ -8,10 +9,12 @@ import { NextPage } from 'next';
 import { useRouter } from 'next/router';
 
 const Logout: NextPage = () => {
+  const queryClient = useQueryClient();
   const { push } = useRouter();
 
   const handleLogout = async () => {
     await removeAuthentication();
+    queryClient.clear();
     push(ROUTES.LOGIN);
   };
 

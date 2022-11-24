@@ -1,12 +1,11 @@
 import { CheckOutlined, CloseOutlined } from '@ant-design/icons';
-import { useSystemContext } from '@context/system';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchMarkDetail } from '@hook/mark/useFetchMarkDetail';
 import { useFetchResults } from '@hook/result/useFetchResult';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
 import { ALPHABET, ExamLevelRangeEnum, LevelEnum } from '@util/constant';
-import { Descriptions, Drawer, Tag } from 'antd';
+import { Descriptions, Modal, Tag } from 'antd';
 import moment from 'moment';
 import cx from 'classnames';
 import { FC } from 'react';
@@ -16,12 +15,18 @@ type Props = {
   roomId: string;
   examId: string;
   markId: string;
+  userId: string;
   onClose: () => void;
 };
 
-const ViewExam: FC<Props> = ({ open, roomId, examId, markId, onClose }) => {
-  const { userId } = useSystemContext();
-
+const ViewSubmissionDetail: FC<Props> = ({
+  open,
+  roomId,
+  examId,
+  markId,
+  userId,
+  onClose,
+}) => {
   const roomDetail = useFetchRoomDetail(roomId);
   const markDetail = useFetchMarkDetail(markId);
   const examDetail = useFetchExamDetail(examId);
@@ -42,7 +47,13 @@ const ViewExam: FC<Props> = ({ open, roomId, examId, markId, onClose }) => {
   );
 
   return (
-    <Drawer title={roomDetail?.title} width="75vw" onClose={onClose} open={open}>
+    <Modal
+      title={roomDetail?.title}
+      width="75vw"
+      onCancel={onClose}
+      open={open}
+      footer={null}
+    >
       <div className="w-full flex flex-col gap-5">
         <Descriptions size="small" column={3}>
           <Descriptions.Item label="Ngày thi">
@@ -115,8 +126,8 @@ const ViewExam: FC<Props> = ({ open, roomId, examId, markId, onClose }) => {
           );
         })}
       </div>
-    </Drawer>
+    </Modal>
   );
 };
 
-export default ViewExam;
+export default ViewSubmissionDetail;

@@ -14,6 +14,21 @@ class Mark extends Client {
       }
     );
   }
+
+  public getFullMarks(req: GetMarkRequest) {
+    return fetcher<BaseResponse<GetMarkResponse[]>>(
+      `${this.baseUrl}/v1/mark/full-marks?${qs.stringify(uuidVerify(req))}`,
+      {
+        headers: this.privateHeaders,
+      }
+    );
+  }
+
+  public getMarkDetail(id: string) {
+    return fetcher<BaseResponse<GetMarkResponse>>(`${this.baseUrl}/v1/mark/${id}`, {
+      headers: this.privateHeaders,
+    });
+  }
 }
 
 const markService = new Mark();
