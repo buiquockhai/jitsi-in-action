@@ -90,3 +90,7 @@ export interface PointingRoomRequest {
   exam_id: string;
   room_id: string;
 }
+
+export interface CloseRoomRequest {
+  room_id: string;
+}

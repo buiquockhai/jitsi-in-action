@@ -1,4 +1,5 @@
 import withAuth from '@hoc/withAuth';
+import TeacherCounter from '@layout/pages/teachers/start/counter';
 import ExamView from '@layout/pages/teachers/start/exam-view';
 import TeacherStartManage from '@layout/pages/teachers/start/manage';
 import MeetingPane from '@layout/pages/teachers/start/meeting';
@@ -9,11 +10,14 @@ import { NextPage } from 'next';
 
 const StartPage: NextPage = () => {
   return (
-    <div className="w-full p-5 min-h-full">
+    <div className="w-full p-5 min-h-full relative">
+      <div className="absolute right-5 top-5 flex items-end gap-5 z-10">
+        <TeacherCounter />
+      </div>
       <div className="card-container min-h-full">
         <Tabs type="card">
           <Tabs.TabPane tab="Meeting" key="1">
-            <MeetingPane />
+            {/* <MeetingPane /> */}
           </Tabs.TabPane>
           <Tabs.TabPane tab="Chi tiết" key="2">
             <TeacherStartManage />

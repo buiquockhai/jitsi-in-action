@@ -23,7 +23,6 @@
       "@style/*": ["styles/*"],
       "@util/*": ["utils/*"],
       "@type/*": ["types/*"],
-      "@mock/*": ["mocks/*"],
       "@hook/*": ["hooks/*"],
       "@query/*": ["query/*"],
       "@context/*": ["contexts/*"],

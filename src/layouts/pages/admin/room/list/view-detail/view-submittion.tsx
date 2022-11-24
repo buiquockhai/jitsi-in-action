@@ -74,7 +74,7 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
         onClose={() => setDetail(submissionDetailInitialValues)}
       />
       <Popconfirm
-        title="Bạn có chắc chắn chấm bài cho ?phòng thi"
+        title="Bạn có chắc chắn chấm bài cho phòng thi?"
         icon={<QuestionCircleOutlined />}
         onConfirm={handlePointing}
       >

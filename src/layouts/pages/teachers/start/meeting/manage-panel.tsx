@@ -20,6 +20,8 @@ const ManagePanel = () => {
     ? JSON.parse(roomDetail?.member_status)
     : {};
 
+  console.log(roomMemberStatus);
+
   const handleAccept = (studentId: string) => {
     acceptMutation.mutate({
       student_id: studentId,
@@ -38,6 +40,7 @@ const ManagePanel = () => {
     <div className="w-full min-h-full p-3 flex flex-col gap-2">
       {users?.map((item) => {
         const status = roomMemberStatus[item?.id] ?? '0';
+        console.log(roomMemberStatus[item?.id], item?.id);
 
         return (
           <div

@@ -4,7 +4,7 @@ import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { RoomResponse } from '@service/room/types';
 import { Badge, Calendar } from 'antd';
 import moment, { Moment } from 'moment';
-import React, { Fragment, useState } from 'react';
+import { Fragment, useState } from 'react';
 import EventModal from './event-modal';
 
 const StudentCalendar = () => {

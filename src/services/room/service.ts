@@ -3,6 +3,7 @@ import fetcher from '@util/fetcher';
 import { Client } from '@util/apis';
 import { BaseResponse } from '@schema/system';
 import {
+  CloseRoomRequest,
   GetRoomRequest,
   NewRoomRequest,
   PenaltyPointRequest,
@@ -109,6 +110,14 @@ class Room extends Client {
 
   public pointingRoom(req: PointingRoomRequest) {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/pointing-room`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public closeRoom(req: CloseRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/close-room`, {
       headers: this.privateHeaders,
       method: 'POST',
       body: JSON.stringify(req),

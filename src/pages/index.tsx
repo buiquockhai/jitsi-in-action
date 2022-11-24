@@ -7,8 +7,12 @@ import { GetServerSideProps, GetServerSidePropsContext } from 'next';
 import withAuth from '@hoc/withAuth';
 import { RoleEnum, __role } from '@util/constant';
 import { ROUTES } from '@util/routes';
+import { useSystemContext } from '@context/system';
+import TeacherCalendar from '@layout/pages/teachers/schedule';
 
 const Home = () => {
+  const { role } = useSystemContext();
+
   return (
     <div className="w-full flex flex-col h-screen overflow-auto">
       <Landing />
@@ -25,7 +29,7 @@ const Home = () => {
         </div>
       </Container>
       <div className="p-10">
-        <StudentCalendar />
+        {role === 'student' ? <StudentCalendar /> : <TeacherCalendar />}
       </div>
     </div>
   );

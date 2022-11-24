@@ -1,6 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
 import { LogoutOutlined } from '@ant-design/icons';
-import { Avatar, Badge, Drawer, Dropdown, Menu, Tag } from 'antd';
+import { Avatar, Drawer, Dropdown, Menu, Tag } from 'antd';
 import Container from './container';
 import { useRouter } from 'next/router';
 import { removeAuthentication } from '@util/functions';
@@ -10,20 +10,23 @@ import { RoleEnum } from '@util/constant';
 import { adminMenu, studentMenu, teacherMenu } from '@util/menu';
 import { v4 } from 'uuid';
 import { useQueryClient } from '@tanstack/react-query';
+import { useFetchNotification } from '@hook/notification/useFetchNotification';
 
 const Header = () => {
   const queryClient = useQueryClient();
 
   const { push } = useRouter();
-  const { role, avatar } = useSystemContext();
+  const { role, avatar, userId } = useSystemContext();
 
   const [visible, setVisible] = useState(false);
+
+  const notifications = useFetchNotification(userId);
 
   const handleLogout = useCallback(async () => {
     await removeAuthentication();
     queryClient.clear();
     push(ROUTES.LOGIN);
-  }, [push]);
+  }, [push, queryClient]);
 
   const menu = useMemo(() => {
     const menuData: any[] = [];
@@ -104,9 +107,7 @@ const Header = () => {
               </div>
             </Dropdown>
             <button onClick={setVisible.bind(null, true)} type="button">
-              <Badge count={5}>
-                <Avatar src={avatar} />
-              </Badge>
+              <Avatar src={avatar} />
             </button>
 
             <Drawer
@@ -114,23 +115,23 @@ const Header = () => {
               placement="right"
               width={500}
               onClose={setVisible.bind(null, false)}
-              visible={visible}
+              open={visible}
             >
               <div className="flex gap-2 flex-wrap items-center">
                 {menu.menuDataFlatten?.map(({ key, label, onClick }) => (
-                  <Tag key={key} onClick={onClick}>
+                  <Tag key={key} onClick={onClick} className="cursor-pointer">
                     {label}
                   </Tag>
                 ))}
               </div>
               <div className="space-y-2 mt-4">
-                {Array.from({ length: 10 }).map(() => (
+                {(notifications ?? []).map((item) => (
                   <div
-                    key={v4()}
+                    key={item.id}
                     className="rounded-sm bg-blue-50 border-blue-300 border p-5 flex flex-col"
                   >
-                    <p className="font-semibold">Tiêu đề thông báo</p>
-                    <p>Nội dung thông báo ...</p>
+                    <p className="font-semibold">{item.title}</p>
+                    <p>{item.content}</p>
                   </div>
                 ))}
               </div>

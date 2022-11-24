@@ -30,6 +30,7 @@ export const SocketListener = {
   serverFeedbackUpdateAnswer: 'server-feedback-update-answer',
   serverFeedbackForceLeave: 'server-feedback-force-leave',
   serverFeedbackPenalty: 'server-feedback-penalty',
+  serverFeedbackCloseRoom: 'server-feedback-close-room',
 } as const;
 
 export const SocketEmitter = {
@@ -48,7 +49,7 @@ const SocketContextProvider = ({ children }) => {
 
   const [openWaiting, setOpenWaiting] = useState(false);
 
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
 
   const { role, userId } = useSystemContext();
 
@@ -141,12 +142,24 @@ const SocketContextProvider = ({ children }) => {
       }
     });
 
+    socket.on(SocketListener.serverFeedbackCloseRoom, (data) => {
+      if (data.studentIds?.includes(userId)) {
+        api.info({
+          placement: 'bottomRight',
+          message: 'Kết thúc thi',
+          description: 'Giám thị đã đóng phòng thi.',
+        });
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        replace(ROUTES.STUDENT_SCHEDULE);
+      }
+    });
+
     return () => {
       Object.values(SocketListener).forEach((item) => {
         socket.off(item);
       });
     };
-  }, [api, role, userId, push, queryClient]);
+  }, [api, role, userId, push, replace, queryClient]);
 
   const context: SocketContextProps = {
     socket,
