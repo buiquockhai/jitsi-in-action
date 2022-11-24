@@ -124,14 +124,6 @@ export function QuestionsFolderView() {
                   onClick={() => handleEdit(node)}
                 />
               </Tooltip>
-              <Tooltip title="Di chuyển">
-                <Button
-                  icon={<EnterOutlined />}
-                  type="dashed"
-                  shape="circle"
-                  size="small"
-                />
-              </Tooltip>
               <Popconfirm
                 title="Bạn có chắc chắn？"
                 icon={<QuestionCircleOutlined />}

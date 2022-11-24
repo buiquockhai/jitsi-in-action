@@ -48,14 +48,16 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       );
       form.setFieldValue('answers', formatAnswers);
     }
-  }, [answers]);
+  }, [answers, form]);
 
   return (
     <div className="w-full rounded-sm bg-white p-5">
       <Form.Item name="folderId" label="Thư mục">
         <Select placeholder="Chọn thư mục" allowClear>
           {folderList?.map((item) => (
-            <Select.Option value={item?.id}>{item.name}</Select.Option>
+            <Select.Option key={item.id} value={item?.id}>
+              {item.name}
+            </Select.Option>
           ))}
         </Select>
       </Form.Item>
@@ -66,7 +68,9 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       >
         <Radio.Group>
           {Object.entries(QuestionTypeEnum)?.map(([key, value]) => (
-            <Radio.Button value={key}>{value}</Radio.Button>
+            <Radio.Button key={key} value={key}>
+              {value}
+            </Radio.Button>
           ))}
         </Radio.Group>
       </Form.Item>
@@ -93,7 +97,9 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       >
         <Select placeholder="Chọn đáp án đúng" allowClear>
           {answers?.map((item) => (
-            <Select.Option value={item?.id}>{item?.label}</Select.Option>
+            <Select.Option key={item.id} value={item?.id}>
+              {item?.label}
+            </Select.Option>
           ))}
         </Select>
       </Form.Item>
@@ -106,7 +112,9 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       >
         <Select placeholder="Chọn đáp án đúng" mode="multiple" allowClear>
           {answers?.map((item) => (
-            <Select.Option value={item?.id}>{item?.label}</Select.Option>
+            <Select.Option key={item.id} value={item?.id}>
+              {item?.label}
+            </Select.Option>
           ))}
         </Select>
       </Form.Item>
@@ -154,7 +162,10 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
               <Fragment>
                 {fields.map(({ key, name, ...restField }, index) => {
                   return (
-                    <div className="w-full flex flex-row gap-3 items-baseline">
+                    <div
+                      key={key}
+                      className="w-full flex flex-row gap-3 items-baseline"
+                    >
                       <Form.Item
                         {...restField}
                         name={[name, 'content']}

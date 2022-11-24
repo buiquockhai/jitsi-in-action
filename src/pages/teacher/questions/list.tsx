@@ -1,12 +1,9 @@
 import withAuth from '@hoc/withAuth';
 import { RoleEnum } from '@util/constant';
 import QuestionListContextProvider from '@layout/pages/teachers/questions/list/context';
-import { useEffect } from 'react';
 import { QuestionView } from '@layout/pages/teachers/questions/list/questions-view';
 
 export default function QuestionList() {
-  useEffect(() => {}, []);
-
   return (
     <QuestionListContextProvider>
       <QuestionView />
@@ -14,7 +11,4 @@ export default function QuestionList() {
   );
 }
 
-export const getServerSideProps = withAuth(
-  async () => ({ props: {} }),
-  RoleEnum.teacher
-);
+export const getServerSideProps = withAuth(() => ({ props: {} }), RoleEnum.teacher);
