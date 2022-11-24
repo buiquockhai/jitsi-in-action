@@ -115,14 +115,22 @@ const RoomTable = ({}) => {
                 size="small"
                 type="link"
                 onClick={() => push(ROUTES.ADMIN_UPDATE_ROOM(row.id))}
+                disabled={row.status === '2'}
               />
 
               <Popconfirm
                 title="Bạn có chắc chắn xoá đề thi?"
                 icon={<QuestionCircleOutlined />}
                 onConfirm={() => handleRemove(row.id)}
+                disabled={row.status === '2'}
               >
-                <Button icon={<DeleteOutlined />} size="small" type="link" danger />
+                <Button
+                  icon={<DeleteOutlined />}
+                  size="small"
+                  type="link"
+                  danger
+                  disabled={row.status === '2'}
+                />
               </Popconfirm>
             </div>
           );

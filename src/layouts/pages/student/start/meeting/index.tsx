@@ -1,9 +1,11 @@
 import dynamic from 'next/dynamic';
 import { IJitsiMeetingProps } from '@jitsi/react-sdk/lib/types';
 import { useRouter } from 'next/router';
+import { useSystemContext } from '@context/system';
 
 const MeetingPane = () => {
-  const { replace } = useRouter();
+  const { query } = useRouter();
+  const { name } = useSystemContext();
 
   const JitsiMeeting = dynamic(
     () => import('@jitsi/react-sdk').then(({ JitsiMeeting }) => JitsiMeeting) as any,
@@ -16,8 +18,13 @@ const MeetingPane = () => {
     <div className="w-full h-[80vh] bg-red-50">
       <JitsiMeeting
         domain="meet.distributed-systems.xyz"
-        roomName="PleaseUseAGoodRoomName"
+        roomName={query.id as string}
+        userInfo={{
+          displayName: name,
+          email: '',
+        }}
         configOverwrite={{
+          hideConferenceSubject: true,
           hideConferenceTimer: true,
           disablePolls: true,
           disableSelfViewSettings: true,
@@ -37,10 +44,6 @@ const MeetingPane = () => {
             'participants-pane',
             'highlight',
           ],
-        }}
-        // onApiReady={(externalApi) => {}}
-        onReadyToClose={() => {
-          replace('/');
         }}
         getIFrameRef={(iframeRef) => {
           iframeRef.style.height = '100%';

@@ -1,23 +1,31 @@
 import { Fragment, memo, useCallback, useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
-import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
+import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import moment from 'moment';
 import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
+import { useStudentSubmit } from '@hook/room/useStudentSubmit';
+import { useSystemContext } from '@context/system';
 
 const StudentCounter = () => {
   const { query } = useRouter();
+  const { userId } = useSystemContext();
 
   const [timerText, setTimerText] = useState('');
 
+  const studentSubmitMutation = useStudentSubmit([GET_ROOM_DETAIL]);
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
 
+  const submitted =
+    (roomDetail?.member_status ?? '')?.length > 10
+      ? JSON.parse(roomDetail?.member_status ?? '')
+      : {};
+
   const getTimer = useCallback(() => {
-    const duration =
-      parseInt(examDetail?.exam?.duration?.toString() || '0') + 60 * 8;
-    const expire = moment(roomDetail?.start_date).add(duration, 'minutes');
+    const duration = parseInt(examDetail?.exam?.duration?.toString() || '0');
+    const expire = moment(roomDetail?.teacher_start_date).add(duration, 'minutes');
 
     const diffSeconds = expire.diff(moment(new Date()), 'seconds');
     if (diffSeconds > 0) {
@@ -25,14 +33,20 @@ const StudentCounter = () => {
     } else {
       setTimerText('');
     }
-  }, [examDetail?.exam?.duration, roomDetail?.start_date]);
+  }, [examDetail?.exam?.duration, roomDetail?.teacher_start_date]);
 
   useEffect(() => {
-    if (examDetail?.exam && roomDetail?.start_date) {
+    if (examDetail?.exam && roomDetail?.teacher_start_date) {
       const interval = setInterval(getTimer, 1000);
       return () => clearInterval(interval);
     }
   }, [examDetail, roomDetail, getTimer]);
+
+  const handelSubmit = () => {
+    studentSubmitMutation.mutate({
+      room_id: query.id as string,
+    });
+  };
 
   return (
     <Fragment>
@@ -40,8 +54,14 @@ const StudentCounter = () => {
       <Popconfirm
         title="Bạn có chắc chắn nộp bài?"
         icon={<QuestionCircleOutlined />}
+        disabled={timerText?.length <= 0 || submitted[userId] === '3'}
+        onConfirm={handelSubmit}
       >
-        <Button size="small" type="primary">
+        <Button
+          size="small"
+          type="primary"
+          disabled={timerText?.length <= 0 || submitted[userId] === '3'}
+        >
           Nộp bài
         </Button>
       </Popconfirm>

@@ -31,6 +31,8 @@ export const SocketListener = {
   serverFeedbackForceLeave: 'server-feedback-force-leave',
   serverFeedbackPenalty: 'server-feedback-penalty',
   serverFeedbackCloseRoom: 'server-feedback-close-room',
+  serverFeedbackOpenRoom: 'server-feedback-open-room',
+  serverFeedbackStudentSubmit: 'server-feedback-student-submit',
 } as const;
 
 export const SocketEmitter = {
@@ -151,6 +153,28 @@ const SocketContextProvider = ({ children }) => {
         });
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
         replace(ROUTES.STUDENT_SCHEDULE);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackOpenRoom, (data) => {
+      if (data.studentIds?.includes(userId)) {
+        api.success({
+          placement: 'bottomRight',
+          message: 'Bắt đầu thi',
+          description: 'Giám thị đã mở phòng thi.',
+        });
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackStudentSubmit, (data) => {
+      if (userId === data.proctorId) {
+        api.info({
+          placement: 'bottomRight',
+          message: 'Bắt đầu thi',
+          description: 'Sinh viên đã nộp bài. Vui lòng kiểm tra.',
+        });
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
       }
     });
 

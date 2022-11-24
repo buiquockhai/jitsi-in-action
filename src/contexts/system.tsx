@@ -1,18 +1,12 @@
 import { Router } from 'next/router';
-import { useState, useEffect, ReactNode, Dispatch, SetStateAction } from 'react';
+import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { createContext } from '@util/createContext';
 import { JwtResponse, RoleTypes } from '@schema/system';
 import { getCookie } from '@util/functions';
 import { __token } from './../utils/constant';
 import jwt_decode from 'jwt-decode';
 import { notification } from 'antd';
-import { NotificationInstance, NotificationPlacement } from 'antd/lib/notification';
-
-type NotificationProps = {
-  message: string;
-  description: ReactNode;
-  placement?: NotificationPlacement;
-};
+import { NotificationInstance } from 'antd/lib/notification';
 
 export interface SystemContextProps {
   toast: boolean;
@@ -29,6 +23,8 @@ export interface SystemContextProps {
   setUsername: Dispatch<SetStateAction<string>>;
   avatar: string;
   setAvatar: Dispatch<SetStateAction<string>>;
+  name: string;
+  setName: Dispatch<SetStateAction<string>>;
   notification: NotificationInstance;
 }
 
@@ -57,6 +53,7 @@ const SystemContextProvider = ({ children }) => {
       setRole(jwtDecode.role);
       setUserId(jwtDecode.id);
       setUsername(jwtDecode.username);
+      setName(jwtDecode.name);
     }
   }, []);
 
@@ -67,6 +64,7 @@ const SystemContextProvider = ({ children }) => {
   const [role, setRole] = useState<RoleTypes>('student');
   const [username, setUsername] = useState('');
   const [avatar, setAvatar] = useState('');
+  const [name, setName] = useState('');
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -85,6 +83,8 @@ const SystemContextProvider = ({ children }) => {
     setUsername,
     avatar,
     setAvatar,
+    name,
+    setName,
     notification: api,
   };
 

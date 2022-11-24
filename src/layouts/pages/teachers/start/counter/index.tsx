@@ -7,20 +7,21 @@ import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCloseRoom } from '@hook/room/useCloseRoom';
 import { ROUTES } from '@util/routes';
+import { useOpenRoom } from '@hook/room/useOpenRoom';
 
 const TeacherCounter = () => {
   const { query, replace } = useRouter();
 
   const [timerText, setTimerText] = useState('');
 
+  const openRoomMutation = useOpenRoom([GET_ROOM_DETAIL]);
   const closeRoomMutation = useCloseRoom([GET_ROOM_DETAIL]);
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
 
   const getTimer = useCallback(() => {
-    const duration =
-      parseInt(examDetail?.exam?.duration?.toString() || '0') + 60 * 8;
-    const expire = moment(roomDetail?.start_date).add(duration, 'minutes');
+    const duration = parseInt(examDetail?.exam?.duration?.toString() || '0');
+    const expire = moment(roomDetail?.teacher_start_date).add(duration, 'minutes');
 
     const diffSeconds = expire.diff(moment(new Date()), 'seconds');
     if (diffSeconds > 0) {
@@ -28,10 +29,10 @@ const TeacherCounter = () => {
     } else {
       setTimerText('');
     }
-  }, [examDetail?.exam?.duration, roomDetail?.start_date]);
+  }, [examDetail?.exam?.duration, roomDetail?.teacher_start_date]);
 
   useEffect(() => {
-    if (examDetail?.exam && roomDetail?.start_date) {
+    if (examDetail?.exam && roomDetail?.teacher_start_date) {
       const interval = setInterval(getTimer, 1000);
       return () => clearInterval(interval);
     }
@@ -44,18 +45,36 @@ const TeacherCounter = () => {
     replace(ROUTES.TEACHER_SCHEDULE);
   };
 
+  const handleOpenRoom = () => {
+    openRoomMutation.mutate({
+      room_id: query.id as string,
+    });
+  };
+
   return (
     <Fragment>
       <span>{timerText}</span>
-      <Popconfirm
-        title="Bạn có chắc chắn đóng phòng thi?"
-        icon={<QuestionCircleOutlined />}
-        onConfirm={handleCloseRoom}
-      >
-        <Button size="small" type="primary" danger>
-          Đóng
-        </Button>
-      </Popconfirm>
+      {roomDetail?.teacher_start_date ? (
+        <Popconfirm
+          title="Bạn có chắc chắn đóng phòng thi?"
+          icon={<QuestionCircleOutlined />}
+          onConfirm={handleCloseRoom}
+        >
+          <Button size="small" type="primary" danger>
+            Đóng
+          </Button>
+        </Popconfirm>
+      ) : (
+        <Popconfirm
+          title="Bạn có chắc chắn bắt đầu phòng thi?"
+          icon={<QuestionCircleOutlined />}
+          onConfirm={handleOpenRoom}
+        >
+          <Button size="small" type="primary">
+            Mở phòng thi
+          </Button>
+        </Popconfirm>
+      )}
     </Fragment>
   );
 };

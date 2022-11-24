@@ -12,6 +12,7 @@ export type RoomResponse = {
   proctor_name: string;
   member_status: string;
   marked: string;
+  teacher_start_date: string;
   start_date: string;
   created_date: string;
   created_id: string;
@@ -92,5 +93,13 @@ export interface PointingRoomRequest {
 }
 
 export interface CloseRoomRequest {
+  room_id: string;
+}
+
+export interface OpenRoomRequest {
+  room_id: string;
+}
+
+export interface StudentSubmitRequest {
   room_id: string;
 }

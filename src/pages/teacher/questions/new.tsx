@@ -80,7 +80,7 @@ const TeacherQuestions = () => {
       })),
     };
 
-    if (isEdit) {
+    if (!isEdit.current) {
       await newQuestionMutation.mutate(object);
       form.setFieldsValue(initialValues);
     } else {

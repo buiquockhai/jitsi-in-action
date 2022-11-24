@@ -98,5 +98,6 @@ export interface UpdateQuestionRequest {
   title?: string;
   content?: string;
   images?: string;
+  folder_id?: string;
   deleted?: DeleteFlagTypes;
 }

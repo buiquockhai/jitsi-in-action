@@ -6,6 +6,7 @@ import {
   CloseRoomRequest,
   GetRoomRequest,
   NewRoomRequest,
+  OpenRoomRequest,
   PenaltyPointRequest,
   PointingRoomRequest,
   RoomResponse,
@@ -118,6 +119,22 @@ class Room extends Client {
 
   public closeRoom(req: CloseRoomRequest) {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/close-room`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public openRoom(req: OpenRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/open-room`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public studentSubmit(req: OpenRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/room/student-submit`, {
       headers: this.privateHeaders,
       method: 'POST',
       body: JSON.stringify(req),

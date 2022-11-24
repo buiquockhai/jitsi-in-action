@@ -5,7 +5,8 @@ import { GET_RESULTS, useFetchResults } from '@hook/result/useFetchResult';
 import { usePushResult } from '@hook/result/usePushResult';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { ALPHABET } from '@util/constant';
-import { Button } from 'antd';
+import { Button, Empty, message } from 'antd';
+import moment from 'moment';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -18,6 +19,11 @@ const ExamPane = () => {
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
 
+  const submitted =
+    (roomDetail?.member_status ?? '')?.length > 10
+      ? JSON.parse(roomDetail?.member_status ?? '')
+      : {};
+
   const questions = examDetail?.questionList ?? [];
   const focusQuestion = questions?.[focusIndex];
 
@@ -29,6 +35,20 @@ const ExamPane = () => {
   const pushResultMutation = usePushResult([GET_RESULTS]);
 
   const handlePushAnswer = (answerId: string, label: string) => {
+    if (submitted[userId] === '3') {
+      return message.error('Bạn đã nộp bài. Không được phép chỉnh sửa');
+    }
+
+    const duration = parseInt(examDetail?.exam?.duration?.toString() || '0');
+    const diffMinutes = moment(new Date()).diff(
+      moment(roomDetail?.teacher_start_date),
+      'minutes'
+    );
+
+    if (diffMinutes > duration) {
+      return message.error('Đã hết thời gian làm bài');
+    }
+
     pushResultMutation.mutate({
       room_id: query.id as string,
       question_id: focusQuestion?.id,
@@ -37,6 +57,10 @@ const ExamPane = () => {
       proctor_id: roomDetail?.proctor_id,
     });
   };
+
+  if ((roomDetail?.teacher_start_date ?? '')?.length <= 0) {
+    return <Empty />;
+  }
 
   return (
     <div className="space-y-5 h-[80vh]">

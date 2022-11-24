@@ -52,10 +52,14 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
 
   return (
     <div className="w-full rounded-sm bg-white p-5">
-      <Form.Item name="folderId" label="Thư mục">
+      <Form.Item
+        name="folderId"
+        label="Thư mục"
+        rules={[{ required: true, message: 'Vui lòng chọn thư mục' }]}
+      >
         <Select placeholder="Chọn thư mục" allowClear>
           {folderList?.map((item) => (
-            <Select.Option key={item.id} value={item?.id}>
+            <Select.Option key={item?.id} value={item?.id}>
               {item.name}
             </Select.Option>
           ))}
@@ -97,7 +101,7 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       >
         <Select placeholder="Chọn đáp án đúng" allowClear>
           {answers?.map((item) => (
-            <Select.Option key={item.id} value={item?.id}>
+            <Select.Option key={item?.id} value={item?.id}>
               {item?.label}
             </Select.Option>
           ))}
@@ -112,7 +116,7 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       >
         <Select placeholder="Chọn đáp án đúng" mode="multiple" allowClear>
           {answers?.map((item) => (
-            <Select.Option key={item.id} value={item?.id}>
+            <Select.Option key={item?.id} value={item?.id}>
               {item?.label}
             </Select.Option>
           ))}

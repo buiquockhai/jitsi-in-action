@@ -17,7 +17,7 @@ const StartPage: NextPage = () => {
       <div className="card-container min-h-full">
         <Tabs type="card">
           <Tabs.TabPane tab="Meeting" key="1">
-            {/* <MeetingPane /> */}
+            <MeetingPane />
           </Tabs.TabPane>
           <Tabs.TabPane tab="Chi tiết" key="2">
             <TeacherStartManage />

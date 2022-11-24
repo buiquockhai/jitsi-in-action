@@ -1,4 +1,4 @@
-import { Breadcrumb, Button, Input } from 'antd';
+import { Breadcrumb, Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useQuestionListContext } from './context';
 import { useRouter } from 'next/router';
@@ -46,7 +46,6 @@ export function QuestionListPath() {
         <Button icon={<PlusOutlined />} onClick={() => setNewFodlerOpen(true)}>
           Thư mục
         </Button>
-        <Input.Search placeholder="Tìm câu hỏi" allowClear style={{ width: 200 }} />
       </div>
     </div>
   );

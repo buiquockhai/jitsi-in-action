@@ -39,6 +39,7 @@ export default class RootDocument extends Document {
           <link rel="shortcut icon" href="/logo/droppii.svg" />
           <link rel="manifest" href="/site.webmanifest" />
           <link rel="mask-icon" href="/safari-pinned-tab.svg" color="#5bbad5" />
+          <title>Learn and Do</title>
         </Head>
         <body>
           <Main />

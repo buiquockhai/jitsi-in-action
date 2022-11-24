@@ -19,7 +19,7 @@ const ViewDetailModal: FC<Props> = ({ open, examId, roomId, groupId, onClose }) 
   return (
     <Modal
       width="95vw"
-      footer={[]}
+      footer={null}
       title={roomDetail?.title}
       onCancel={onClose}
       open={open}
@@ -40,7 +40,7 @@ const ViewDetailModal: FC<Props> = ({ open, examId, roomId, groupId, onClose }) 
           {
             label: 'Bài nộp',
             key: 'submit-detail',
-            // disabled: roomDetail?.status !== '2',
+            disabled: roomDetail?.status !== '2',
             children: (
               <ViewSubmission roomId={roomId} groupId={groupId} examId={examId} />
             ),
