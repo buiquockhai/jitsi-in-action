@@ -1,10 +1,10 @@
 import { v4 } from 'uuid';
 import {
+  ApartmentOutlined,
   AppstoreOutlined,
   BellOutlined,
   CalendarOutlined,
   CloudOutlined,
-  NumberOutlined,
   TeamOutlined,
   UserOutlined,
 } from '@ant-design/icons';
@@ -54,7 +54,7 @@ export const adminMenu = [
   {
     key: v4(),
     label: 'Phòng thi',
-    icon: <NumberOutlined />,
+    icon: <ApartmentOutlined />,
     children: [
       {
         key: v4(),

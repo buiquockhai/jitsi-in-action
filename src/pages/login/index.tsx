@@ -29,7 +29,7 @@ const statusMessage = {
 };
 
 const Login = () => {
-  const { push } = useRouter();
+  const { replace } = useRouter();
   const { setRole, setUserId, setUsername, setAvatar } = useSystemContext();
 
   const [open, setOpen] = useState(false);
@@ -47,7 +47,9 @@ const Login = () => {
       setUserId(jwtData.id);
       setUsername(jwtData.username);
       setAvatar(jwtData.avatar);
-      push(ROUTES.HOME);
+      replace(ROUTES.HOME).then(() => {
+        window.location.reload();
+      });
     } else {
       message.error(statusMessage.fail);
     }
