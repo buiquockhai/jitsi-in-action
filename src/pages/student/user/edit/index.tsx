@@ -24,7 +24,7 @@ type FormProps = {
 };
 
 const StudentUpdateInformation: NextPage = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormProps>();
 
   const ref = createRef<HTMLInputElement>();
 

@@ -74,3 +74,16 @@ export interface UpdateUserPasswordRequest {
   old_password: string;
   new_password: string;
 }
+
+export interface NewUserRequest {
+  username: string;
+  name: string;
+  gender: GenderTypes;
+  date_of_birth: string;
+  phone: string;
+  address: string;
+  contact: string;
+  avatar: string;
+  password: string;
+  secret_key: string;
+}

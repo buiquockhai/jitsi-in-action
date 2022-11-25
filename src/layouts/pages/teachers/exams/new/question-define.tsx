@@ -5,7 +5,7 @@ import { CloseOutlined, QuestionCircleOutlined } from '@ant-design/icons';
 import { FormInstance } from 'antd/es/form/Form';
 import { useFetchQuestion } from '@hook/question/useFetchQuestion';
 import { useRouter } from 'next/router';
-import { useEffect, FC, useRef } from 'react';
+import { useEffect, FC } from 'react';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 
 type Props = {

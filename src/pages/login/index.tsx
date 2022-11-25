@@ -55,7 +55,7 @@ const Login = () => {
 
   return (
     <div className="overflow-hidden relative">
-      <Registration open={open} onClose={setOpen.bind(null, false)} />
+      <Registration open={open} onClose={() => setOpen(false)} />
       <div className="w-screen overflow-hidden h-screen fixed top-0 left-0 flex">
         <img
           src="/assets/__bg_login.png"
@@ -136,7 +136,7 @@ const Login = () => {
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
-  const { req, res }: any = context;
+  const { req, res } = context;
   const cookie = req.headers.cookie;
 
   const token = getCookie(__token, cookie);

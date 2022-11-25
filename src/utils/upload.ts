@@ -16,5 +16,5 @@ export const upload = async (file: File, path?: string) => {
     })
     .catch((error) => console.log(error));
 
-  return url;
+  return url || '';
 };

@@ -64,10 +64,12 @@ export function QuestionsFolderView() {
         deleted: 'Y',
       });
       const questionChildren = node.children.map((item) => item.key);
-      await updateQuestionMutation.mutate({
-        id: questionChildren,
-        deleted: 'Y',
-      });
+      if (questionChildren?.length > 0) {
+        await updateQuestionMutation.mutate({
+          id: questionChildren,
+          deleted: 'Y',
+        });
+      }
     } else {
       updateQuestionMutation.mutate({
         id: node.key,

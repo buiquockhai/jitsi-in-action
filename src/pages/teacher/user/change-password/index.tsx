@@ -11,7 +11,7 @@ type FormProps = {
 };
 
 const ChangePassword = () => {
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormProps>();
 
   const userChangePasswordMutation = useUpdatePassword();
 

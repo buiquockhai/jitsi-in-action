@@ -7,6 +7,7 @@ import {
   GetUserDetailResponse,
   GetUserListRequest,
   GetUserListResponse,
+  NewUserRequest,
   UpdateUserDetailRequest,
   UpdateUserPasswordRequest,
 } from './types';
@@ -48,6 +49,13 @@ class UserService extends Client {
     );
   }
 
+  public newUser(req: NewUserRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/user`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
   public updateUserDetail(req: UpdateUserDetailRequest) {
     return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/user`, {
       headers: this.privateHeaders,

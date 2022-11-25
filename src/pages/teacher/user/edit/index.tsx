@@ -25,7 +25,7 @@ type FormProps = {
 const TeacherUpdateInformation: NextPage = () => {
   const ref = createRef<HTMLInputElement>();
 
-  const [form] = Form.useForm();
+  const [form] = Form.useForm<FormProps>();
 
   const { userId } = useSystemContext();
 
@@ -135,7 +135,7 @@ const TeacherUpdateInformation: NextPage = () => {
             <Form.Item
               name="gender"
               label="Giới tính"
-              rules={[{ required: true, message: 'Vui lòng nhập tên đầy đủ' }]}
+              rules={[{ required: true, message: 'Vui lòng chọn giới tính' }]}
             >
               <Radio.Group>
                 {Object.entries(GenderEnum).map(([key, value]) => (
