@@ -30,7 +30,7 @@ const initialValues: FormProps = {
   groupId: '',
   status: '0',
   duration: 0,
-  startAt: moment('01/01/2022 00:00:00', 'DD/MM/YYYY hh:mm:ss'),
+  startAt: moment(new Date(), 'DD/MM/YYYY hh:mm:ss'),
 };
 
 const NewRoomPage: NextPage = () => {
@@ -149,7 +149,11 @@ const NewRoomPage: NextPage = () => {
               label="Nhóm"
               rules={[{ required: true, message: 'Vui lòng chọn nhóm thi' }]}
             >
-              <Select placeholder="Chọn nhóm" allowClear>
+              <Select
+                placeholder="Chọn nhóm"
+                allowClear
+                disabled={(query.id ?? '').length > 0}
+              >
                 {groups?.map((item) => (
                   <Select.Option key={item?.id} value={item?.id}>
                     {item.title}

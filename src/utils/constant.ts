@@ -70,6 +70,13 @@ export const DeleteFlagEnum = {
 
 export type DeleteFlagTypes = keyof typeof DeleteFlagEnum;
 
+export const UserRoomVerifiedEnum = {
+  Y: 'Y',
+  N: 'N',
+} as const;
+
+export type UserRoomVerifiedTypes = keyof typeof UserRoomVerifiedEnum;
+
 export const LevelEnum = {
   0: 'Dễ',
   1: 'Trung bình',

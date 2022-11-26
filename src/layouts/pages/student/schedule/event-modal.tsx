@@ -19,11 +19,10 @@ const EventModal: FC<Props> = ({ data, open, onClose }) => {
 
   const [controlRoomId, setControlRoomId] = useState('');
 
-  const handleJoin = async (roomId: string, groupId: string) => {
-    if (roomId && groupId) {
+  const handleJoin = async (roomId: string) => {
+    if (roomId) {
       const res = await roomService.joinRoomStudent({
         room_id: roomId,
-        group_id: groupId,
       });
       if (res.data?.id) {
         onClose();
@@ -51,7 +50,7 @@ const EventModal: FC<Props> = ({ data, open, onClose }) => {
                 <Button
                   key={item.id}
                   type="primary"
-                  onClick={() => handleJoin(item.id, item.group_id)}
+                  onClick={() => handleJoin(item.id)}
                 >
                   Tham gia
                 </Button>,

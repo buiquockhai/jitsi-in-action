@@ -4,6 +4,7 @@ import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { GET_RESULTS, useFetchResults } from '@hook/result/useFetchResult';
 import { usePushResult } from '@hook/result/usePushResult';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
+import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
 import { ALPHABET } from '@util/constant';
 import { Button, Empty, message } from 'antd';
 import moment from 'moment';
@@ -18,11 +19,10 @@ const ExamPane = () => {
 
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
-
-  const submitted =
-    (roomDetail?.member_status ?? '')?.length > 10
-      ? JSON.parse(roomDetail?.member_status ?? '')
-      : {};
+  const userInRoom = useFetchUserInRoom({
+    user_id: userId,
+    room_id: query.id as string,
+  });
 
   const questions = examDetail?.questionList ?? [];
   const focusQuestion = questions?.[focusIndex];
@@ -35,7 +35,7 @@ const ExamPane = () => {
   const pushResultMutation = usePushResult([GET_RESULTS]);
 
   const handlePushAnswer = (answerId: string, label: string) => {
-    if (submitted[userId] === '3') {
+    if (userInRoom?.[0]?.status === '3') {
       return message.error('Bạn đã nộp bài. Không được phép chỉnh sửa');
     }
 

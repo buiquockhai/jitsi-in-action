@@ -8,14 +8,15 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCloseRoom } from '@hook/room/useCloseRoom';
 import { ROUTES } from '@util/routes';
 import { useOpenRoom } from '@hook/room/useOpenRoom';
+import { GET_USER_IN_ROOM } from '@hook/user-room/useFetchUserRoom';
 
 const TeacherCounter = () => {
   const { query, replace } = useRouter();
 
   const [timerText, setTimerText] = useState('');
 
-  const openRoomMutation = useOpenRoom([GET_ROOM_DETAIL]);
-  const closeRoomMutation = useCloseRoom([GET_ROOM_DETAIL]);
+  const openRoomMutation = useOpenRoom([GET_ROOM_DETAIL, GET_USER_IN_ROOM]);
+  const closeRoomMutation = useCloseRoom([GET_ROOM_DETAIL, GET_USER_IN_ROOM]);
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
 

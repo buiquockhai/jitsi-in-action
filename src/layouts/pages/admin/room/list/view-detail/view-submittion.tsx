@@ -1,6 +1,5 @@
 import { useFetchResults } from '@hook/result/useFetchResult';
 import { FC, useState } from 'react';
-import { useFetchUsers } from '@hook/user/useFetchUsers';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
 import { Button, Popconfirm } from 'antd';
@@ -10,6 +9,7 @@ import { QuestionCircleOutlined } from '@ant-design/icons';
 import { usePointingRoom } from '@hook/room/usePoitingRoom';
 import { GET_MARKS, useFetchMarks } from '@hook/mark/useFetchMarks';
 import ViewSubmissionDetail from './view-submission-detail';
+import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
 
 type Props = {
   roomId: string;
@@ -35,7 +35,7 @@ const submissionDetailInitialValues: SubmissionProps = {
 
 const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
   const results = useFetchResults({ room_id: roomId });
-  const members = useFetchUsers({ group_id: groupId });
+  const memberInRooms = useFetchUserInRoom({ room_id: roomId });
   const examDetail = useFetchExamDetail(examId);
   const violatingRules = useFetchViolatingRules({ room_id: roomId });
   const roomDetail = useFetchRoomDetail(roomId);
@@ -84,25 +84,29 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
       </Popconfirm>
 
       <ul className="space-y-5">
-        {(members ?? []).map((user) => {
+        {(memberInRooms ?? []).map((user) => {
           const penaltyPoint =
             violatingRules?.reduce(
               (sum, item) =>
-                item.user_id === user.id ? sum + parseFloat(item.minus_point) : sum,
+                item.user_id === user.user_id
+                  ? sum + parseFloat(item.minus_point)
+                  : sum,
               0
             ) ?? 0;
 
-          const markDetail = (marks ?? [])?.find((item) => item.user_id === user.id);
+          const markDetail = (marks ?? [])?.find(
+            (item) => item.user_id === user.user_id
+          );
 
           return (
-            <div className="space-y-5" key={user.id}>
+            <div className="space-y-5" key={user.user_id}>
               <div className="w-full flex items-center justify-between">
                 <div className="flex items-center">
                   <p className="w-52 truncate">
-                    <b>Tên</b>: {user?.name}
+                    <b>Tên</b>: {user?.tb_user.name}
                   </p>
                   <p className="w-40 truncate">
-                    <b>Mã</b>: {user?.code}
+                    <b>Mã</b>: {user?.tb_user.name}
                   </p>
                   <p
                     className={cx('w-40 truncate', {
@@ -130,7 +134,9 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                 <Button
                   size="small"
                   type="link"
-                  onClick={() => handleShowDetail(markDetail?.id ?? '', user.id)}
+                  onClick={() =>
+                    handleShowDetail(markDetail?.id ?? '', user.user_id)
+                  }
                 >
                   Xem bài làm
                 </Button>
@@ -141,7 +147,7 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                   const resultBelongToQuestion = (results ?? []).filter(
                     (item) =>
                       item.question_id === question?.id &&
-                      item.created_id === user.id
+                      item.created_id === user.user_id
                   );
 
                   const correctAnswers = (question?.tb_answers ?? []).flatMap(

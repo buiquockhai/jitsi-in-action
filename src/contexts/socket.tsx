@@ -1,5 +1,6 @@
 import { GET_RESULTS } from '@hook/result/useFetchResult';
 import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
+import { GET_USER_IN_ROOM } from '@hook/user-room/useFetchUserRoom';
 import { GET_VIOLATING_RULES } from '@hook/violating-rule/useFetchViolatingRules';
 import { useQueryClient } from '@tanstack/react-query';
 import { RoleEnum } from '@util/constant';
@@ -89,6 +90,7 @@ const SocketContextProvider = ({ children }) => {
     socket.on(SocketListener.serverFeedbackJoinRoom, (data) => {
       if (userId === data.proctorId) {
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
       }
     });
 
@@ -108,7 +110,9 @@ const SocketContextProvider = ({ children }) => {
 
     socket.on(SocketListener.serverFeedbackCancelJoinRoom, (data) => {
       if (userId === data.proctorId) {
-        queryClient.invalidateQueries([GET_ROOM_DETAIL, GET_RESULTS]);
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_RESULTS]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
       }
     });
 
@@ -122,6 +126,7 @@ const SocketContextProvider = ({ children }) => {
       if (userId === data.studentId) {
         push(ROUTES.STUDENT_SCHEDULE);
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
         api.error({
           placement: 'bottomRight',
           message: 'Bị buộc rời khỏi phòng thi',
@@ -152,6 +157,7 @@ const SocketContextProvider = ({ children }) => {
           description: 'Giám thị đã đóng phòng thi.',
         });
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
         replace(ROUTES.STUDENT_SCHEDULE);
       }
     });
@@ -164,6 +170,7 @@ const SocketContextProvider = ({ children }) => {
           description: 'Giám thị đã mở phòng thi.',
         });
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
       }
     });
 
@@ -175,6 +182,7 @@ const SocketContextProvider = ({ children }) => {
           description: 'Sinh viên đã nộp bài. Vui lòng kiểm tra.',
         });
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
       }
     });
 

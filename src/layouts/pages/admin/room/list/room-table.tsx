@@ -74,13 +74,6 @@ const RoomTable = ({}) => {
         width: '10%',
       },
       {
-        title: 'Xáo trộn',
-        dataIndex: 'shuffle',
-        width: '10%',
-        render: (shuffle) => <Tag>{shuffle ? 'Có' : 'Không'}</Tag>,
-        sorter: (a, b) => a.shuffle - b.shuffle,
-      },
-      {
         title: 'Thời gian bắt đầu',
         dataIndex: 'start_date',
         width: '10%',

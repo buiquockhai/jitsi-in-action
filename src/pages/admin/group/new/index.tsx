@@ -56,11 +56,11 @@ const NewGroup: NextPage = () => {
   ]);
 
   const userFreeze = useFetchUserFreeze();
-  const useByGroup = useFetchUsers({ group_id: query.id as string });
+  const userByGroup = useFetchUsers({ group_id: query.id as string });
   const groupDetail = useFetchGroupDetail(query.id as string);
 
   const source = query.id
-    ? [...(useByGroup ?? []), ...(userFreeze ?? [])]
+    ? [...(userByGroup ?? []), ...(userFreeze ?? [])]
     : userFreeze;
 
   const sourceWithKey = source?.map((item) => ({ ...item, key: item.id }));

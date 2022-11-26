@@ -7,7 +7,6 @@ import {
   GetRoomRequest,
   NewRoomRequest,
   OpenRoomRequest,
-  PenaltyPointRequest,
   PointingRoomRequest,
   RoomResponse,
   StudentCancelJoinRoomRequest,

@@ -13,23 +13,27 @@ import {
   GET_VIOLATING_RULES,
   useFetchViolatingRules,
 } from '@hook/violating-rule/useFetchViolatingRules';
+import {
+  GET_USER_IN_ROOM,
+  useFetchUserInRoom,
+} from '@hook/user-room/useFetchUserRoom';
 
 const TeacherStartManage = () => {
   const { query } = useRouter();
 
   const roomDetail = useFetchRoomDetail(query.id as string);
-  const members = useFetchUsers({ group_id: roomDetail?.group_id });
+  const memberInRoom = useFetchUserInRoom({ room_id: query.id as string });
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
   const results = useFetchResults({
     room_id: query.id as string,
   });
-  const forceLeaveMutation = useForceLeaveRoom([GET_ROOM_DETAIL, GET_RESULTS]);
+  const forceLeaveMutation = useForceLeaveRoom([
+    GET_ROOM_DETAIL,
+    GET_USER_IN_ROOM,
+    GET_RESULTS,
+  ]);
   const newViolatingRuleMutation = useNewViolatingRule([GET_VIOLATING_RULES]);
   const violatingRules = useFetchViolatingRules({ room_id: query.id as string });
-
-  const roomMemberStatus = roomDetail?.member_status
-    ? JSON.parse(roomDetail?.member_status)
-    : {};
 
   const handleForceLeave = (studentId: string) => {
     forceLeaveMutation.mutate({
@@ -48,12 +52,13 @@ const TeacherStartManage = () => {
 
   return (
     <ul className="space-y-5">
-      {(members ?? []).map((user) => {
-        const status = roomMemberStatus[user?.id] ?? '0';
+      {(memberInRoom ?? []).map((user) => {
         const penaltyPoint =
           violatingRules?.reduce(
             (sum, item) =>
-              item.user_id === user.id ? sum + parseFloat(item.minus_point) : sum,
+              item.user_id === user.user_id
+                ? sum + parseFloat(item.minus_point)
+                : sum,
             0
           ) ?? 0;
 
@@ -62,10 +67,10 @@ const TeacherStartManage = () => {
             <div className="w-full flex items-center justify-between">
               <div className="flex items-center">
                 <p className="w-52 truncate">
-                  <b>Tên</b>: {user?.name}
+                  <b>Tên</b>: {user?.tb_user.name}
                 </p>
                 <p className="w-40 truncate">
-                  <b>Mã</b>: {user?.code}
+                  <b>Mã</b>: {user?.tb_user.code}
                 </p>
                 <p
                   className={cx('w-40 truncate', {
@@ -78,10 +83,10 @@ const TeacherStartManage = () => {
                   <b>Trạng thái</b>:{' '}
                   <span
                     className={cx('text-gray-500', {
-                      'text-green-500': status === '2',
+                      'text-green-500': user.status === '2',
                     })}
                   >
-                    {RequestJoinRoomStatusEnum[status]}
+                    {RequestJoinRoomStatusEnum[user.status]}
                   </span>
                 </p>
               </div>
@@ -89,18 +94,18 @@ const TeacherStartManage = () => {
                 <Popconfirm
                   title="Bạn có chắc chắn muốn trừ điểm cảnh cáo vi phạm. Mỗi lần cảnh cáo thí sinh sẽ bị trừ 0.5 điểm vào kết quả thi."
                   icon={<QuestionCircleOutlined />}
-                  onConfirm={() => handlePenalty(user.id)}
+                  onConfirm={() => handlePenalty(user.user_id)}
                 >
-                  <Button size="small" danger disabled={status !== '2'}>
+                  <Button size="small" danger disabled={user.status !== '2'}>
                     Trừ điểm cảnh cáo
                   </Button>
                 </Popconfirm>
                 <Popconfirm
                   title="Bạn có chắc chắn bắt buộc thí sinh nộp bài. Thí sẽ đồng thời sẽ bị đuổi ra khỏi phòng thi."
                   icon={<QuestionCircleOutlined />}
-                  onConfirm={() => handleForceLeave(user.id)}
+                  onConfirm={() => handleForceLeave(user.user_id)}
                 >
-                  <Button size="small" danger disabled={status !== '2'}>
+                  <Button size="small" danger disabled={user.status !== '2'}>
                     Buộc nộp bài
                   </Button>
                 </Popconfirm>
@@ -111,7 +116,8 @@ const TeacherStartManage = () => {
               {(examDetail?.questionList ?? []).map((question, index) => {
                 const answer = results?.find(
                   (item) =>
-                    item.question_id === question.id && item.created_id === user.id
+                    item.question_id === question.id &&
+                    item.created_id === user.user_id
                 );
 
                 return (

@@ -10,7 +10,6 @@ export type RoomResponse = {
   group_title: string;
   proctor_id: string;
   proctor_name: string;
-  member_status: string;
   marked: string;
   teacher_start_date: string;
   start_date: string;
@@ -57,7 +56,6 @@ export interface UpdateRoomRequest {
 }
 
 export interface StudentJoinRoomRequest {
-  group_id: string;
   room_id: string;
 }
 
@@ -77,11 +75,6 @@ export interface StudentCancelJoinRoomRequest {
 }
 
 export interface TeacherForceLeaveRoomRequest {
-  student_id: string;
-  room_id: string;
-}
-
-export interface PenaltyPointRequest {
   student_id: string;
   room_id: string;
 }

@@ -7,6 +7,10 @@ import { Button, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useStudentSubmit } from '@hook/room/useStudentSubmit';
 import { useSystemContext } from '@context/system';
+import {
+  GET_USER_IN_ROOM,
+  useFetchUserInRoom,
+} from '@hook/user-room/useFetchUserRoom';
 
 const StudentCounter = () => {
   const { query } = useRouter();
@@ -14,14 +18,16 @@ const StudentCounter = () => {
 
   const [timerText, setTimerText] = useState('');
 
-  const studentSubmitMutation = useStudentSubmit([GET_ROOM_DETAIL]);
+  const studentSubmitMutation = useStudentSubmit([
+    GET_ROOM_DETAIL,
+    GET_USER_IN_ROOM,
+  ]);
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
-
-  const submitted =
-    (roomDetail?.member_status ?? '')?.length > 10
-      ? JSON.parse(roomDetail?.member_status ?? '')
-      : {};
+  const userInRoom = useFetchUserInRoom({
+    user_id: userId,
+    room_id: query.id as string,
+  });
 
   const getTimer = useCallback(() => {
     const duration = parseInt(examDetail?.exam?.duration?.toString() || '0');
@@ -54,13 +60,13 @@ const StudentCounter = () => {
       <Popconfirm
         title="Bạn có chắc chắn nộp bài?"
         icon={<QuestionCircleOutlined />}
-        disabled={timerText?.length <= 0 || submitted[userId] === '3'}
+        disabled={timerText?.length <= 0 || userInRoom?.[0]?.status === '3'}
         onConfirm={handelSubmit}
       >
         <Button
           size="small"
           type="primary"
-          disabled={timerText?.length <= 0 || submitted[userId] === '3'}
+          disabled={timerText?.length <= 0 || userInRoom?.[0]?.status === '3'}
         >
           Nộp bài
         </Button>

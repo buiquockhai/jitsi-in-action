@@ -10,6 +10,7 @@ import { notificationService } from '@service/notification/service';
 import { resultService } from '@service/result/service';
 import { violatingService } from '@service/violating-rule/service';
 import { markService } from '@service/mark/service';
+import { userRoomService } from '@service/user-room/service';
 
 const services = [
   userService,
@@ -22,6 +23,7 @@ const services = [
   resultService,
   violatingService,
   markService,
+  userRoomService,
 ];
 
 const dispatch = {
@@ -58,4 +60,5 @@ export {
   resultService,
   violatingService,
   markService,
+  userRoomService,
 };
