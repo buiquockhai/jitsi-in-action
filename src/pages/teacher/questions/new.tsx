@@ -1,6 +1,6 @@
 import CreationQuestionConfiguration from '@layout/pages/teachers/questions/new/config';
 import PageHeaderQuestionCreation from '@layout/pages/teachers/questions/new/page-header';
-import { Form, UploadFile } from 'antd';
+import { Form } from 'antd';
 import QuestionPreview from '@layout/pages/teachers/questions/new/preview';
 import withAuth from '@hoc/withAuth';
 import { RoleEnum, QuestionTypes, LevelTypes, ALPHABET } from '@util/constant';
@@ -21,7 +21,7 @@ type FormProps = {
   questionContent: string;
   singleCorrect: string;
   multipleCorrect: string[];
-  questionImages: UploadFile[];
+  questionImages: string[];
   answers: Array<{
     id: string;
     label: string;
@@ -103,7 +103,7 @@ const TeacherQuestions = () => {
         folderId: questionDetail.folder_id,
         questionContent: questionDetail.content,
         questionImages:
-          (questionDetail.images ?? '')?.length > 0
+          (questionDetail.images ?? [])?.length > 0
             ? JSON.parse(questionDetail?.images ?? '')
             : [],
         answers: questionDetail.tb_answers.map((item, index) => ({

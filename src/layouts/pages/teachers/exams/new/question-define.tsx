@@ -51,21 +51,13 @@ const QuestionDefine: FC<Props> = ({ form }) => {
                 <Tag color="green">{QuestionTypeEnum?.[node?.type]}</Tag>
                 <Tag color="magenta">{LevelEnum?.[node?.level]}</Tag>
               </div>
-              <div className="flex flex-row items-center gap-2">
-                <InputNumber
-                  min={0}
-                  size="small"
-                  placeholder="Điểm"
-                  value={node?.point}
-                />
-                <Popconfirm
-                  placement="left"
-                  title="Bạn có muốn xoá?"
-                  icon={<QuestionCircleOutlined />}
-                >
-                  <Button icon={<CloseOutlined />} size="small" type="link" danger />
-                </Popconfirm>
-              </div>
+              <InputNumber
+                min={0}
+                size="small"
+                placeholder="Điểm"
+                value={node?.point}
+                disabled
+              />
             </div>
 
             <div className="w-full flex flex-col gap-2">
@@ -73,7 +65,18 @@ const QuestionDefine: FC<Props> = ({ form }) => {
               <p>{node?.content}</p>
             </div>
 
-            <div className="w-full grid grid-cols-2 gap-3 mt-5">
+            <ul className="flex gap-3 flex-wrap">
+              {JSON.parse(node?.images ?? '[]').map((item) => (
+                <img
+                  key={item}
+                  className="rounded-sm object-cover w-[200px] h-[200px]"
+                  loading="lazy"
+                  src={item}
+                />
+              ))}
+            </ul>
+
+            <div className="w-full grid grid-cols-2 gap-3">
               {node?.tb_answers?.map((item, index) => {
                 const correct = parseInt(item.percent) > 0;
                 return (

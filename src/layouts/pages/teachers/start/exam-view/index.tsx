@@ -22,7 +22,18 @@ const ExamView = () => {
 
           <p className="font-semibold">{question?.content}</p>
 
-          <div className="w-full grid grid-cols-2 gap-3 mt-5">
+          <ul className="flex gap-3 flex-wrap">
+            {JSON.parse(question?.images ?? '[]').map((item) => (
+              <img
+                key={item}
+                className="rounded-sm object-cover w-[200px] h-[200px]"
+                loading="lazy"
+                src={item}
+              />
+            ))}
+          </ul>
+
+          <div className="w-full grid grid-cols-2 gap-3">
             {question?.tb_answers?.map((item, index) => {
               return (
                 <div

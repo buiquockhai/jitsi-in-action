@@ -6,40 +6,34 @@ import {
   Radio,
   Select,
   Slider,
-  Upload,
-  UploadFile,
-  UploadProps,
   FormInstance,
 } from 'antd';
-import React, { Fragment, useEffect, useState } from 'react';
-import ImgCrop from 'antd-img-crop';
-import { usePreview } from '@hook/system/usePreview';
-import { MinusCircleOutlined, PlusOutlined } from '@ant-design/icons';
+import { Fragment, useEffect, FC, createRef, ChangeEvent } from 'react';
+import {
+  CloseCircleTwoTone,
+  MinusCircleOutlined,
+  PlusOutlined,
+} from '@ant-design/icons';
 import { ALPHABET, LevelEnum, QuestionTypeEnum } from '@util/constant';
 import { isArray, isNil } from 'lodash';
 import { v4 } from 'uuid';
 import { useSystemContext } from '@context/system';
 import { useFetchFolder } from '@hook/question/useFetchFolder';
+import { upload } from '@util/upload';
 
 type FormProps = {
   form: FormInstance;
 };
 
-const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
-  const [onPreview] = usePreview();
-
+const CreationQuestionConfiguration: FC<FormProps> = ({ form }) => {
+  const ref = createRef<HTMLInputElement>();
   const { userId } = useSystemContext();
 
   const folderList = useFetchFolder({ created_id: userId });
 
   const answers = Form.useWatch('answers', form);
   const type = Form.useWatch('type', form);
-
-  const [fileList, setFileList] = useState<UploadFile[]>([]);
-
-  const onChange: UploadProps['onChange'] = ({ fileList: newFileList }) => {
-    setFileList(newFileList);
-  };
+  const images = Form.useWatch('questionImages', form);
 
   useEffect(() => {
     if (isArray(answers)) {
@@ -50,8 +44,24 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
     }
   }, [answers, form]);
 
+  const handleChangeFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.files) {
+      const url = await upload(event.target.files?.[0], 'questions/');
+      form.setFieldsValue({
+        questionImages: [...(images ?? []), url],
+      });
+    }
+  };
+
   return (
     <div className="w-full rounded-sm bg-white p-5">
+      <input
+        type="file"
+        ref={ref}
+        hidden
+        accept="image/*"
+        onChange={handleChangeFile}
+      />
       <Form.Item
         name="folderId"
         label="Thư mục"
@@ -140,17 +150,39 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
       </Form.Item>
 
       <Form.Item label="Hình ảnh">
-        <ImgCrop rotate>
-          <Upload
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            listType="picture-card"
-            fileList={fileList}
-            onChange={onChange}
-            onPreview={onPreview}
-          >
-            {fileList?.length < 5 && '+ Upload'}
-          </Upload>
-        </ImgCrop>
+        <Form.List name="questionImages">
+          {(fields, { remove }) => {
+            return (
+              <div className="flex gap-2 flex-wrap">
+                {fields.map((filed, index) => {
+                  return (
+                    <div {...filed} className="relative">
+                      <img
+                        className="rounded-sm w-[100px] h-[100px] object-cover"
+                        src={images[index]}
+                      />
+                      <button
+                        type="button"
+                        className="absolute right-0 top-0 transform translate-x-1/2 -translate-y-1/2"
+                        onClick={() => remove(index)}
+                      >
+                        <CloseCircleTwoTone />
+                      </button>
+                    </div>
+                  );
+                })}
+
+                <button
+                  type="button"
+                  className="w-[100px] h-[100px] bg-slate-100 rounded-sm hover:opacity-75"
+                  onClick={() => ref.current?.click()}
+                >
+                  <PlusOutlined />
+                </button>
+              </div>
+            );
+          }}
+        </Form.List>
       </Form.Item>
 
       <Form.Item label="Đáp án">
@@ -166,10 +198,7 @@ const CreationQuestionConfiguration: React.FC<FormProps> = ({ form }) => {
               <Fragment>
                 {fields.map(({ key, name, ...restField }, index) => {
                   return (
-                    <div
-                      key={key}
-                      className="w-full flex flex-row gap-3 items-baseline"
-                    >
+                    <div key={key} className="w-full flex gap-3 items-baseline">
                       <Form.Item
                         {...restField}
                         name={[name, 'content']}
