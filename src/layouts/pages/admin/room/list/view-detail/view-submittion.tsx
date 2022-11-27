@@ -1,15 +1,15 @@
+import cx from 'classnames';
 import { useFetchResults } from '@hook/result/useFetchResult';
 import { FC, useState } from 'react';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
-import { Button, Popconfirm } from 'antd';
-import cx from 'classnames';
+import { Button, Modal, Popconfirm } from 'antd';
 import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { usePointingRoom } from '@hook/room/usePoitingRoom';
 import { GET_MARKS, useFetchMarks } from '@hook/mark/useFetchMarks';
-import ViewSubmissionDetail from './view-submission-detail';
 import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
+import ViewSubmissionDetail from './view-submission-detail';
 
 type Props = {
   roomId: string;
@@ -67,6 +67,27 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
     });
   };
 
+  const handleViewDetailPenalty = (userId: string, name: string) => {
+    const penalties = violatingRules?.filter((item) => item.user_id === userId);
+    Modal.info({
+      title: name,
+      content: (
+        <ul className="list-disc">
+          {penalties?.map((item) => (
+            <li key={item.id}>{item.description || '__'}</li>
+          ))}
+        </ul>
+      ),
+    });
+  };
+
+  const handleViewGetOut = (description: string, name: string) => {
+    Modal.info({
+      title: name,
+      content: <p>{description}</p>,
+    });
+  };
+
   return (
     <div className="space-y-5">
       <ViewSubmissionDetail
@@ -106,14 +127,24 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                     <b>Tên</b>: {user?.tb_user.name}
                   </p>
                   <p className="w-40 truncate">
-                    <b>Mã</b>: {user?.tb_user.name}
+                    <b>Mã</b>: {user?.tb_user.code}
                   </p>
                   <p
-                    className={cx('w-40 truncate', {
+                    className={cx('w-52 truncate', {
                       'text-red-500': penaltyPoint > 0,
                     })}
                   >
-                    <b>Điểm trừ</b>: {penaltyPoint}
+                    <b>Điểm trừ</b>: {penaltyPoint}{' '}
+                    <a
+                      className={cx({
+                        hidden: penaltyPoint <= 0,
+                      })}
+                      onClick={() =>
+                        handleViewDetailPenalty(user.user_id, user.tb_user.name)
+                      }
+                    >
+                      (Xem lí do)
+                    </a>
                   </p>
                   <p
                     className={cx('w-40 truncate', {
@@ -131,15 +162,30 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                     {Math.max(0, parseFloat(markDetail?.mark ?? '0') - penaltyPoint)}
                   </p>
                 </div>
-                <Button
-                  size="small"
-                  type="link"
-                  onClick={() =>
-                    handleShowDetail(markDetail?.id ?? '', user.user_id)
-                  }
-                >
-                  Xem bài làm
-                </Button>
+                <div className="flex gap-2">
+                  <Button
+                    size="small"
+                    type="link"
+                    danger
+                    className={cx({
+                      '!hidden': user.description?.length <= 0,
+                    })}
+                    onClick={() =>
+                      handleViewGetOut(user.description, user.tb_user.name)
+                    }
+                  >
+                    (Xem lí do bị buộc rời)
+                  </Button>
+                  <Button
+                    size="small"
+                    type="link"
+                    onClick={() =>
+                      handleShowDetail(markDetail?.id ?? '', user.user_id)
+                    }
+                  >
+                    Xem bài làm
+                  </Button>
+                </div>
               </div>
 
               <ul className="flex overflow-x-auto border">

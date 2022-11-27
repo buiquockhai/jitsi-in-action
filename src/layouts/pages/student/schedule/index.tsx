@@ -1,7 +1,6 @@
 import { useSystemContext } from '@context/system';
-import { useFetchRooms } from '@hook/room/useFetchRooms';
-import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
-import { RoomResponse } from '@service/room/types';
+import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
+import { GetUserRoomResponse } from '@service/user-room/types';
 import { Badge, Calendar } from 'antd';
 import moment, { Moment } from 'moment';
 import { Fragment, useState } from 'react';
@@ -11,14 +10,13 @@ const StudentCalendar = () => {
   const { userId } = useSystemContext();
 
   const [open, setOpen] = useState(false);
-  const [events, setEvents] = useState<RoomResponse[]>([]);
+  const [events, setEvents] = useState<GetUserRoomResponse[]>([]);
 
-  const userDetail = useFetchUserDetail(userId);
-  const rooms = useFetchRooms({ group_id: userDetail?.group_id });
+  const userInRoom = useFetchUserInRoom({ user_id: userId });
 
   const getDayEvent = (date: Moment) => {
-    const events = (rooms ?? []).filter((item) => {
-      const time = moment(item.start_date);
+    const events = (userInRoom ?? []).filter((item) => {
+      const time = moment(item.tb_room.start_date);
       return (
         time.date() === date.date() &&
         time.month() === date.month() &&
@@ -28,7 +26,7 @@ const StudentCalendar = () => {
     return events;
   };
 
-  const handleShowDetail = (events: RoomResponse[]) => {
+  const handleShowDetail = (events: GetUserRoomResponse[]) => {
     setOpen(true);
     setEvents(events);
   };
@@ -40,14 +38,16 @@ const StudentCalendar = () => {
       <ul onClick={() => handleShowDetail(dayEvents)}>
         {dayEvents.map((item) => {
           const currentTime = new Date();
-          const time = moment(item.start_date).toDate().getTime();
+          const time = moment(item.tb_room.start_date).toDate().getTime();
           const status = time > currentTime.getTime() ? 'success' : 'default';
 
           return (
             <li key={item.id}>
               <Badge
                 status={status}
-                text={`${moment(item?.start_date).format('HH:mm')} - ${item?.title}`}
+                text={`${moment(item.tb_room.start_date).format('HH:mm')} - ${
+                  item.tb_room.title
+                }`}
               />
             </li>
           );

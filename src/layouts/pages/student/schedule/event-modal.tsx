@@ -1,20 +1,18 @@
-import { useSocketContext } from '@context/socket';
-import { useSystemContext } from '@context/system';
-import { RoomResponse } from '@service/room/types';
-import { roomService } from '@service/router';
-import { Button, List, Modal } from 'antd';
 import moment from 'moment';
+import { useSocketContext } from '@context/socket';
+import { roomService } from '@service/router';
+import { GetUserRoomResponse } from '@service/user-room/types';
+import { Button, List, Modal } from 'antd';
 import { FC, Fragment, useState } from 'react';
 import RequestModal from './request-modal';
 
 type Props = {
-  data: RoomResponse[];
+  data: GetUserRoomResponse[];
   open: boolean;
   onClose: () => void;
 };
 
 const EventModal: FC<Props> = ({ data, open, onClose }) => {
-  const { userId } = useSystemContext();
   const { setOpenWaiting } = useSocketContext();
 
   const [controlRoomId, setControlRoomId] = useState('');
@@ -36,7 +34,9 @@ const EventModal: FC<Props> = ({ data, open, onClose }) => {
     <Fragment>
       <Modal
         width="50vw"
-        title={`Lịch thi ngày ${moment(data?.[0]?.start_date).format('DD/MM/YYYY')}`}
+        title={`Lịch thi ngày ${moment(data?.[0]?.tb_room?.start_date).format(
+          'DD/MM/YYYY'
+        )}`}
         open={open}
         onCancel={onClose}
         footer={null}
@@ -50,13 +50,14 @@ const EventModal: FC<Props> = ({ data, open, onClose }) => {
                 <Button
                   key={item.id}
                   type="primary"
-                  onClick={() => handleJoin(item.id)}
+                  onClick={() => handleJoin(item?.room_id)}
                 >
                   Tham gia
                 </Button>,
               ]}
             >
-              {moment(item?.start_date).format('HH:mm DD/MM/YYYY')} - {item?.title}
+              {moment(item?.tb_room?.start_date).format('HH:mm DD/MM/YYYY')} -{' '}
+              {item?.tb_room?.title}
             </List.Item>
           )}
         />

@@ -1,7 +1,7 @@
 import withAuth from '@hoc/withAuth';
 import StudentCalendar from '@layout/pages/student/schedule';
 import { RoleEnum } from '@util/constant';
-import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
+import { NextPage } from 'next';
 
 const StudentSchedule: NextPage = () => {
   return (
@@ -13,12 +13,10 @@ const StudentSchedule: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async (context: GetServerSidePropsContext) => {
-    return {
-      props: {},
-    };
-  },
+export const getServerSideProps = withAuth(
+  () => ({
+    props: {},
+  }),
   RoleEnum.student
 );
 

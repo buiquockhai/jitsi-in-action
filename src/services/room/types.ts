@@ -77,6 +77,7 @@ export interface StudentCancelJoinRoomRequest {
 export interface TeacherForceLeaveRoomRequest {
   student_id: string;
   room_id: string;
+  description: string;
 }
 
 export interface PointingRoomRequest {

@@ -5,6 +5,7 @@ export type ViolatingRuleResponse = {
   room_id: string;
   user_id: string;
   minus_point: string;
+  description: string;
   created_date: string;
   created_id: string;
   updated_date: string;
@@ -23,6 +24,7 @@ export interface NewViolatingRuleRequest {
   room_id: string;
   user_id: string;
   minus_point: string;
+  description?: string;
 }
 
 export interface UpdateViolatingRuleRequest {

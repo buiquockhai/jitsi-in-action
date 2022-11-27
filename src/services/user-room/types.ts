@@ -4,6 +4,7 @@ import {
   UserRoomVerifiedTypes,
 } from '@util/constant';
 import { GetUserListResponse } from '@service/user/types';
+import { RoomResponse } from '@service/room/types';
 
 export type UserRoomResponse = {
   id: string;
@@ -29,4 +30,5 @@ export interface GetUserRoomRequest {
 
 export interface GetUserRoomResponse extends UserRoomResponse {
   tb_user: GetUserListResponse;
+  tb_room: RoomResponse;
 }

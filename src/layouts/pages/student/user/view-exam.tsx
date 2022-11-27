@@ -6,10 +6,11 @@ import { useFetchResults } from '@hook/result/useFetchResult';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
 import { ALPHABET, ExamLevelRangeEnum, LevelEnum } from '@util/constant';
-import { Descriptions, Drawer, Tag } from 'antd';
+import { Button, Descriptions, Drawer, Modal, Tag } from 'antd';
 import moment from 'moment';
 import cx from 'classnames';
 import { FC } from 'react';
+import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
 
 type Props = {
   open: boolean;
@@ -22,6 +23,7 @@ type Props = {
 const ViewExam: FC<Props> = ({ open, roomId, examId, markId, onClose }) => {
   const { userId } = useSystemContext();
 
+  const userRoom = useFetchUserInRoom({ user_id: userId });
   const roomDetail = useFetchRoomDetail(roomId);
   const markDetail = useFetchMarkDetail(markId);
   const examDetail = useFetchExamDetail(examId);
@@ -36,10 +38,29 @@ const ViewExam: FC<Props> = ({ open, roomId, examId, markId, onClose }) => {
 
   const exam = examDetail?.exam;
   const questions = examDetail?.questionList ?? [];
-  const penaltyPoint = violating?.reduce(
-    (sum, item) => sum + parseFloat(item.minus_point),
-    0
-  );
+  const penaltyPoint =
+    violating?.reduce((sum, item) => sum + parseFloat(item.minus_point), 0) ?? 0;
+
+  const handleViewDetailPenalty = (userId: string) => {
+    const penalties = violating?.filter((item) => item.user_id === userId);
+    Modal.info({
+      title: 'Lí do bị trừ điểm',
+      content: (
+        <ul className="list-disc">
+          {penalties?.map((item) => (
+            <li key={item.id}>{item.description || '__'}</li>
+          ))}
+        </ul>
+      ),
+    });
+  };
+
+  const handleViewGetOut = (description: string) => {
+    Modal.info({
+      title: 'Lí do bị đuổi khỏi phòng thi',
+      content: <p>{description}</p>,
+    });
+  };
 
   return (
     <Drawer title={roomDetail?.title} width="75vw" onClose={onClose} open={open}>
@@ -57,11 +78,35 @@ const ViewExam: FC<Props> = ({ open, roomId, examId, markId, onClose }) => {
           <Descriptions.Item label="Điểm thi">
             {markDetail?.mark ?? 0}
           </Descriptions.Item>
-          <Descriptions.Item label="Điểm trừ">{penaltyPoint || 0}</Descriptions.Item>
+          <Descriptions.Item label="Điểm trừ">{penaltyPoint}</Descriptions.Item>
           <Descriptions.Item label="Điểm chính thức">
-            {Math.max(0, parseFloat(markDetail?.mark ?? '0') - (penaltyPoint || 0))}
+            {Math.max(0, parseFloat(markDetail?.mark ?? '0') - penaltyPoint)}
           </Descriptions.Item>
         </Descriptions>
+
+        <div className="flex gap-3 justify-end">
+          <Button
+            size="small"
+            danger
+            className={cx({
+              hidden: penaltyPoint <= 0,
+            })}
+            onClick={() => handleViewDetailPenalty(userId)}
+          >
+            Lí do trừ điểm
+          </Button>
+          <Button
+            size="small"
+            danger
+            type="primary"
+            className={cx({
+              '!hidden': (userRoom?.[0]?.description ?? '').length <= 0,
+            })}
+            onClick={() => handleViewGetOut(userRoom?.[0]?.description ?? '')}
+          >
+            Lí do buộc rời phòng
+          </Button>
+        </div>
 
         {questions?.map((question) => {
           const correctAnswerIds = question.tb_answers.flatMap((item) =>
