@@ -43,7 +43,7 @@ const GetOutDescription: FC<Props> = ({ open, studentId, onClose }) => {
 
   return (
     <Modal title="Lí do" open={open} onOk={handleForceLeave} onCancel={onClose}>
-      <p className="mb-5">
+      <p className="!mb-5">
         Bạn có chắc chắn bắt buộc thí sinh nộp bài. Thí sẽ đồng thời sẽ bị đuổi ra
         khỏi phòng thi.
       </p>

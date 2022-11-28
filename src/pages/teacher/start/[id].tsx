@@ -4,7 +4,6 @@ import ExamView from '@layout/pages/teachers/start/exam-view';
 import TeacherStartManage from '@layout/pages/teachers/start/manage';
 import MeetingPane from '@layout/pages/teachers/start/meeting';
 import RoomInformation from '@layout/pages/teachers/start/room-info';
-import { userRoomService } from '@service/router';
 import { RoleEnum, RoleTypes } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Tabs } from 'antd';
@@ -52,7 +51,8 @@ export const getServerSideProps: GetServerSideProps = withAuth(
         }),
       }
     );
-    if (!verify) {
+    const flag = await verify.json();
+    if (!flag?.data) {
       res.writeHead(302, { Location: ROUTES.TEACHER_SCHEDULE });
       res.end();
     }

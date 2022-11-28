@@ -1,3 +1,4 @@
+import { GetExamDetailResponse } from '@service/exam/types';
 import { DeleteFlagTypes, RoomStatusTypes } from '@util/constant';
 
 export type RoomResponse = {
@@ -24,6 +25,9 @@ export interface GetRoomRequest {
   id?: string;
   group_id?: string;
   proctor_id?: string;
+}
+export interface GetRoomResponse extends RoomResponse {
+  tb_exam: GetExamDetailResponse;
 }
 
 export interface NewRoomRequest {

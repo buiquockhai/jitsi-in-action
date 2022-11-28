@@ -8,7 +8,6 @@ import {
   GetUserRoomRequest,
   GetUserRoomResponse,
   KickOutRequest,
-  VerifyJoinRoomRequest,
 } from './types';
 
 class UserRoomService extends Client {
@@ -35,17 +34,6 @@ class UserRoomService extends Client {
       method: 'POST',
       body: JSON.stringify(req),
     });
-  }
-
-  public verifyLoadRoom(req: VerifyJoinRoomRequest) {
-    return fetcher<BaseResponse<any>>(
-      `${this.baseUrl}/v1/user-room/verify-join-room`,
-      {
-        headers: this.privateHeaders,
-        method: 'POST',
-        body: JSON.stringify(req),
-      }
-    );
   }
 }
 

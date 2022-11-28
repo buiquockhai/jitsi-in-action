@@ -52,14 +52,14 @@ const RoomTable = ({}) => {
       {
         title: 'Trạng thái',
         dataIndex: 'status',
-        width: '10%',
+        width: '5%',
         render: (status) => <Tag>{RoomStatusEnum[status]}</Tag>,
         sorter: (a, b) => a.status - b.status,
       },
       {
         title: 'Phòng thi',
         dataIndex: 'title',
-        width: '15%',
+        width: '10%',
       },
       {
         title: 'Tên đề thi',
@@ -75,6 +75,15 @@ const RoomTable = ({}) => {
         title: 'Giám thị',
         dataIndex: 'proctor_name',
         width: '10%',
+      },
+      {
+        title: 'Thời gian làm bài',
+        dataIndex: 'tb_exam.duration',
+        width: '10%',
+        render: (_, record) => `${record?.tb_exam?.duration ?? 0} phút`,
+        sorter: (a, b) =>
+          parseInt(a?.tb_exam?.duration ?? '0') -
+          parseInt(b?.tb_exam?.duration ?? '0'),
       },
       {
         title: 'Thời gian bắt đầu',

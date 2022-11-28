@@ -1,4 +1,3 @@
-import { useSystemContext } from '@context/system';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { Descriptions } from 'antd';
@@ -7,7 +6,6 @@ import { useRouter } from 'next/router';
 
 const RoomInformation = () => {
   const { query } = useRouter();
-  const { userId } = useSystemContext();
 
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');

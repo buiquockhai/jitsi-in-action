@@ -41,7 +41,7 @@ const EventModal: FC<Props> = ({ data, open, onClose }) => {
                 key={item.id}
                 type="primary"
                 onClick={() => handleJoin(item.id)}
-                // disabled={item.status === '2'}
+                disabled={item.status === '2'}
               >
                 Tham gia
               </Button>,

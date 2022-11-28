@@ -5,10 +5,10 @@ import { BaseResponse } from '@schema/system';
 import {
   CloseRoomRequest,
   GetRoomRequest,
+  GetRoomResponse,
   NewRoomRequest,
   OpenRoomRequest,
   PointingRoomRequest,
-  RoomResponse,
   StudentCancelJoinRoomRequest,
   StudentJoinRoomRequest,
   TeacherAcceptJoinRoomRequest,
@@ -19,7 +19,7 @@ import { uuidVerify } from '@util/functions';
 
 class Room extends Client {
   public getRooms(req: GetRoomRequest) {
-    return fetcher<BaseResponse<RoomResponse[]>>(
+    return fetcher<BaseResponse<GetRoomResponse[]>>(
       `${this.baseUrl}/v1/room?${qs.stringify(uuidVerify(req))}`,
       {
         headers: this.privateHeaders,
@@ -28,7 +28,7 @@ class Room extends Client {
   }
 
   public getRoomDetail(id: string) {
-    return fetcher<BaseResponse<RoomResponse>>(`${this.baseUrl}/v1/room/${id}`, {
+    return fetcher<BaseResponse<GetRoomResponse>>(`${this.baseUrl}/v1/room/${id}`, {
       headers: this.privateHeaders,
     });
   }

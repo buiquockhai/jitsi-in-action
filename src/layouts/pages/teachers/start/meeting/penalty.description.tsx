@@ -38,7 +38,7 @@ const PenaltyDescription: FC<Props> = ({ open, studentId, onClose }) => {
 
   return (
     <Modal title="Lí do" open={open} onOk={handlePenalty} onCancel={onClose}>
-      <p className="mb-5">
+      <p className="!mb-5">
         Bạn có chắc chắn muốn trừ điểm cảnh cáo vi phạm. Mỗi lần cảnh cáo thí sinh sẽ
         bị trừ 0.5 điểm vào kết quả thi.
       </p>

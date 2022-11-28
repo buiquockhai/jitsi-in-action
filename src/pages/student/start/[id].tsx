@@ -3,7 +3,6 @@ import StudentCounter from '@layout/pages/student/start/counter';
 import ExamPane from '@layout/pages/student/start/exam';
 import MeetingPane from '@layout/pages/student/start/meeting';
 import RoomInformation from '@layout/pages/student/start/room-info';
-import { userRoomService } from '@service/router';
 import { RoleEnum, RoleTypes } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Tabs } from 'antd';
@@ -48,7 +47,8 @@ export const getServerSideProps: GetServerSideProps = withAuth(
         }),
       }
     );
-    if (!verify) {
+    const flag = await verify.json();
+    if (!flag?.data) {
       res.writeHead(302, { Location: ROUTES.STUDENT_SCHEDULE });
       res.end();
     }

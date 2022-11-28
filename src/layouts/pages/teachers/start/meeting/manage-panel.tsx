@@ -98,6 +98,7 @@ const ManagePanel = () => {
           const submitted = item.status === '3';
           const verified = item.verified === 'Y';
           const presentRoom = roomDetail?.status === '1';
+          const alreadyStart = (roomDetail?.teacher_start_date ?? '').length > 0;
 
           return (
             <div
@@ -133,8 +134,20 @@ const ManagePanel = () => {
                         Trừ điểm
                       </Menu.Item>
                       <Menu.Item
-                        disabled={!joined || !verified || !presentRoom || submitted}
-                        danger={joined && verified && presentRoom && !submitted}
+                        disabled={
+                          !joined ||
+                          !verified ||
+                          !presentRoom ||
+                          submitted ||
+                          !alreadyStart
+                        }
+                        danger={
+                          joined &&
+                          verified &&
+                          presentRoom &&
+                          !submitted &&
+                          alreadyStart
+                        }
                         onClick={() =>
                           setGetOut({
                             open: true,

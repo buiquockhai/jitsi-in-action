@@ -27,11 +27,13 @@ const columns = [
     dataIndex: 'name',
     title: 'Tên đầy đủ',
     width: '40%',
+    sorter: (a, b) => a.name?.length - b.name?.length,
   },
   {
     dataIndex: 'gender',
     title: 'Giới tính',
     render: (gender) => <Tag>{GenderEnum[gender]}</Tag>,
+    sorter: (a, b) => a.gender?.length - b.gender?.length,
     width: '20%',
   },
   {
@@ -127,7 +129,7 @@ const NewGroup: NextPage = () => {
       </div>
 
       <Transfer
-        showSearch={true}
+        showSearch={false}
         targetKeys={targetKeys}
         onChange={onChange}
         dataSource={sourceWithKey}
