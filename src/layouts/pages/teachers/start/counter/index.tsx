@@ -3,12 +3,15 @@ import { useRouter } from 'next/router';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import moment from 'moment';
-import { Button, Popconfirm } from 'antd';
+import { Button, message, Popconfirm } from 'antd';
 import { QuestionCircleOutlined } from '@ant-design/icons';
 import { useCloseRoom } from '@hook/room/useCloseRoom';
 import { ROUTES } from '@util/routes';
 import { useOpenRoom } from '@hook/room/useOpenRoom';
-import { GET_USER_IN_ROOM } from '@hook/user-room/useFetchUserRoom';
+import {
+  GET_USER_IN_ROOM,
+  useFetchUserInRoom,
+} from '@hook/user-room/useFetchUserRoom';
 
 const TeacherCounter = () => {
   const { query, replace } = useRouter();
@@ -19,6 +22,7 @@ const TeacherCounter = () => {
   const closeRoomMutation = useCloseRoom([GET_ROOM_DETAIL, GET_USER_IN_ROOM]);
   const roomDetail = useFetchRoomDetail(query.id as string);
   const examDetail = useFetchExamDetail(roomDetail?.exam_id ?? '');
+  const memberInRoom = useFetchUserInRoom({ room_id: query.id as string });
 
   const getTimer = useCallback(() => {
     const duration = parseInt(examDetail?.exam?.duration?.toString() || '0');
@@ -39,14 +43,23 @@ const TeacherCounter = () => {
     }
   }, [examDetail, roomDetail, getTimer]);
 
-  const handleCloseRoom = () => {
-    closeRoomMutation.mutate({
+  const handleCloseRoom = async () => {
+    await closeRoomMutation.mutate({
       room_id: query.id as string,
     });
     replace(ROUTES.TEACHER_SCHEDULE);
   };
 
   const handleOpenRoom = () => {
+    const exitedUnAuth = memberInRoom?.some(
+      (item) => item.status === '2' && item.verified === 'N'
+    );
+
+    if (exitedUnAuth) {
+      return message.error(
+        'Còn thí sinh đã tham gia nhưng chưa xác thực. Vui lòng xác thực trước khi mở phòng thi'
+      );
+    }
     openRoomMutation.mutate({
       room_id: query.id as string,
     });

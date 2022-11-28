@@ -1,16 +1,14 @@
 import cx from 'classnames';
-import { useState, Fragment } from 'react';
+import { Fragment } from 'react';
 import { useFetchExamDetail } from '@hook/exam/useFetchExamDetail';
 import { useFetchResults } from '@hook/result/useFetchResult';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { RequestJoinRoomStatusEnum } from '@util/constant';
 import { useRouter } from 'next/router';
-import { Button, Modal, Popconfirm } from 'antd';
-import { QuestionCircleOutlined } from '@ant-design/icons';
+import { Modal } from 'antd';
 import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRules';
 import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
-import GetOutDescription from './get-out-description';
-import PenaltyDescription from './penalty.description';
+import { DownCircleTwoTone } from '@ant-design/icons';
 
 type GetOutProps = {
   open: boolean;
@@ -32,9 +30,6 @@ const TeacherStartManage = () => {
     room_id: query.id as string,
   });
   const violatingRules = useFetchViolatingRules({ room_id: query.id as string });
-
-  const [getOut, setGetOut] = useState<GetOutProps>(initialGetOut);
-  const [penalty, setPenalty] = useState<GetOutProps>(initialGetOut);
 
   const handleViewDetailPenalty = (userId: string, name: string) => {
     const penalties = violatingRules?.filter((item) => item.user_id === userId);
@@ -59,8 +54,6 @@ const TeacherStartManage = () => {
 
   return (
     <Fragment>
-      <GetOutDescription {...getOut} onClose={() => setGetOut(initialGetOut)} />
-      <PenaltyDescription {...penalty} onClose={() => setPenalty(initialGetOut)} />
       <ul className="space-y-5">
         {(memberInRoom ?? []).map((user) => {
           const penaltyPoint =
@@ -120,36 +113,15 @@ const TeacherStartManage = () => {
                     </a>
                   </p>
                 </div>
-                <div className="flex gap-3">
-                  <Popconfirm
-                    title="Bạn có chắc chắn muốn trừ điểm cảnh cáo vi phạm. Mỗi lần cảnh cáo thí sinh sẽ bị trừ 0.5 điểm vào kết quả thi."
-                    icon={<QuestionCircleOutlined />}
-                    onConfirm={() =>
-                      setPenalty({
-                        open: true,
-                        studentId: user.user_id,
-                      })
-                    }
-                  >
-                    <Button size="small" danger disabled={user.status !== '2'}>
-                      Trừ điểm cảnh cáo
-                    </Button>
-                  </Popconfirm>
-                  <Popconfirm
-                    title="Bạn có chắc chắn bắt buộc thí sinh nộp bài. Thí sẽ đồng thời sẽ bị đuổi ra khỏi phòng thi."
-                    icon={<QuestionCircleOutlined />}
-                    onConfirm={() =>
-                      setGetOut({
-                        open: true,
-                        studentId: user.user_id,
-                      })
-                    }
-                  >
-                    <Button size="small" danger disabled={user.status !== '2'}>
-                      Buộc nộp bài
-                    </Button>
-                  </Popconfirm>
-                </div>
+                {user.verified === 'Y' ? (
+                  <div className="flex gap-2 text-green-600 items-center">
+                    <DownCircleTwoTone twoToneColor="#68B984" />
+                    <p>Đã xác thực</p>
+                  </div>
+                ) : null}
+                {user.verified === 'N' && user.status === '2' ? (
+                  <p className="text-gray-400">Chưa xác thực</p>
+                ) : null}
               </div>
 
               <ul className="flex overflow-x-auto border">

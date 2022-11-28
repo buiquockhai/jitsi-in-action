@@ -1,6 +1,5 @@
 import fetch from 'isomorphic-unfetch';
-
-export type FetcherError = Error & { response: Response; statusCode: number };
+import { message } from 'antd';
 
 export default async function fetcher<JSON = any>(
   input: RequestInfo,
@@ -10,13 +9,11 @@ export default async function fetcher<JSON = any>(
   if (res.ok) {
     return res.json();
   }
-  const error = new Error(res.statusText) as FetcherError;
-  error.statusCode = res.status;
-  error.response = res;
-  if (res.json) {
+  if (res) {
     const data = (await res.json()) as any;
-    error.message = data?.message || data?.data?.message;
+    const messageText = data?.message || data?.data?.message || 'Không thành công';
+    message.error(messageText);
   }
 
-  return Promise.reject(error);
+  return Promise.reject();
 }

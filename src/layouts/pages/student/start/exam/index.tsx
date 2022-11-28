@@ -58,7 +58,10 @@ const ExamPane = () => {
     });
   };
 
-  if ((roomDetail?.teacher_start_date ?? '')?.length <= 0) {
+  if (
+    (roomDetail?.teacher_start_date ?? '')?.length <= 0 ||
+    userInRoom?.[0]?.verified === 'N'
+  ) {
     return <Empty />;
   }
 

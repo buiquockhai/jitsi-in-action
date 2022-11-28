@@ -6,7 +6,7 @@ import { useFetchViolatingRules } from '@hook/violating-rule/useFetchViolatingRu
 import { Button, Modal, Popconfirm } from 'antd';
 import { GET_ROOM_DETAIL, useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { QuestionCircleOutlined } from '@ant-design/icons';
-import { usePointingRoom } from '@hook/room/usePoitingRoom';
+import { usePointingRoom } from '@hook/room/usePointingRoom';
 import { GET_MARKS, useFetchMarks } from '@hook/mark/useFetchMarks';
 import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
 import ViewSubmissionDetail from './view-submission-detail';

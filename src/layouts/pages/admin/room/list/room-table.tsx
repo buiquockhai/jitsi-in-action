@@ -11,18 +11,18 @@ import { RoomStatusEnum } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button, Popconfirm, Table, Tag } from 'antd';
 import { useRouter } from 'next/router';
-import { Fragment, useMemo, useState } from 'react';
+import { Fragment, useCallback, useMemo, useState } from 'react';
 import moment from 'moment';
 import ViewDetailModal from './view-detail';
 
-type DetaiProps = {
+type DetailProps = {
   open: boolean;
   roomId: string;
   examId: string;
   groupId: string;
 };
 
-const initialValues: DetaiProps = {
+const initialValues: DetailProps = {
   open: false,
   roomId: '',
   examId: '',
@@ -35,14 +35,17 @@ const RoomTable = ({}) => {
   const rooms = useFetchRooms({});
   const updateRoomMutation = useUpdateRoom([GET_ROOMS, GET_ROOM_DETAIL]);
 
-  const [data, setData] = useState<DetaiProps>(initialValues);
+  const [data, setData] = useState<DetailProps>(initialValues);
 
-  const handleRemove = (id: string) => {
-    updateRoomMutation.mutate({
-      id: id,
-      deleted: 'Y',
-    });
-  };
+  const handleRemove = useCallback(
+    (id: string) => {
+      updateRoomMutation.mutate({
+        id: id,
+        deleted: 'Y',
+      });
+    },
+    [updateRoomMutation]
+  );
 
   const columns = useMemo(
     () => [
@@ -130,7 +133,7 @@ const RoomTable = ({}) => {
         },
       },
     ],
-    []
+    [push, handleRemove]
   );
 
   return (

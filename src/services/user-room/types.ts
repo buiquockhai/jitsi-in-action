@@ -32,3 +32,14 @@ export interface GetUserRoomResponse extends UserRoomResponse {
   tb_user: GetUserListResponse;
   tb_room: RoomResponse;
 }
+
+export interface AuthStudentInRoomRequest {
+  user_id: string;
+  room_id: string;
+  verified: UserRoomVerifiedTypes;
+}
+
+export interface KickOutRequest {
+  user_id: string;
+  room_id: string;
+}

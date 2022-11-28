@@ -34,6 +34,8 @@ export const SocketListener = {
   serverFeedbackCloseRoom: 'server-feedback-close-room',
   serverFeedbackOpenRoom: 'server-feedback-open-room',
   serverFeedbackStudentSubmit: 'server-feedback-student-submit',
+  serverFeedbackTeacherAuth: 'server-feedback-teacher-auth',
+  serverFeedbackKickOut: 'server-feedback-kick-out',
 } as const;
 
 export const SocketEmitter = {
@@ -183,6 +185,31 @@ const SocketContextProvider = ({ children }) => {
         });
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
         queryClient.invalidateQueries([GET_USER_IN_ROOM]);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackTeacherAuth, (data) => {
+      if (userId === data.studentId) {
+        api.info({
+          placement: 'bottomRight',
+          message: 'Xác thực phòng thi',
+          description: `Giáo viên đã ${data.verified === 'N' ? 'huỷ' : ''} xác thực`,
+        });
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
+      }
+    });
+
+    socket.on(SocketListener.serverFeedbackKickOut, (data) => {
+      if (userId === data.studentId) {
+        api.info({
+          placement: 'bottomRight',
+          message: 'Rời khỏi phòng thi',
+          description: 'Bị bị giám thị mời rời khỏi phòng thi',
+        });
+        queryClient.invalidateQueries([GET_ROOM_DETAIL]);
+        queryClient.invalidateQueries([GET_USER_IN_ROOM]);
+        replace(ROUTES.STUDENT_SCHEDULE);
       }
     });
 

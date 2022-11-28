@@ -2,6 +2,7 @@ import dynamic from 'next/dynamic';
 import { IJitsiMeetingProps } from '@jitsi/react-sdk/lib/types';
 import { useRouter } from 'next/router';
 import { useSystemContext } from '@context/system';
+import { memo } from 'react';
 
 const JitsiFrame = () => {
   const { query } = useRouter();
@@ -53,4 +54,4 @@ const JitsiFrame = () => {
   );
 };
 
-export default JitsiFrame;
+export default memo(JitsiFrame);

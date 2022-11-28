@@ -3,7 +3,12 @@ import { BaseResponse } from '@schema/system';
 import fetcher from '@util/fetcher';
 import { Client } from '@util/apis';
 import { uuidVerify } from '@util/functions';
-import { GetUserRoomRequest, GetUserRoomResponse } from './types';
+import {
+  AuthStudentInRoomRequest,
+  GetUserRoomRequest,
+  GetUserRoomResponse,
+  KickOutRequest,
+} from './types';
 
 class UserRoomService extends Client {
   public getUserRooms(req: GetUserRoomRequest) {
@@ -13,6 +18,22 @@ class UserRoomService extends Client {
         headers: this.privateHeaders,
       }
     );
+  }
+
+  public authStudent(req: AuthStudentInRoomRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/user-room/auth-student`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
+  }
+
+  public kickOut(req: KickOutRequest) {
+    return fetcher<BaseResponse<any>>(`${this.baseUrl}/v1/user-room/kick-out`, {
+      headers: this.privateHeaders,
+      method: 'POST',
+      body: JSON.stringify(req),
+    });
   }
 }
 
