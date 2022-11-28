@@ -36,7 +36,7 @@ export interface NewRoomRequest {
   proctor_id: string;
   proctor_name: string;
   start_date?: Date;
-  meeting?: string;
+  duration?: number;
 }
 
 export interface UpdateRoomRequest {
@@ -51,7 +51,6 @@ export interface UpdateRoomRequest {
   proctor_id?: string;
   proctor_name?: string;
   start_date?: Date;
-  meeting?: string;
   deleted?: DeleteFlagTypes;
 }
 

@@ -1,6 +1,6 @@
 import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
 import { NextPage } from 'next';
-import moment from 'moment';
+import moment, { duration } from 'moment';
 import withAuth from '@hoc/withAuth';
 import { RoleEnum, RoomStatusTypes } from '@util/constant';
 import { useFetchExams } from '@hook/exam/useFetchExams';
@@ -70,7 +70,11 @@ const NewRoomPage: NextPage = () => {
         ...object,
       });
     } else {
-      await newRoomMutation.mutate({ ...object, status: '0' });
+      await newRoomMutation.mutate({
+        ...object,
+        status: '0',
+        duration: values.duration,
+      });
       form.setFieldsValue(initialValues);
     }
   };
