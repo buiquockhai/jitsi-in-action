@@ -29,7 +29,7 @@ const Home = () => {
         </div>
       </Container>
       <div className="p-10">
-        {role === 'student' ? <StudentCalendar /> : <TeacherCalendar />}
+        {role === RoleEnum.student ? <StudentCalendar /> : <TeacherCalendar />}
       </div>
     </div>
   );

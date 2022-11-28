@@ -1,9 +1,9 @@
 import { Router } from 'next/router';
 import { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import { createContext } from '@util/createContext';
-import { JwtResponse, RoleTypes } from '@schema/system';
+import { JwtResponse } from '@schema/system';
 import { getCookie } from '@util/functions';
-import { __token } from './../utils/constant';
+import { RoleEnum, RoleTypes, __token } from '@util/constant';
 import jwt_decode from 'jwt-decode';
 import { notification } from 'antd';
 import { NotificationInstance } from 'antd/lib/notification';
@@ -61,7 +61,7 @@ const SystemContextProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [userId, setUserId] = useState('');
   const [hideMenu, setHideMenu] = useState(true);
-  const [role, setRole] = useState<RoleTypes>('student');
+  const [role, setRole] = useState<RoleTypes>(RoleEnum.student);
   const [username, setUsername] = useState('');
   const [avatar, setAvatar] = useState('');
   const [name, setName] = useState('');

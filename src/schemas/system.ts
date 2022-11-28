@@ -1,3 +1,5 @@
+import { RoleTypes } from '@util/constant';
+
 export interface Pageable {
   pageNumber: number;
   totalPages: number;
@@ -19,8 +21,6 @@ export type JwtResponse = {
   role: RoleTypes;
   username: string;
 };
-
-export type RoleTypes = 'admin' | 'teacher' | 'student';
 
 export interface LoginResponse {
   data: string;

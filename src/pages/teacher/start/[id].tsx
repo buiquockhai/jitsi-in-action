@@ -4,9 +4,11 @@ import ExamView from '@layout/pages/teachers/start/exam-view';
 import TeacherStartManage from '@layout/pages/teachers/start/manage';
 import MeetingPane from '@layout/pages/teachers/start/meeting';
 import RoomInformation from '@layout/pages/teachers/start/room-info';
-import { RoleEnum } from '@util/constant';
+import { userRoomService } from '@service/router';
+import { RoleEnum, RoleTypes } from '@util/constant';
+import { ROUTES } from '@util/routes';
 import { Tabs } from 'antd';
-import { NextPage } from 'next';
+import { GetServerSideProps, GetServerSidePropsContext, NextPage } from 'next';
 
 const StartPage: NextPage = () => {
   return (
@@ -34,10 +36,30 @@ const StartPage: NextPage = () => {
   );
 };
 
-export const getServerSideProps = withAuth(
-  () => ({
-    props: {},
-  }),
+export const getServerSideProps: GetServerSideProps = withAuth(
+  async ({ res, req, query }: GetServerSidePropsContext) => {
+    const verify = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-room/verify-join-room`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${req.cookies.__token}`,
+        },
+        body: JSON.stringify({
+          room_id: query.id as string,
+          role: req.cookies.__role as RoleTypes,
+        }),
+      }
+    );
+    if (!verify) {
+      res.writeHead(302, { Location: ROUTES.TEACHER_SCHEDULE });
+      res.end();
+    }
+    return {
+      props: {},
+    };
+  },
   RoleEnum.teacher
 );
 

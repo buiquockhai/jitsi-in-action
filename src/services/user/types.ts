@@ -1,5 +1,4 @@
-import { RoleTypes } from '@schema/system';
-import { DeleteFlagTypes, GenderTypes } from '@util/constant';
+import { DeleteFlagTypes, GenderTypes, RoleTypes } from '@util/constant';
 
 export interface GetUserListRequest {
   role?: RoleTypes;

@@ -1,3 +1,4 @@
+import { GET_NOTIFICATIONS } from '@hook/notification/useFetchNotification';
 import { GET_RESULTS } from '@hook/result/useFetchResult';
 import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
 import { GET_USER_IN_ROOM } from '@hook/user-room/useFetchUserRoom';
@@ -129,6 +130,7 @@ const SocketContextProvider = ({ children }) => {
         push(ROUTES.STUDENT_SCHEDULE);
         queryClient.invalidateQueries([GET_ROOM_DETAIL]);
         queryClient.invalidateQueries([GET_USER_IN_ROOM]);
+        queryClient.invalidateQueries([GET_NOTIFICATIONS]);
         api.error({
           placement: 'bottomRight',
           message: 'Bị buộc rời khỏi phòng thi',
@@ -148,6 +150,7 @@ const SocketContextProvider = ({ children }) => {
         });
 
         queryClient.invalidateQueries([GET_VIOLATING_RULES]);
+        queryClient.invalidateQueries([GET_NOTIFICATIONS]);
       }
     });
 

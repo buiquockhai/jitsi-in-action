@@ -1,6 +1,7 @@
 import {
   DeleteFlagTypes,
   RequestJoinRoomStatusTypes,
+  RoleTypes,
   UserRoomVerifiedTypes,
 } from '@util/constant';
 import { GetUserListResponse } from '@service/user/types';
@@ -42,4 +43,9 @@ export interface AuthStudentInRoomRequest {
 export interface KickOutRequest {
   user_id: string;
   room_id: string;
+}
+
+export interface VerifyJoinRoomRequest {
+  room_id: string;
+  role: RoleTypes;
 }
