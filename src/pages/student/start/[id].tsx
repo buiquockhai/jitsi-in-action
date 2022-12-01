@@ -33,6 +33,7 @@ const StartPage: NextPage = () => {
 
 export const getServerSideProps: GetServerSideProps = withAuth(
   async ({ res, req, query }: GetServerSidePropsContext) => {
+    process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = '0';
     const verify = await fetch(
       `${process.env.NEXT_PUBLIC_BASE_URL}/v1/user-room/verify-join-room`,
       {
