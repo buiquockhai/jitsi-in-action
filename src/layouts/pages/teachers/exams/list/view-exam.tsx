@@ -53,7 +53,10 @@ const ViewExam: FC<Props> = ({ open, id, onClose }) => {
       open={open}
       extra={
         <div className="flex flex-row gap-2">
-          <Button onClick={() => push(ROUTES.TEACHER_UPDATE_EXAM(id))}>
+          <Button
+            onClick={() => push(ROUTES.TEACHER_UPDATE_EXAM(id))}
+            disabled={exam?.submitted === 'Y'}
+          >
             Chỉnh sửa
           </Button>
           <Button

@@ -114,20 +114,28 @@ const ExamsTable: FC<Props> = ({ onFocus }) => {
                 size="small"
                 type="link"
                 onClick={() => push(ROUTES.TEACHER_UPDATE_EXAM(row.id))}
+                disabled={row.submitted === 'Y'}
               />
               <Popconfirm
                 title="Bạn có chắc chắn xoá？"
                 icon={<QuestionCircleOutlined />}
                 onConfirm={() => handleRemove(row.id)}
+                disabled={row.submitted === 'Y'}
               >
-                <Button icon={<DeleteOutlined />} size="small" type="link" danger />
+                <Button
+                  icon={<DeleteOutlined />}
+                  size="small"
+                  type="link"
+                  danger
+                  disabled={row.submitted === 'Y'}
+                />
               </Popconfirm>
             </div>
           );
         },
       },
     ],
-    [onFocus, push]
+    [onFocus, push, handleRemove]
   );
 
   return <Table size="small" columns={columns} dataSource={examList} />;
