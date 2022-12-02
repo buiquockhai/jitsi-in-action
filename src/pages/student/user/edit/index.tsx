@@ -2,8 +2,8 @@ import withAuth from '@hoc/withAuth';
 import { GenderTypes, RoleEnum } from '@util/constant';
 import { Button, DatePicker, Form, Input, Radio } from 'antd';
 import moment from 'moment';
-import { GetServerSideProps, NextPage } from 'next';
-import { ChangeEvent, createRef, useEffect, useState } from 'react';
+import { NextPage } from 'next';
+import { ChangeEvent, createRef, useEffect } from 'react';
 import { useFetchUserDetail } from '@hook/user/useFetchUserDetail';
 import { GenderEnum } from '@util/constant';
 import { useUpdateUserDetail } from '@hook/user/useUpdateUserDetail';
@@ -190,10 +190,11 @@ const StudentUpdateInformation: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
-  return {
+export const getServerSideProps = withAuth(
+  () => ({
     props: {},
-  };
-}, RoleEnum.student);
+  }),
+  RoleEnum.student
+);
 
 export default StudentUpdateInformation;

@@ -3,7 +3,7 @@ import StudentAccountTable from '@layout/pages/admin/account/student-table';
 import TeacherAccountTable from '@layout/pages/admin/account/teacher-table';
 import { RoleEnum } from '@util/constant';
 import { Tabs } from 'antd';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 
 const AccountList: NextPage = () => {
   return (
@@ -22,10 +22,11 @@ const AccountList: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
-  return {
+export const getServerSideProps = withAuth(
+  () => ({
     props: {},
-  };
-}, RoleEnum.admin);
+  }),
+  RoleEnum.admin
+);
 
 export default AccountList;

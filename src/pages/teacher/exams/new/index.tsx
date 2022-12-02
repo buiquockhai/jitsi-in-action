@@ -81,7 +81,7 @@ const TeacherExams: NextPage = () => {
 };
 
 export const getServerSideProps = withAuth(
-  async () => ({
+  () => ({
     props: {},
   }),
   RoleEnum.teacher

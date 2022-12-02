@@ -11,7 +11,7 @@ import {
 import { RoleEnum } from '@util/constant';
 import { copy } from '@util/functions';
 import { Button, Form, Input, message, Popconfirm } from 'antd';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 import { v4 } from 'uuid';
 import { useEffect } from 'react';
 import { userUpdateConfiguration } from '@hook/configuration/useUpdateConfiguration';
@@ -144,10 +144,11 @@ const SponsorSetting: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
-  return {
+export const getServerSideProps = withAuth(
+  () => ({
     props: {},
-  };
-}, RoleEnum.admin);
+  }),
+  RoleEnum.admin
+);
 
 export default SponsorSetting;

@@ -2,7 +2,7 @@ import withAuth from '@hoc/withAuth';
 import StudentInformationCard from '@layout/pages/student/user/card';
 import MarksTable from '@layout/pages/student/user/marks-table';
 import { RoleEnum } from '@util/constant';
-import { GetServerSideProps, NextPage } from 'next';
+import { NextPage } from 'next';
 
 const StudentInformation: NextPage = () => {
   return (
@@ -13,10 +13,11 @@ const StudentInformation: NextPage = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(async (_) => {
-  return {
+export const getServerSideProps = withAuth(
+  () => ({
     props: {},
-  };
-}, RoleEnum.student);
+  }),
+  RoleEnum.student
+);
 
 export default StudentInformation;

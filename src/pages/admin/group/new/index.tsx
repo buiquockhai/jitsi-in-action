@@ -174,7 +174,7 @@ const NewGroup: NextPage = () => {
 };
 
 export const getServerSideProps = withAuth(
-  async (_) => ({
+  () => ({
     props: {},
   }),
   RoleEnum.admin

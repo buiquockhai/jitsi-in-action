@@ -1,7 +1,6 @@
 import withAuth from '@hoc/withAuth';
 import { RoleEnum } from '@util/constant';
 import { Form, Input, Button } from 'antd';
-import { GetServerSideProps } from 'next';
 import { message } from 'antd';
 import { useUpdatePassword } from '@hook/user/useUpdatePassword';
 
@@ -72,10 +71,11 @@ const ChangePassword = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(() => {
-  return {
+export const getServerSideProps = withAuth(
+  () => ({
     props: {},
-  };
-}, RoleEnum.student);
+  }),
+  RoleEnum.student
+);
 
 export default ChangePassword;

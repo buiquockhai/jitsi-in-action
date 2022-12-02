@@ -148,7 +148,7 @@ const TeacherQuestions = () => {
 };
 
 export const getServerSideProps = withAuth(
-  async () => ({
+  () => ({
     props: {},
   }),
   RoleEnum.teacher

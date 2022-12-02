@@ -38,7 +38,7 @@ const Logout: NextPage = () => {
 };
 
 export const getServerSideProps = withAuth(
-  async () => ({
+  () => ({
     props: {},
   }),
   RoleEnum.admin

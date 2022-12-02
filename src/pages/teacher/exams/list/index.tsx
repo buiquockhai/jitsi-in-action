@@ -5,7 +5,6 @@ import SlideLayout from '@layout/utils/slide-layout';
 import { RoleEnum } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button } from 'antd';
-import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
@@ -37,10 +36,7 @@ const TeacherExams = () => {
   );
 };
 
-export const getServerSideProps: GetServerSideProps = withAuth(
-  async () => ({ props: {} }),
-  RoleEnum.teacher
-);
+export const getServerSideProps = withAuth(() => ({ props: {} }), RoleEnum.teacher);
 
 TeacherExams.layout = SlideLayout;
 

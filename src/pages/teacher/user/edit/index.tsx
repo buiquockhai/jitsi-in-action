@@ -189,9 +189,6 @@ const TeacherUpdateInformation: NextPage = () => {
   );
 };
 
-export const getServerSideProps = withAuth(
-  async () => ({ props: {} }),
-  RoleEnum.teacher
-);
+export const getServerSideProps = withAuth(() => ({ props: {} }), RoleEnum.teacher);
 
 export default TeacherUpdateInformation;

@@ -1,6 +1,6 @@
 import { Button, DatePicker, Form, Input, InputNumber, Select } from 'antd';
 import { NextPage } from 'next';
-import moment, { duration } from 'moment';
+import moment from 'moment';
 import withAuth from '@hoc/withAuth';
 import { RoleEnum, RoomStatusTypes } from '@util/constant';
 import { useFetchExams } from '@hook/exam/useFetchExams';
@@ -205,7 +205,7 @@ const NewRoomPage: NextPage = () => {
 };
 
 export const getServerSideProps = withAuth(
-  async () => ({
+  () => ({
     props: {},
   }),
   RoleEnum.admin

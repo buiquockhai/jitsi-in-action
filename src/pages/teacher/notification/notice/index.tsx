@@ -36,7 +36,7 @@ const Notification: NextPage = () => {
 };
 
 export const getServerSideProps = withAuth(
-  async () => ({
+  () => ({
     props: {},
   }),
   RoleEnum.teacher
