@@ -23,6 +23,7 @@ type SubmissionProps = {
   examId: string;
   markId: string;
   userId: string;
+  userName: string;
 };
 
 const submissionDetailInitialValues: SubmissionProps = {
@@ -31,6 +32,7 @@ const submissionDetailInitialValues: SubmissionProps = {
   examId: '',
   markId: '',
   userId: '',
+  userName: '',
 };
 
 const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
@@ -57,13 +59,14 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
     submissionDetailInitialValues
   );
 
-  const handleShowDetail = (markId: string, userId: string) => {
+  const handleShowDetail = (markId: string, userId: string, userName: string) => {
     setDetail({
       open: true,
       markId: markId,
       roomId: roomId,
       examId: examId,
       userId: userId,
+      userName: userName,
     });
   };
 
@@ -180,7 +183,11 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                     size="small"
                     type="link"
                     onClick={() =>
-                      handleShowDetail(markDetail?.id ?? '', user.user_id)
+                      handleShowDetail(
+                        markDetail?.id ?? '',
+                        user.user_id,
+                        user.tb_user.name
+                      )
                     }
                   >
                     Xem bài làm

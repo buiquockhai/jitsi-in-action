@@ -21,7 +21,7 @@ const StudentDetail: React.FC<StudentDetailProps> = ({ open, data, onClose }) =>
       open={open}
     >
       <div className="w-full flex flex-col gap-5">
-        <Avatar icon={<AntDesignOutlined />} size={100} />
+        <Avatar icon={<AntDesignOutlined />} size={100} src={data?.avatar}/>
 
         <Descriptions size="small" column={1}>
           <Descriptions.Item label="Mã học sinh">{data?.code}</Descriptions.Item>

@@ -16,6 +16,7 @@ type Props = {
   examId: string;
   markId: string;
   userId: string;
+  userName: string;
   onClose: () => void;
 };
 
@@ -25,6 +26,7 @@ const ViewSubmissionDetail: FC<Props> = ({
   examId,
   markId,
   userId,
+  userName,
   onClose,
 }) => {
   const roomDetail = useFetchRoomDetail(roomId);
@@ -48,7 +50,7 @@ const ViewSubmissionDetail: FC<Props> = ({
 
   return (
     <Modal
-      title={roomDetail?.title}
+      title={userName}
       width="75vw"
       onCancel={onClose}
       open={open}
