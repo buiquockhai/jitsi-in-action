@@ -10,6 +10,7 @@ import { usePointingRoom } from '@hook/room/usePointingRoom';
 import { GET_MARKS, useFetchMarks } from '@hook/mark/useFetchMarks';
 import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
 import ViewSubmissionDetail from './view-submission-detail';
+import { GET_ROOMS } from '@hook/room/useFetchRooms';
 
 type Props = {
   roomId: string;
@@ -45,7 +46,7 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
     room_id: roomId,
   });
 
-  const pointingMutation = usePointingRoom([GET_ROOM_DETAIL, GET_MARKS]);
+  const pointingMutation = usePointingRoom([GET_ROOM_DETAIL, GET_MARKS, GET_ROOMS]);
 
   const handlePointing = () => {
     pointingMutation.mutate({
@@ -157,12 +158,15 @@ const ViewSubmission: FC<Props> = ({ roomId, groupId, examId }) => {
                     <b>Điểm</b>: {markDetail?.mark || ''}
                   </p>
                   <p
-                    className={cx('w-40 truncate', {
+                    className={cx('w-56 truncate', {
                       'text-blue-500': penaltyPoint > 0,
                     })}
                   >
                     <b>Điểm chính thức</b>:{' '}
-                    {Math.max(0, parseFloat(markDetail?.mark ?? '0') - penaltyPoint)}
+                    {Math.max(
+                      0,
+                      parseFloat(markDetail?.mark ?? '0') - (penaltyPoint ?? 0)
+                    )}
                   </p>
                 </div>
                 <div className="flex gap-2">

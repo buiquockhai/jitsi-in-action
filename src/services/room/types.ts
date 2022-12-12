@@ -1,5 +1,5 @@
 import { GetExamDetailResponse } from '@service/exam/types';
-import { DeleteFlagTypes, RoomStatusTypes } from '@util/constant';
+import { DeleteFlagTypes, MarkedFlagTypes, RoomStatusTypes } from '@util/constant';
 
 export type RoomResponse = {
   id: string;
@@ -11,7 +11,7 @@ export type RoomResponse = {
   group_title: string;
   proctor_id: string;
   proctor_name: string;
-  marked: string;
+  marked: MarkedFlagTypes;
   teacher_start_date: string;
   start_date: string;
   created_date: string;
@@ -51,7 +51,7 @@ export interface UpdateRoomRequest {
   exam_title?: string;
   group_id?: string;
   group_title?: string;
-  marked?: string;
+  marked?: MarkedFlagTypes;
   proctor_id?: string;
   proctor_name?: string;
   start_date?: Date;

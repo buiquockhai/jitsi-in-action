@@ -7,7 +7,7 @@ import {
 import { GET_ROOM_DETAIL } from '@hook/room/useFetchRoomDetail';
 import { GET_ROOMS, useFetchRooms } from '@hook/room/useFetchRooms';
 import { useUpdateRoom } from '@hook/room/useUpdateRoom';
-import { RoomStatusEnum } from '@util/constant';
+import { MarkedFlagEnum, RoomStatusEnum } from '@util/constant';
 import { ROUTES } from '@util/routes';
 import { Button, Popconfirm, Table, Tag } from 'antd';
 import { useRouter } from 'next/router';
@@ -64,7 +64,7 @@ const RoomTable = ({}) => {
       {
         title: 'Tên đề thi',
         dataIndex: 'exam_title',
-        width: '15%',
+        width: '10%',
       },
       {
         title: 'Nhóm thi',
@@ -79,7 +79,7 @@ const RoomTable = ({}) => {
       {
         title: 'Thời gian làm bài',
         dataIndex: 'tb_exam.duration',
-        width: '10%',
+        width: '5%',
         render: (_, record) => `${record?.tb_exam?.duration ?? 0} phút`,
         sorter: (a, b) =>
           parseInt(a?.tb_exam?.duration ?? '0') -
@@ -93,6 +93,13 @@ const RoomTable = ({}) => {
           moment(a.start_date).toDate().getTime() -
           moment(b.start_date).toDate().getTime(),
         render: (start_date) => moment(start_date).format('HH:mm DD/MM/YYYY'),
+      },
+      {
+        title: 'Đã chấm bài',
+        dataIndex: 'marked',
+        width: '10%',
+        sorter: (a, b) => a.marked.charCodeAt(0) - b.marked.charCodeAt(0),
+        render: (marked) => MarkedFlagEnum[marked],
       },
       {
         title: 'Hoạt động',

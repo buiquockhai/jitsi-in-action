@@ -71,8 +71,8 @@ export const DeleteFlagEnum = {
 export type DeleteFlagTypes = keyof typeof DeleteFlagEnum;
 
 export const UserRoomVerifiedEnum = {
-  Y: 'Y',
-  N: 'N',
+  Y: 'Đã xác thực',
+  N: 'Chưa xác thực',
 } as const;
 
 export type UserRoomVerifiedTypes = keyof typeof UserRoomVerifiedEnum;
@@ -110,3 +110,10 @@ export const RequestJoinRoomStatusEnum = {
 } as const;
 
 export type RequestJoinRoomStatusTypes = keyof typeof RequestJoinRoomStatusEnum;
+
+export const MarkedFlagEnum = {
+  N: 'Chưa',
+  Y: 'Đã chấm',
+};
+
+export type MarkedFlagTypes = keyof typeof MarkedFlagEnum;

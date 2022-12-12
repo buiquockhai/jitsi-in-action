@@ -1,6 +1,6 @@
 import { GetQuestionDetailResponse } from '@service/question/types';
 import { GetUserDetailResponse } from '@service/user/types';
-import { DeleteFlagTypes } from '@util/constant';
+import { DeleteFlagTypes, QuestionTypes } from '@util/constant';
 
 export type ResultResponse = {
   id: string;
@@ -32,6 +32,7 @@ export interface PushResultRequest {
   selected_answer_id?: string;
   selected_answer_label?: string;
   proctor_id?: string;
+  question_type?: QuestionTypes;
 }
 
 export interface NewResultRequest {

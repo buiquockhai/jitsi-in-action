@@ -5,7 +5,7 @@ import { GET_RESULTS, useFetchResults } from '@hook/result/useFetchResult';
 import { usePushResult } from '@hook/result/usePushResult';
 import { useFetchRoomDetail } from '@hook/room/useFetchRoomDetail';
 import { useFetchUserInRoom } from '@hook/user-room/useFetchUserRoom';
-import { ALPHABET } from '@util/constant';
+import { ALPHABET, QuestionTypes } from '@util/constant';
 import { Button, Empty, message } from 'antd';
 import moment from 'moment';
 import { useRouter } from 'next/router';
@@ -34,7 +34,11 @@ const ExamPane = () => {
 
   const pushResultMutation = usePushResult([GET_RESULTS]);
 
-  const handlePushAnswer = (answerId: string, label: string) => {
+  const handlePushAnswer = (
+    answerId: string,
+    label: string,
+    questionType: QuestionTypes
+  ) => {
     if (userInRoom?.[0]?.status === '3') {
       return message.error('Bạn đã nộp bài. Không được phép chỉnh sửa');
     }
@@ -55,6 +59,7 @@ const ExamPane = () => {
       selected_answer_id: answerId,
       selected_answer_label: label,
       proctor_id: roomDetail?.proctor_id,
+      question_type: questionType,
     });
   };
 
@@ -142,7 +147,9 @@ const ExamPane = () => {
                 key={item?.id}
                 className="px-4 py-1 border rounded-sm border-dashed cursor-pointer !text-left"
                 type={isActive ? 'primary' : 'default'}
-                onClick={() => handlePushAnswer(item?.id, ALPHABET[index])}
+                onClick={() =>
+                  handlePushAnswer(item?.id, ALPHABET[index], focusQuestion.type)
+                }
               >
                 <span className="font-semibold">{ALPHABET[index]}.</span>{' '}
                 {item?.content}
